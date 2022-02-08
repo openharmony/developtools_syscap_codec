@@ -1,0 +1,31 @@
+{
+  "name": "@ohos/syscap_codec",
+  "description": "SystemCapability encode/decode.",
+  "version": "3.1",
+  "license": "Apache License 2.0",
+  "pubiishAs": "code-segment",
+  "segment": {
+    "destPath": "developtools/syscap_codec"
+  },
+  "dirs": {},
+  "scripts": {},
+  "component": {
+    "name": "syscap_codec",
+    "subsystem": "developtools",
+    "syscap": [],
+    "feature": [],
+    "adapted_system_type": [ "small", "standard" ],
+    "deps": {
+      "components": [],
+      "third_party": [
+        "bounds_checking_function",
+        "thirdparty_cjson"
+      ]
+    },
+    "build": {
+      "sub_component": [ "//developtools/syscap_codec:syscap_codec" ],
+      "inner_kits": [],
+      "test": []
+    }
+  }
+}
