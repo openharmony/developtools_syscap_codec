@@ -90,7 +90,7 @@ static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
         return -1;
     }
-    fp = fopen(inputFile, "r");
+    fp = fopen(inputFile, "rb");
     if (fp == NULL) {
         PRINT_ERR("open file(%s) failed, errno = %d\n", inputFile, errno);
         FreeContextBuffer(contextBuffer);
@@ -135,7 +135,7 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char
         return -1;
     }
 
-    fp = fopen(fileFullPath, "w");
+    fp = fopen(fileFullPath, "wb");
     if (fp == NULL) {
         PRINT_ERR("can`t create file(%s), errno = %d\n", fileFullPath, errno);
         return -1;
