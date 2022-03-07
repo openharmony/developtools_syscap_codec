@@ -1,18 +1,8 @@
-# SysCap编解码工具<a name="ZH-CN_TOPIC_0000001149090043"></a>
+# 系统能力编解码工具
 
-- [SysCap编解码工具<a name="ZH-CN_TOPIC_0000001149090043"></a>](#)
-  - [简介<a name="section662115419449"></a>](#简介)
-  - [架构<a name="section15908143623714"></a>](#架构)
-  - [目录<a name="section161941989596"></a>](#目录)
-    - [pc端编译说明<a name="section129654513262"></a>](#pc端编译说明)
-    - [pc端获取说明<a name="section129654513263"></a>](#pc端获取说明)
-    - [命令帮助<a name="section129654513265"></a>](#命令帮助)
+系统能力(SystemCapability, 本文中使用SysCap缩写)编解码工具的应用场景：
 
-## 简介<a name="section662115419449"></a>
-
-SysCap编解码工具的应用场景：
-
-1.设备开发时，设备厂商对OS不见进行拼装后，编译构建生成Syscap列表，厂商ID和API版本信息作为Syscap编解码工具的输入，生成PCID。
+1.设备开发时，设备厂商对OS部件进行拼装后，编译构建生成Syscap列表，厂商ID和API版本信息作为Syscap编解码工具的输入，生成PCID。
 
 2.应用开发时，IDE根据应用配置的Syscap和API版本生成RPCID。开发者导入PCID时，使用Syscap编解码工具解码出设备的Syscap集合。
 
@@ -20,7 +10,7 @@ SysCap编解码工具的应用场景：
 
 4.应用安装时，包管理使用Syscap工具解码应用需要的Syscap集合。
 
-## 架构<a name="section15908143623714"></a>
+## 架构
 
 SysCap编解码工具主要有两部分组成：
 
@@ -28,7 +18,7 @@ SysCap编解码工具主要有两部分组成：
 
 2. syscap_tool_shared部分：用于设备开发、应用安装等场景，完成RPCID和PCID的编解码。
 
-## 目录<a name="section161941989596"></a>
+## 目录
 
 ```
 /developtools
@@ -42,7 +32,11 @@ SysCap编解码工具主要有两部分组成：
 │       └── syscap_tool.c        # syscap_tool编解码接口的实现
 ```
 
-### pc端编译说明<a name="section129654513262"></a>
+### API
+
+PC端工具，不对外提供API。
+
+### pc端编译说明
 
 
 syscap_tool pc端可执行文件编译步骤：
@@ -51,23 +45,24 @@ syscap_tool pc端可执行文件编译步骤：
 
 2. 编译：在目标开发机上运行上面调整好的sdk编译命令， 正常编译syscap_tool会输出到sdk平台相关目录下； 注意： ubuntu环境下只能编译windows/linux版本工具，mac版需要在macos开发机上编译。
 
-### pc端获取说明<a name="section129654513263"></a>
+### pc端获取说明
 
 [1.下载sdk获取(建议)](#section161941989591)
-```
-通过访问本社区网站下载dailybuilds或正式发布的sdk压缩包，从中根据自己平台到相应的目录toolchain下解压提取
-```
+
+通过访问本社区网站下载dailybuilds或正式发布的sdk压缩包，从中根据自己平台到相应的目录toolchain下解压提取。
+
 
 [2.自行编译](#section161941989592)
 
-编译请参考上面单独小节，本项目仓prebuilt目录下不再提供预制
-
+编译请参考上面单独小节，本项目仓prebuilt目录下不再提供预制。
 
 [3.支持运行环境](#section161941989593)
 
-linux版本建议ubuntu 18.04以上 64位，其他相近版本也可。
+Windows x86_64/Linux x86_64/Darwin x86_64 
 
-### 命令帮助<a name="section129654513265"></a>
+### 命令帮助
+
+本工具一般被IDE、应用市场和包管理器集成，手工调试时可参考以下说明。
 
 使用./syscap_tool -h或者./syscap_tool --help查看：
 
@@ -87,3 +82,6 @@ linux版本建议ubuntu 18.04以上 64位，其他相近版本也可。
 
 -o outpath, --input outpath : output path
 
+### Release Note
+
+v1.0.0 2022-3-8 首版本，提供Windows/Linux/Mac平台的系统能力编解码。
