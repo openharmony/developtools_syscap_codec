@@ -2,21 +2,17 @@
 
 SysCap(SystemCapability) encoder and decoder tools common usage scenarios as follow：
 
-1.APP development: IDE collect APP required SysCap and API verssion as in RPCID encoder input. And IDE will decode PCID to device SysCap list when it imported.
+APP development: IDE collect APP required SysCap and API verssion as in RPCID encoder input. And IDE will decode PCID to device SysCap list when it imported. This tool is only for use by the IDE, developers will not be used directly.
 
-2.APP distribution: RPCID/PCID decoder used for APP distribution procedure, APP store will check whether device's SysCap satisfy APP required SysCap.
+Main function：
 
-## Architecture
+1. PCID Encode: Encode SysCap list to PCID.
 
-SysCap codec tools has two components：
+2. PCID Decode: Decode PCID to get system SysCap list.
 
-1.PCID Encode: Encode SysCap list to PCID.
+3. RPCID Encode: Encode APP required SysCap list to RPCID.
 
-2.PCID Decode: Decode PCID to get system SysCap list.
-
-3.RPCID Encode: Encode APP required SysCap list to RPCID.
-
-4.RPCID Decode: Decode RPCID to get APP required SysCap list.
+4. RPCID Decode: Decode RPCID to get APP required SysCap list.
 
 ## File Structure
 
@@ -44,15 +40,17 @@ syscap_tool binary building steps as follow：
 
 1. Build commands：SysCap tools binary building and installation will be tiggered by SDK compiling procedure. How to build SDK please refer to https://gitee.com/openharmony/build/blob/master/README_zh.md.
 
-2. Building cmd should be adjust for host platform as same as SDK compiling, the archive will in corresponding platform directoty. Note: Ubuntu host only avaiable for windows/linux building, MacOs binary should building on MacOs host.
+2. Building cmd should be adjust for host platform as same as SDK compiling, the archive will in corresponding platform directoty.
+
+Note: Ubuntu host only avaiable for windows/linux building, MacOs binary should building on MacOs host.
 
 ### Downloading Binary
 
-[1.Downlaod SDK(recommonded))]
+1. Downlaod SDK(recommonded)
 
 Download daily builds(http://ci.openharmony.cn/dailybuilds) which included SDK.
 
-[3.Supported Host]
+2. Supported Host
 
 Windows x86_64/Linux x86_64/Darwin x86_64
 
@@ -62,6 +60,8 @@ SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instru
 
 ./syscap_tool -h or ./syscap_tool --help：
 ```
+./syscap_tool --help
+
 ./syscap_tool -R/P -e/d -i filepath [-o outpath]
 
 -h, --help : how to use
