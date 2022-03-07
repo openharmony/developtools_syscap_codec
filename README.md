@@ -1,71 +1,67 @@
-# 系统能力编解码工具
+# System Capability Encoder and Decoder Tools
 
-系统能力(SystemCapability, 本文中使用SysCap缩写)编解码工具的应用场景：
+SysCap(SystemCapability) encoder and decoder tools common usage scenarios as follow：
 
-1.设备开发时，设备厂商对OS部件进行拼装后，编译构建生成Syscap列表，厂商ID和API版本信息作为Syscap编解码工具的输入，生成PCID。
+1.APP development: IDE collect APP required SysCap and API verssion as in RPCID encoder input. And IDE will decode PCID to device SysCap list when it imported.
 
-2.应用开发时，IDE根据应用配置的Syscap和API版本生成RPCID。开发者导入PCID时，使用Syscap编解码工具解码出设备的Syscap集合。
+2.APP distribution: RPCID/PCID decoder used for APP distribution procedure, APP store will check whether device's SysCap satisfy APP required SysCap.
 
-3.应用分发时，应用市场使用Syscap工具对应用RPCID和设备的PCID进行解码。
+## Architecture
 
-4.应用安装时，包管理使用Syscap工具解码应用需要的Syscap集合。
+SysCap codec tools has two components：
 
-## 架构
+1.PCID Encode: Encode SysCap list to PCID.
 
-SysCap编解码工具主要有两部分组成：
+2.PCID Decode: Decode PCID to get system SysCap list.
 
-1. syscap_tool部分：运用于应用开发场景，供IDE使用，用于编码生成RPCID和解码PCID
+3.RPCID Encode: Encode APP required SysCap list to RPCID.
 
-2. syscap_tool_shared部分：用于设备开发、应用安装等场景，完成RPCID和PCID的编解码。
+4.RPCID Decode: Decode RPCID to get APP required SysCap list.
 
-## 目录
+## File Structure
 
 ```
 /developtools
-├── syscap_codec                 # syscap codec代码目录
+├── syscap_codec                 # root directory
 │   ├── include
-│   │   └── syscap_tool.h        # syscap_tool_shared对外接口定义  
+│   │   └── syscap_tool.h        # interfaces
 │   └── src
-│       ├── endian_internel.h    # 内部实现的大小端转换接口定义(便于win、mac、linux平台通用)
-│       ├── endian_internel.c    # 大小端转换实现
-│       ├── main.c               # syscap_tool命令行工具代码实现 
-│       └── syscap_tool.c        # syscap_tool编解码接口的实现
+│   │   ├── endian_internel.h    # internal big/little endian conversion headers(common for win、mac、linux)
+│   │   ├── endian_internel.c    # big/little endian conversion implement
+│   │   ├── main.c               # command line implement
+│   │   └── syscap_tool.c        # codec implement
+│   └── test 
+│       └── syscap_tool_test.c   # syscap_tool test codec implement
 ```
 
 ### API
 
-PC端工具，不对外提供API。
+PC tools, no API provided.
 
-### pc端编译说明
+### Building Manually
 
+syscap_tool binary building steps as follow：
 
-syscap_tool pc端可执行文件编译步骤：
+1. Build commands：SysCap tools binary building and installation will be tiggered by SDK compiling procedure. How to build SDK please refer to https://gitee.com/openharmony/build/blob/master/README_zh.md.
 
-1. 编译命令：编译sdk命令 请参考https://gitee.com/openharmony/build/blob/master/README_zh.md 仓编译sdk说明， 执行其指定的sdk编译命令来编译整个sdk， syscap_tool会被编译打包到里面。
+2. Building cmd should be adjust for host platform as same as SDK compiling, the archive will in corresponding platform directoty. Note: Ubuntu host only avaiable for windows/linux building, MacOs binary should building on MacOs host.
 
-2. 编译：在目标开发机上运行上面调整好的sdk编译命令， 正常编译syscap_tool会输出到sdk平台相关目录下； 注意： ubuntu环境下只能编译windows/linux版本工具，mac版需要在macos开发机上编译。
+### Downloading Binary
 
-### pc端获取说明
+[1.Downlaod SDK(recommonded))]
 
-[1.下载sdk获取(建议)](#section161941989591)
+Download daily builds(http://ci.openharmony.cn/dailybuilds) which included SDK.
 
-通过访问本社区网站下载dailybuilds或正式发布的sdk压缩包，从中根据自己平台到相应的目录toolchain下解压提取。
+[3.Supported Host]
 
+Windows x86_64/Linux x86_64/Darwin x86_64
 
-[2.自行编译](#section161941989592)
+### Help
 
-编译请参考上面单独小节，本项目仓prebuilt目录下不再提供预制。
+SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instructions for debugging manually:
 
-[3.支持运行环境](#section161941989593)
-
-Windows x86_64/Linux x86_64/Darwin x86_64 
-
-### 命令帮助
-
-本工具一般被IDE、应用市场和包管理器集成，手工调试时可参考以下说明。
-
-使用./syscap_tool -h或者./syscap_tool --help查看：
-
+./syscap_tool -h or ./syscap_tool --help：
+```
 ./syscap_tool -R/P -e/d -i filepath [-o outpath]
 
 -h, --help : how to use
@@ -81,7 +77,8 @@ Windows x86_64/Linux x86_64/Darwin x86_64
 -i filepath, --input filepath : input file
 
 -o outpath, --input outpath : output path
+```
 
 ### Release Note
 
-v1.0.0 2022-3-8 首版本，提供Windows/Linux/Mac平台的系统能力编解码。
+v1.0.0 2022-3-8 first release, SysCap codec supported for Windows/Linux/Mac host.
