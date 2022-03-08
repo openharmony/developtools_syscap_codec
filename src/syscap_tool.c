@@ -183,8 +183,8 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
         goto FREE_CONTEXT_OUT;
     }
     osCapSize = cJSON_GetArraySize(osCapPtr);
-    if (osCapSize <= 0) {
-        PRINT_ERR("\"os\" array is empty\n");
+    if (osCapSize < 0) {
+        PRINT_ERR("get \"os\" array size failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -601,8 +601,8 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     }
 
     sysCapSize = cJSON_GetArraySize(sysCapPtr);
-    if (sysCapSize <= 0) {
-        PRINT_ERR("\"syscap\" array is empty\n");
+    if (sysCapSize < 0) {
+        PRINT_ERR("get \"syscap\" array size failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
