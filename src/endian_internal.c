@@ -22,7 +22,7 @@
 
 int32_t CheckEndian(void);
 
-int32_t CheckEndian()
+int32_t CheckEndian(void)
 {
     union {
         int32_t i;

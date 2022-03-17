@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-#include "syscap_tool.h"
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -23,6 +22,7 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <wait.h>
+#include "syscap_tool.h"
 
 extern char *optarg;
 
