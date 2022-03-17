@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#include "syscap_tool.h"
 #include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <limits.h>
+#include "syscap_tool.h"
 
 extern char *optarg;
 
