@@ -21,8 +21,6 @@
 #include <limits.h>
 #include "syscap_tool.h"
 
-extern char *optarg;
-
 int main(int argc, char **argv)
 {
     int32_t ret, optIndex;

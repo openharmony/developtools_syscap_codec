@@ -24,8 +24,6 @@
 #include <wait.h>
 #include "syscap_tool.h"
 
-extern char *optarg;
-
 char *g_testFilePcid = "{\n  \"api_version\": 0,\n  \"manufacturer_id\": 0,\n  \"product\": \"rk3568\",\n" \
     "  \"syscap\": {\n    \"os\": [\n      \"SystemCapability.Account.AppAccount\",\n" \
     "      \"SystemCapability.Account.OsAccount\"\n    ]\n  },\n" \
