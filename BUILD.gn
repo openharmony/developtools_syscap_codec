@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/lite/config/component/lite_component.gni")
 import("//build/ohos.gni")
 
 config("pubilc") {
@@ -19,6 +20,7 @@ config("pubilc") {
 
 sources_platform_common = [
   "./src/syscap_tool.c",
+  "./src/create_pcid.c",
   "./src/endian_internal.c",
 ]
 
@@ -92,6 +94,51 @@ ohos_shared_library("syscap_tool_shared") {
   part_name = "syscap_codec"
 }
 
+ohos_shared_library("syscap_interface_shared") {
+  include_dirs = [ "./interfaces/inner_api/" ]
+  sources = [ "./interfaces/inner_api/syscap_interface.c" ]
+
+  deps = [ "//third_party/bounds_checking_function:libsec_static" ]
+
+  if (defined(ohos_lite)) {
+    deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
+  } else {
+    deps += [ "//third_party/cJSON:cjson_static" ]
+  }
+
+  subsystem_name = "developtools"
+  part_name = "syscap_codec"
+}
+
+group("syscap_tool_bin_linux") {
+  deps = [ ":syscap_tool_bin(//build/toolchain/linux:clang_x64)" ]
+}
+
+build_ext_component("generate_pcid") {
+  outputs = [ "$root_out_dir/PCID.sc" ]
+  deps = [ ":syscap_tool_bin_linux" ]
+  exec_path = rebase_path(root_out_dir)
+  preload_path = rebase_path(preloader_output_dir)
+  cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_tool"
+  command = "chmod 777 $cmd"
+  command += " && $cmd -N -e -i ${preload_path}/${product_name}/system/etc/SystemCapability.json"
+  command += " && mv $exec_path/${product_name}.sc $exec_path/PCID.sc"
+}
+
+ohos_prebuilt_etc("PCID.sc") {
+  deps = [ ":generate_pcid" ]
+  source = "$root_out_dir/PCID.sc"
+  part_name = "syscap_codec"
+}
+
+group("pcid_sc") {
+  deps = [ ":PCID.sc" ]
+}
+
 group("syscap_codec") {
-  deps = [ ":syscap_tool_shared" ]
+  deps = [
+    ":pcid_sc",
+    ":syscap_interface_shared",
+    ":syscap_tool_shared",
+  ]
 }
