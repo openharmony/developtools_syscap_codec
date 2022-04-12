@@ -92,6 +92,25 @@ ohos_shared_library("syscap_tool_shared") {
   part_name = "syscap_codec"
 }
 
+ohos_shared_library("syscap_interface_shared") {
+  include_dirs = [ "./interfaces/inner_api/include" ]
+  sources = [ "./interfaces/inner_api/syscap_interface.c" ]
+
+  deps = [ "//third_party/bounds_checking_function:libsec_static" ]
+
+  if (defined(ohos_lite)) {
+    deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
+  } else {
+    deps += [ "//third_party/cJSON:cjson_static" ]
+  }
+
+  subsystem_name = "developtools"
+  part_name = "syscap_codec"
+}
+
 group("syscap_codec") {
-  deps = [ ":syscap_tool_shared" ]
+  deps = [
+    ":syscap_interface_shared",
+    ":syscap_tool_shared",
+  ]
 }
