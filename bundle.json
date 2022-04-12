@@ -23,7 +23,9 @@
       ]
     },
     "build": {
-      "sub_component": [ "//developtools/syscap_codec:syscap_codec" ],
+      "sub_component": [
+        "//developtools/syscap_codec:syscap_codec"
+      ],
       "inner_kits": [],
       "test": []
     }
