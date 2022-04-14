@@ -34,10 +34,10 @@ typedef struct ProductCompatibilityIDHead {
 } PCIDHead; // to do
 
 
-bool EncodeOsSyscap(int output[32]);
-bool DecodeOsSyscap(int input[32], char **output, int *outputCnt, int** outputLen);
-bool EncodePrivateSyscap(char *output, int *outputLen);
-bool DecodePrivateSyscap(char *input, int inputLen, char *output, int *outputCnt, int **outputLen);
+bool EncodeOsSyscap(int (*output)[32]);
+bool DecodeOsSyscap(int input[32], char ***output, int *outputCnt);
+bool EncodePrivateSyscap(char **output, int *outputLen);
+bool DecodePrivateSyscap(char *input, char ***output, int *outputCnt);
 
 #ifdef __cplusplus
 #if __cplusplus

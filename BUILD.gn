@@ -96,6 +96,7 @@ ohos_shared_library("syscap_tool_shared") {
 
 ohos_shared_library("syscap_interface_shared") {
   include_dirs = [ "./interfaces/inner_api/" ]
+  public_configs = [ ":pubilc" ]
   sources = [ "./interfaces/inner_api/syscap_interface.c" ]
 
   deps = [ "//third_party/bounds_checking_function:libsec_static" ]
