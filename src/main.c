@@ -28,7 +28,6 @@ int main(int argc, char **argv)
     char curpath[PATH_MAX] = {0};
     int32_t rpcid = 0;
     int32_t pcid = 0;
-    int32_t newpcid = 0;
     int32_t encode = 0;
     int32_t decode = 0;
     int32_t help = 0;
@@ -40,7 +39,6 @@ int main(int argc, char **argv)
             {"help",    no_argument,       0,  'h' },
             {"RPCID",   no_argument,       0,  'R' },
             {"PCID",    no_argument,       0,  'P' },
-            {"newPCID", no_argument,       0,  'N' },
             {"encode",  no_argument,       0,  'e' },
             {"decode",  no_argument,       0,  'd' },
             {"input",   required_argument, 0,  'i' },
@@ -48,7 +46,7 @@ int main(int argc, char **argv)
             {0,         0,                 0,  0 }
         };
 
-        int32_t flag = getopt_long(argc, argv, "hRPNedi:o:", long_options, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hRPedi:o:", long_options, &optIndex);
         if (flag == -1) {
             break;
         }
@@ -64,9 +62,6 @@ int main(int argc, char **argv)
                 break;
             case 'P':
                 pcid = 1;
-                break;
-            case 'N':
-                newpcid = 1;
                 break;
             case 'i':
                 inputfile = optarg;
@@ -85,11 +80,9 @@ int main(int argc, char **argv)
     } else if (rpcid && !pcid && !encode && decode && inputfile && !help) {
         ret = RPCIDDecode(inputfile, outputpath);
     } else if (!rpcid && pcid && encode && !decode && inputfile && !help) {
-        ret = PCIDEncode(inputfile, outputpath);
-    } else if (!rpcid && pcid && !encode && decode && inputfile && !help) {
-        ret = PCIDDecode(inputfile, outputpath);
-    } else if (!rpcid && !pcid && newpcid && encode && !decode && inputfile && !help) {
         ret = CreatePCID(inputfile, outputpath);
+    } else if (!rpcid && pcid && !encode && decode && inputfile && !help) {
+        ret = DecodePCID(inputfile, outputpath);
     } else {
         printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
         printf("-h, --help : how to use\n");
