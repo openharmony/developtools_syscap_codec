@@ -120,10 +120,16 @@ build_ext_component("generate_pcid") {
   deps = [ ":syscap_tool_bin_linux" ]
   exec_path = rebase_path(root_out_dir)
   preload_path = rebase_path(preloader_output_dir)
-  cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_tool"
+  if (defined(ohos_lite)) {
+    cmd = "${exec_path}/clang_x64/syscap_tool"
+  } else {
+    cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_tool"
+  }
   command = "chmod 777 $cmd"
-  command += " && $cmd -N -e -i ${preload_path}/${product_name}/system/etc/SystemCapability.json"
-  command += " && mv $exec_path/${product_name}.sc $exec_path/PCID.sc"
+  command += " && $cmd -P -e -i ${preload_path}/${product_name}/system/etc/SystemCapability.json"
+  if (defined(ohos_lite)) {
+    command += " && mkdir -p $exec_path/system/etc && cp $exec_path/PCID.sc $exec_path/system/etc/PCID.sc"
+  }
 }
 
 ohos_prebuilt_etc("PCID.sc") {

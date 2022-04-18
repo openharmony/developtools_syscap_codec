@@ -163,5 +163,6 @@ typedef struct ProductCompatibilityID {
 } PCIDMain;
 
 int32_t CreatePCID(char *inputFile, char *outDirPath);
+int32_t DecodePCID(char *inputFile, char *outDirPath);
 
 #endif
