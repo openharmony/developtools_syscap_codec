@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <wait.h>
 #include "syscap_tool.h"
+#include "create_pcid.h"
 
 char *g_testFilePcid = "{\n  \"api_version\": 0,\n  \"manufacturer_id\": 0,\n  \"product\": \"rk3568\",\n" \
     "  \"syscap\": {\n    \"os\": [\n      \"SystemCapability.Account.AppAccount\",\n" \
@@ -61,6 +62,7 @@ int main(int argc, char **argv)
     (void)unlink(pcidFileName);
     (void)unlink(rpcidFileName);
     (void)unlink("./rk3568.sc");
+    (void)unlink("./newPCID.sc");
     (void)unlink("./rpcid.sc");
     (void)unlink("./rk3568.json");
 
@@ -110,6 +112,22 @@ int main(int argc, char **argv)
         }
         passCnt++;
         printf("pass\n");
+        printf("5.test pcid.json encode to new PCID.sc\n");
+        ret = CreatePCID("./newPCID.sc", "./");
+        if (ret != 0) {
+            printf("  error: new pcid.sc encode failed\n");
+            exit(passCnt);
+        }
+        passCnt++;
+        printf("pass\n");
+        printf("6.test new pcid.sc decode to pcid.json\n");
+        ret = PCIDDecode("./newPCID.sc", "./");
+        if (ret != 0) {
+            printf("  error: new pcid.sc decode failed\n");
+            exit(passCnt);
+        }
+        passCnt++;
+        printf("pass\n");
         exit(passCnt);
     }
     (void)wait(&status);
@@ -117,6 +135,7 @@ int main(int argc, char **argv)
     (void)unlink(pcidFileName);
     (void)unlink(rpcidFileName);
     (void)unlink("./rk3568.sc");
+    (void)unlink("./newPCID.sc");
     (void)unlink("./rpcid.sc");
     (void)unlink("./rk3568.json");
 
