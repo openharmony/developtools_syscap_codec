@@ -27,7 +27,7 @@
         "//developtools/syscap_codec:syscap_codec"
       ],
       "inner_kits": [],
-      "test": []
+      "test": [ "//developtools/syscap_codec/test/unittest/common:unittest" ]
     }
   }
 }
