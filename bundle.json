@@ -24,8 +24,7 @@
     },
     "build": {
       "sub_component": [
-        "//developtools/syscap_codec:syscap_codec",
-        "//developtools/syscap_codec/napi:systemcapability"
+        "//developtools/syscap_codec:syscap_codec"
       ],
       "inner_kits": [],
       "test": [ "//developtools/syscap_codec/test/unittest/common:unittest" ]
