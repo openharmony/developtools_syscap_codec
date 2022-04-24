@@ -64,7 +64,7 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
         goto FREE_PRIOUTPUT;
     }
 
-    osCapU32 = (uint32_t *)(osOutput + 2);  // 2, header of pcid.sc
+    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 2);  // 2, header of pcid.sc
     for (i = 0; i < OS_SYSCAP_U32_NUM; i++) {
         retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
         if (retError == -1) {
