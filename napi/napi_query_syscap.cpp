@@ -24,9 +24,9 @@
 
 namespace OHOS {
 EXTERN_C_START
-#define OS_SYSCAP_U32_NUM 30
-#define U32_TO_STR_MAX_LEN 11
-#define SYSCAP_STR_MAX_LEN 128
+const int OS_SYSCAP_U32_NUM = 30;
+const int U32_TO_STR_MAX_LEN = 11;
+const int SYSCAP_STR_MAX_LEN = 128;
 
 #define PRINT_ERR(...) \
     do { \
