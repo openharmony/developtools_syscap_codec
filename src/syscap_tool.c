@@ -230,7 +230,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
                           (!strcmp(systemType, "small") ? 0b010 :
                           (!strcmp(systemType, "standard") ? 0b100 : 0));
     if (headPtr->systemType == 0) {
-        PRINT_ERR("\"system_type\" is invaild, systemType = \"%s\"\n", systemType);
+        PRINT_ERR("\"system_type\" is invalid, systemType = \"%s\"\n", systemType);
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -254,20 +254,20 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
         arrayItemPtr = cJSON_GetArrayItem(osCapPtr, i);
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
-            PRINT_ERR("context of \"os\" array is invaild\n");
+            PRINT_ERR("context of \"os\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
         ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
         if (ret != 0) {
-            PRINT_ERR("context of \"os\" array is invaild\n");
+            PRINT_ERR("context of \"os\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
 
         ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
         if (ret != 0) {
-            PRINT_ERR("context of \"os\" array is invaild\n");
+            PRINT_ERR("context of \"os\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
@@ -284,20 +284,20 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
             arrayItemPtr = cJSON_GetArrayItem(privateCapPtr, i);
             char *pointPos = strchr(arrayItemPtr->valuestring, '.');
             if (pointPos == NULL) {
-                PRINT_ERR("context of \"private\" array is invaild\n");
+                PRINT_ERR("context of \"private\" array is invalid\n");
                 ret = -1;
                 goto FREE_CONVERT_OUT;
             }
             ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
             if (ret != 0) {
-                PRINT_ERR("context of \"private\" array is invaild\n");
+                PRINT_ERR("context of \"private\" array is invalid\n");
                 ret = -1;
                 goto FREE_CONVERT_OUT;
             }
 
             ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
             if (ret != 0) {
-                PRINT_ERR("context of \"private\" array is invaild\n");
+                PRINT_ERR("context of \"private\" array is invalid\n");
                 ret = -1;
                 goto FREE_CONVERT_OUT;
             }
@@ -380,13 +380,13 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
     // 2, to save osSysCaptype & osSysCapLength
     osCapArrayPtr = contextBuffer + sizeof(PCIDHead) + 2 * sizeof(uint16_t);
     if (contextBufferTail <= osCapArrayPtr) {
-        PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
     headPtr = (PCIDHead *)contextBuffer;
     if (headPtr->apiVersionType != 0) {
-        PRINT_ERR("prase file failed, apiVersionType is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, apiVersionType is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -395,14 +395,14 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
                        (headPtr->systemType == 0b010 ? "small" :
                        (headPtr->systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
-        PRINT_ERR("prase file failed, systemType is invaild, %d\n", headPtr->systemType);
+        PRINT_ERR("prase file failed, systemType is invalid, %d\n", headPtr->systemType);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
 
     sysCaptype = NtohsInter(*(uint16_t *)(osCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
     if (sysCaptype != 0) {
-        PRINT_ERR("prase file failed, sysCaptype is invaild, %d\n", sysCaptype);
+        PRINT_ERR("prase file failed, sysCaptype is invalid, %d\n", sysCaptype);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -427,7 +427,7 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
     }
     for (int32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
         if (*(osCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-            PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
             ret = -1;
             goto FREE_VECTOR_OUT;
         }
@@ -456,13 +456,13 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
     if (contextBufferTail >= privateCapArrayPtr) {
         sysCaptype = NtohsInter(*(uint16_t *)(privateCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
         if (sysCaptype != 1) {
-            PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
         sysCapLength = NtohsInter(*(uint16_t *)(privateCapArrayPtr - sizeof(uint16_t)));
         if (contextBufferTail < privateCapArrayPtr + sysCapLength) {
-            PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
@@ -476,7 +476,7 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
 
         for (int32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
             if (*(privateCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-                PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+                PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
                 ret = -1;
                 goto FREE_VECTOR_OUT;
             }
@@ -633,20 +633,20 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
         arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, i);
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
-            PRINT_ERR("context of \"syscap\" array is invaild\n");
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
         ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
         if (ret != 0) {
-            PRINT_ERR("context of \"syscap\" array is invaild\n");
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
 
         ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
         if (ret != 0) {
-            PRINT_ERR("context of \"syscap\" array is invaild\n");
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
@@ -689,27 +689,27 @@ int32_t RPCIDDecode(char *inputFile, char *outDirPath)
     // 2, to save osSysCaptype & osSysCapLength
     sysCapArrayPtr = contextBuffer + sizeof(RPCIDHead) + 2 * sizeof(uint16_t);
     if (contextBufferTail <= sysCapArrayPtr) {
-        PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
     headPtr = (RPCIDHead *)contextBuffer;
     if (headPtr->apiVersionType != 1) {
-        PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
 
     sysCaptype = NtohsInter(*(uint16_t *)(sysCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
     if (sysCaptype != 2) { // 2, app syscap type
-        PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
 
     sysCapLength = NtohsInter(*(uint16_t *)(sysCapArrayPtr - sizeof(uint16_t)));
     if (contextBufferTail < sysCapArrayPtr + sysCapLength) {
-        PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -722,7 +722,7 @@ int32_t RPCIDDecode(char *inputFile, char *outDirPath)
     }
     for (int32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
         if (*(sysCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-            PRINT_ERR("prase file failed, format is invaild, input file : %s\n", inputFile);
+            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
