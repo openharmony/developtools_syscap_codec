@@ -148,7 +148,7 @@ group("syscap_codec") {
     ":syscap_interface_shared",
     ":syscap_tool_shared",
   ]
-  if (support_jsapi) {
+  if (support_jsapi && is_standard_system) {
     deps += [ "napi:systemcapability" ]
   }
 }
