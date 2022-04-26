@@ -96,6 +96,7 @@ static const SyscapWithNum arraySyscap[] = {
     {"SystemCapability.HiviewDFX.Hiview.FaultLogger", HIVIEWDFX_HIVIEW_FAULTLOGGER},
     {"SystemCapability.I18N", I18N},
     {"SystemCapability.Global.I18n", GLOBAL_I18N},
+    {"SystemCapability.Kernel.Linux", KERNEL_LINUX},
     {"SystemCapability.Kernel.liteos-a", KERNEL_LITEOS_A},
     {"SystemCapability.Location.Location", LOCATION_LOCATION},
     {"SystemCapability.MiscServices.download", MISCSERVICES_DOWNLOAD},
