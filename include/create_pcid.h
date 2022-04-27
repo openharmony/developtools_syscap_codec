@@ -17,7 +17,6 @@
 #define _CREATE_PCID_H
 
 #include <stdint.h>
-#include "syscap_define.h"
 
 #define MAX_OS_SYSCAP_NUM 960
 

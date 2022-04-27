@@ -27,6 +27,7 @@
 #include "securec.h"
 #include "cJSON.h"
 #include "endian_internal.h"
+#include "syscap_define.h"
 #include "create_pcid.h"
 
 #define SINGLE_FEAT_LENGTH  (32 * 8)

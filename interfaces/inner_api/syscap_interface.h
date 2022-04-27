@@ -18,7 +18,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "syscap_define.h"
 
 #ifdef __cplusplus
 #if __cplusplus
