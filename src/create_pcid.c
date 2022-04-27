@@ -100,6 +100,7 @@ static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.HiviewDFX.Hiview.FaultLogger", HIVIEWDFX_HIVIEW_FAULTLOGGER},
     {"SystemCapability.I18N", I18N},
     {"SystemCapability.Global.I18n", GLOBAL_I18N},
+    {"SystemCapability.Kernel.Linux", KERNEL_LINUX},
     {"SystemCapability.Kernel.liteos-a", KERNEL_LITEOS_A},
     {"SystemCapability.Location.Location", LOCATION_LOCATION},
     {"SystemCapability.MiscServices.download", MISCSERVICES_DOWNLOAD},
@@ -357,6 +358,11 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     for (i = 0; i < osCapSize; i++) {
         jsonArrayItem = cJSON_GetArrayItem(jsonOsSyscapObj, i);
         osCapIndex = cJSON_GetObjectItem(allOsSyscapObj, jsonArrayItem->valuestring);
+        if (osCapIndex == NULL) {
+            PRINT_ERR("can't find the syscap: %s, please checkout.\n", jsonArrayItem->valuestring);
+            ret = -1;
+            goto FREE_CONVERT_OUT;
+        }
         sectorOfBits = (osCapIndex->valueint) / BITS_OF_ONE_BYTE;
         posOfBits = (osCapIndex->valueint) % BITS_OF_ONE_BYTE;
         if (sectorOfBits >= BYTES_OF_OS_SYSCAP) {
