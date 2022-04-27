@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <securec.h>
 #include "create_pcid.h"
+#include "syscap_define.h"
 #include "syscap_interface.h"
 
 #define PCID_OUT_BUFFER 32
