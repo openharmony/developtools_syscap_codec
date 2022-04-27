@@ -18,21 +18,13 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "syscap_define.h"
 
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 #endif /* __cplusplus */
-
-typedef struct ProductCompatibilityIDHead {
-    uint16_t apiVersion : 15;
-    uint16_t apiVersionType : 1;
-    uint16_t systemType : 3;
-    uint16_t reserved : 13;
-    uint32_t manufacturerID;
-} PCIDHead; // to do
-
 
 bool EncodeOsSyscap(int **output);
 bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt);
