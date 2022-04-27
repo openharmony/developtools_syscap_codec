@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _PCID_H_
-#define _PCID_H_
+#ifndef _SYSCAP_DEFINE_H
+#define _SYSCAP_DEFINE_H
 
 typedef struct SystemCapabilityWithNum {
     char syscapStr[128];
@@ -285,4 +285,4 @@ static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM}
 };
 
-#endif  // _PCID_H_
+#endif  // _SYSCAP_DEFINE_H
