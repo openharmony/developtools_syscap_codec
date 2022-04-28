@@ -32,7 +32,7 @@ sources_platform_common = [
 ohos_shared_library("systemcapability") {
   include_dirs = [
     "//third_party/node/src",
-    "//foundation/ace/napi/interfaces/kits",
+    "//foundation/arkui/napi/interfaces/kits",
     "//developtools/syscap_codec/napi",
     "//developtools/syscap_codec/interfaces/inner_api",
     "//developtools/syscap_codec/include",
