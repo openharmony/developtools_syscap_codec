@@ -26,15 +26,7 @@
       "sub_component": [
         "//developtools/syscap_codec:syscap_codec"
       ],
-      "inner_kits": [
-        {
-          "header": {
-            "header_base": "//developtools/syscap_codec/interfaces/inner_api",
-            "header_files": [ "syscap_interface.h" ]
-          },
-          "name": "//developtools/syscap_codec:syscap_interface_shared"
-        }
-      ],
+      "inner_kits": [],
       "test": [ "//developtools/syscap_codec/test/unittest/common:unittest" ]
     }
   }
