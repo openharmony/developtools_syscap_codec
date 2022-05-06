@@ -61,7 +61,7 @@ static char* getSystemCapability()
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
     int i = 0;
-    int *osOutput = nullptr;
+    char *osOutput = nullptr;
     errno_t err = EOK;
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
@@ -81,7 +81,7 @@ static char* getSystemCapability()
         goto FREE_PRIOUTPUT;
     }
 
-    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 2);  // 2, header of pcid.sc
+    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 8);  // 8, header of pcid.sc
     for (i = 0; i < OS_SYSCAP_U32_NUM; i++) {
         retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
         if (retError == -1) {

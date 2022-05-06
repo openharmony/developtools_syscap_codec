@@ -25,8 +25,8 @@ extern "C" {
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-bool EncodeOsSyscap(int **output);
-bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt);
+bool EncodeOsSyscap(char **output);
+bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt);
 bool EncodePrivateSyscap(char **output, int *outputLen);
 bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt);
 
