@@ -34,9 +34,9 @@ void SyscapCodecTest::TearDown() {}
  */
 HWTEST_F(SyscapCodecTest, EncodeOsSyscap, TestSize.Level1)
 {
-    int *intOsInput = NULL;
-    EXPECT_TRUE(EncodeOsSyscap(&intOsInput));
-    free(intOsInput);
+    char *OsInput = NULL;
+    EXPECT_TRUE(EncodeOsSyscap(&OsInput));
+    free(OsInput);
 }
 
 /*

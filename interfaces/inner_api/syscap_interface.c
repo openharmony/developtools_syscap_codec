@@ -21,7 +21,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <securec.h>
-#include "create_pcid.h"
 #include "syscap_define.h"
 #include "syscap_interface.h"
 
@@ -85,12 +84,12 @@ static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     return 0;
 }
 
-bool EncodeOsSyscap(int **output)
+bool EncodeOsSyscap(char **output)
 {
     int32_t ret;
     int32_t res;
     char *contextBuffer = NULL;
-    int *outputArray = NULL;
+    char *outputArray = NULL;
     uint32_t bufferLen;
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
@@ -99,7 +98,7 @@ bool EncodeOsSyscap(int **output)
         return false;
     }
 
-    outputArray = (int *)malloc(PCID_MAIN_LEN);
+    outputArray = (char *)malloc(PCID_MAIN_LEN);
     if (outputArray == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d\n", PCID_MAIN_LEN);
         return false;
@@ -152,13 +151,13 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     return true;
 }
 
-bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
+bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
 {
     errno_t nRet = 0;
     uint16_t indexOfSyscap[OS_SYSCAP_BYTES * OS_SYSCAP_BYTES] = {0};
     int countOfSyscap = 0, i, j;
 
-    uint8_t *osSyscap = (uint8_t *)(input + 2); // 2, int[2] of pcid header
+    uint8_t *osSyscap = (uint8_t *)(input + 8); // 8, int[2] of pcid header
 
     for (i = 0; i < OS_SYSCAP_BYTES; i++) {
         for (j = 0; j < BITS_OF_BYTE; j++) {
