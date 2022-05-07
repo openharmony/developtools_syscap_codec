@@ -111,28 +111,31 @@ bool EncodeOsSyscap(char output[128])
 bool EncodePrivateSyscap(char **output, int *outputLen)
 {
     int32_t ret;
-    int32_t res;
     char *contextBuffer = NULL;
     char *outputStr = NULL;
     uint32_t bufferLen;
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : rk3568.sc\n");
+        PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
     
-    *outputLen = bufferLen - MAX_SYSCAP_STR_LEN - 1;
+    *outputLen = bufferLen - PCID_MAIN_LEN - 1;
     outputStr = (char *)malloc(*outputLen);
     if (outputStr == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", *outputLen, errno);
+        *outputLen = 0;
         return false;
     }
     (void)memset_s(outputStr, *outputLen, 0, *outputLen);
-    res = strncpy_s(outputStr, *outputLen + 1, contextBuffer + MAX_SYSCAP_STR_LEN, *outputLen);
-    if (res != 0) {
+
+    ret = strncpy_s(outputStr, *outputLen, contextBuffer + PCID_MAIN_LEN, *outputLen);
+    if (ret != 0) {
         PRINT_ERR("strcpy_s failed.");
         FreeContextBuffer(contextBuffer);
+        free(outputStr);
+        *outputLen = 0;
         return false;
     }
 
