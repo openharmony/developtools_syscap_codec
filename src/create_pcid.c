@@ -209,7 +209,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
         allPriSyscapStrLen++;  // for separator ','
     }
     if ((allPriSyscapStrLen + 1) > PRIVATE_SYSCAP_SIZE) {
-        PRINT_ERR("context of \"pri\" array is too many\n");
+        PRINT_ERR("context of \"pri\" array is too many.\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
