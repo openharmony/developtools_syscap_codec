@@ -147,8 +147,9 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
 bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
 {
     errno_t nRet = 0;
-    uint16_t indexOfSyscap[OS_SYSCAP_BYTES * OS_SYSCAP_BYTES] = {0};
-    int countOfSyscap = 0, i, j;
+    uint16_t indexOfSyscap[BITS_OF_BYTE * OS_SYSCAP_BYTES] = {0};
+    uint16_t countOfSyscap = 0;
+    uint16_t i, j;
 
     uint8_t *osSyscap = (uint8_t *)(input + 8); // 8, int[2] of pcid header
 
@@ -170,7 +171,7 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
     }
     (void)memset_s(strSyscap, countOfSyscap * MAX_SYSCAP_STR_LEN, \
                    0, countOfSyscap * MAX_SYSCAP_STR_LEN);
-    char **strSyscapBak = (char **)strSyscap;
+    *output = strSyscap;
 
     for (i = 0; i < countOfSyscap; i++) {
         for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
@@ -180,6 +181,7 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
                     printf("strcpy_s failed. error = %d\n", nRet);
                     *outputCnt = 0;
                     free(strSyscap);
+                    strSyscap = NULL;
                     return false;
                 }
                 strSyscap++;
@@ -188,7 +190,6 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
         }
     }
 
-    *output = (char (*)[MAX_SYSCAP_STR_LEN])strSyscapBak;
     return true;
 }
 
