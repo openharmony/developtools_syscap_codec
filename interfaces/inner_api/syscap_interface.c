@@ -192,48 +192,50 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
 bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
 {
     char (*outputArray)[MAX_SYSCAP_STR_LEN] = NULL;
-    char *inputStr = input;
+    char *inputPos = input;
     uint16_t bufferLen;
-    int syscapCnt = 0, ret;
+    int ret;
+    int syscapCnt = 0;
 
-    while (*inputStr != '\0') {
-        if (*inputStr == ',') {
+    while (*inputPos != '\0') {
+        if (*inputPos == ',') {
             syscapCnt++;
         }
-        inputStr++;
+        inputPos++;
     }
-    inputStr = input;
+    inputPos = input;
 
     bufferLen = MAX_SYSCAP_STR_LEN * syscapCnt;
     outputArray = (char (*)[MAX_SYSCAP_STR_LEN])malloc(bufferLen);
     if (outputArray == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", bufferLen, errno);
-        syscapCnt = 0;
+        *outputCnt = 0;
         return false;
     }
     (void)memset_s(outputArray, bufferLen, 0, bufferLen);
-    char **outputArrayBak = (char **)outputArray;
-    char priSyscapStr[MAX_SYSCAP_STR_LEN - 17] = {0}; // 17. size of "SystemCapability."
-    char *tempPriSyscapStr = priSyscapStr;
-    while (*inputStr != '\0') {
-        if (*inputStr == ',') {
-            *tempPriSyscapStr = '\0';
-            ret = sprintf_s(*outputArray, MAX_SYSCAP_STR_LEN, "SystemCapability.%s", priSyscapStr);
+
+    *output = outputArray;
+    char buffer[MAX_SYSCAP_STR_LEN - 17] = {0}; // 17. size of "SystemCapability."
+    char *bufferPos = buffer;
+    while (*inputPos != '\0') {
+        if (*inputPos == ',') {
+            *bufferPos = '\0';
+            ret = sprintf_s(*outputArray, MAX_SYSCAP_STR_LEN, "SystemCapability.%s", buffer);
             if (ret == -1) {
                 PRINT_ERR("sprintf_s failed\n");
                 *outputCnt = 0;
                 free(outputArray);
+                outputArray = NULL;
                 return false;
             }
-            tempPriSyscapStr = priSyscapStr;
+            bufferPos = buffer;
             outputArray++;
-            inputStr++;
+            inputPos++;
             continue;
         }
-        *tempPriSyscapStr++ = *inputStr++;
+        *bufferPos++ = *inputPos++;
     }
 
     *outputCnt = syscapCnt;
-    *output = (char (*)[MAX_SYSCAP_STR_LEN])outputArrayBak;
     return true;
 }
