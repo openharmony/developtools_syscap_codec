@@ -26,9 +26,6 @@ extern "C" {
 #endif /* __cplusplus */
 
 namespace Syscap {
-int osSyscap[32] = {1, 3, 3};
-char priSyscap[] = "Device.syscap1GEDR,Device.syscap2WREGW,Vendor.syscap3RGD,Vendor.syscap4RWEG,Vendor.syscap5REWGWE,";
-
 class SyscapCodecTest : public testing::Test {
 public:
     static void SetUpTestCase(void);

@@ -84,12 +84,11 @@ static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     return 0;
 }
 
-bool EncodeOsSyscap(char **output)
+bool EncodeOsSyscap(char output[128])
 {
     int32_t ret;
     int32_t res;
     char *contextBuffer = NULL;
-    char *outputArray = NULL;
     uint32_t bufferLen;
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
@@ -98,23 +97,14 @@ bool EncodeOsSyscap(char **output)
         return false;
     }
 
-    outputArray = (char *)malloc(PCID_MAIN_LEN);
-    if (outputArray == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d\n", PCID_MAIN_LEN);
-        return false;
-    }
-    (void)memset_s(outputArray, PCID_MAIN_LEN, 0, PCID_MAIN_LEN);
-
-    res = memcpy_s(outputArray, PCID_MAIN_LEN, contextBuffer, PCID_MAIN_LEN);
+    res = memcpy_s(output, PCID_MAIN_LEN, contextBuffer, PCID_MAIN_LEN);
     if (res != 0) {
         PRINT_ERR("memcpy_s failed.");
         FreeContextBuffer(contextBuffer);
-        free(outputArray);
         return false;
     }
 
     FreeContextBuffer(contextBuffer);
-    *output = outputArray;
     return true;
 }
 
