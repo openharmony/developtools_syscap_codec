@@ -278,7 +278,7 @@ static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.Sensors.Medical_sensor", SENSORS_MEDICAL_SENSOR},
     {"SystemCapability.Sensors.MiscDevice", SENSORS_MISCDEVICE},
     {"SystemCapability.Sensors.Sensor", SENSORS_SENSOR},
-    {"SystemCapability.Sensors.Sensor_lite", SENSORS_SENSOR_LITE},
+    {"SystemCapability.Sensors.Sensor.Lite", SENSORS_SENSOR_LITE},
     {"SystemCapability.Telephony.CallManager", TELEPHONY_CALLMANAGER},
     {"SystemCapability.Telephony.CellularCall", TELEPHONY_CELLULARCALL},
     {"SystemCapability.Telephony.CellularData", TELEPHONY_CELLULARDATA},
