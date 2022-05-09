@@ -93,7 +93,7 @@ bool EncodeOsSyscap(char output[128])
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : rk3568.sc\n");
+        PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
 
@@ -163,7 +163,7 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
 
     *outputCnt = countOfSyscap;
     char (*strSyscap)[MAX_SYSCAP_STR_LEN] = NULL;
-    strSyscap= (char (*)[MAX_SYSCAP_STR_LEN])malloc(countOfSyscap * MAX_SYSCAP_STR_LEN);
+    strSyscap = (char (*)[MAX_SYSCAP_STR_LEN])malloc(countOfSyscap * MAX_SYSCAP_STR_LEN);
     if (strSyscap == NULL) {
         PRINT_ERR("malloc failed.");
         *outputCnt = 0;
