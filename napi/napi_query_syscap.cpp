@@ -73,7 +73,7 @@ static char* getSystemCapability()
     retBool = EncodeOsSyscap(osOutput);
     if (!retBool) {
         PRINT_ERR("get encoded os syscap failed.");
-        goto FREE_OSOUTPUT;
+        return nullptr;
     }
     retBool = EncodePrivateSyscap(&priOutput, &priOutputLen);
     if (!retBool) {
@@ -146,9 +146,6 @@ FREE_PRICAP_ARRAY:
     free(priCapArray);
 FREE_PRIOUTPUT:
     free(priOutput);
-FREE_OSOUTPUT:
-    free(osOutput);
-    temp = nullptr;
 
     return allSyscapBUffer;
 }
