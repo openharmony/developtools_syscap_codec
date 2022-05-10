@@ -61,7 +61,7 @@ static char* getSystemCapability()
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
     int i = 0;
-    int *osOutput = nullptr;
+    char osOutput[128] = {};
     errno_t err = EOK;
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
@@ -70,10 +70,10 @@ static char* getSystemCapability()
     char osCapArray[OS_SYSCAP_U32_NUM][U32_TO_STR_MAX_LEN] = {};
     char (*priCapArray)[SYSCAP_STR_MAX_LEN] = nullptr;
 
-    retBool = EncodeOsSyscap(&osOutput);
+    retBool = EncodeOsSyscap(osOutput);
     if (!retBool) {
         PRINT_ERR("get encoded os syscap failed.");
-        goto FREE_OSOUTPUT;
+        return nullptr;
     }
     retBool = EncodePrivateSyscap(&priOutput, &priOutputLen);
     if (!retBool) {
@@ -81,7 +81,7 @@ static char* getSystemCapability()
         goto FREE_PRIOUTPUT;
     }
 
-    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 2);  // 2, header of pcid.sc
+    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 8);  // 8, header of pcid.sc
     for (i = 0; i < OS_SYSCAP_U32_NUM; i++) {
         retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
         if (retError == -1) {
@@ -146,9 +146,6 @@ FREE_PRICAP_ARRAY:
     free(priCapArray);
 FREE_PRIOUTPUT:
     free(priOutput);
-FREE_OSOUTPUT:
-    free(osOutput);
-    temp = nullptr;
 
     return allSyscapBUffer;
 }
