@@ -21,7 +21,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <securec.h>
-#include "create_pcid.h"
 #include "syscap_define.h"
 #include "syscap_interface.h"
 
@@ -85,65 +84,58 @@ static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     return 0;
 }
 
-bool EncodeOsSyscap(int **output)
+bool EncodeOsSyscap(char output[128])
 {
     int32_t ret;
     int32_t res;
     char *contextBuffer = NULL;
-    int *outputArray = NULL;
     uint32_t bufferLen;
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : rk3568.sc\n");
+        PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
 
-    outputArray = (int *)malloc(PCID_MAIN_LEN);
-    if (outputArray == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d\n", PCID_MAIN_LEN);
-        return false;
-    }
-    (void)memset_s(outputArray, PCID_MAIN_LEN, 0, PCID_MAIN_LEN);
-
-    res = memcpy_s(outputArray, PCID_MAIN_LEN, contextBuffer, PCID_MAIN_LEN);
+    res = memcpy_s(output, PCID_MAIN_LEN, contextBuffer, PCID_MAIN_LEN);
     if (res != 0) {
         PRINT_ERR("memcpy_s failed.");
         FreeContextBuffer(contextBuffer);
-        free(outputArray);
         return false;
     }
 
     FreeContextBuffer(contextBuffer);
-    *output = outputArray;
     return true;
 }
 
 bool EncodePrivateSyscap(char **output, int *outputLen)
 {
     int32_t ret;
-    int32_t res;
     char *contextBuffer = NULL;
     char *outputStr = NULL;
     uint32_t bufferLen;
 
     ret = GetFileContext(&contextBuffer, &bufferLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : rk3568.sc\n");
+        PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
     
-    *outputLen = bufferLen - MAX_SYSCAP_STR_LEN - 1;
+    *outputLen = bufferLen - PCID_MAIN_LEN - 1;
     outputStr = (char *)malloc(*outputLen);
     if (outputStr == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", *outputLen, errno);
+        *outputLen = 0;
         return false;
     }
     (void)memset_s(outputStr, *outputLen, 0, *outputLen);
-    res = strncpy_s(outputStr, *outputLen + 1, contextBuffer + MAX_SYSCAP_STR_LEN, *outputLen);
-    if (res != 0) {
+
+    ret = strncpy_s(outputStr, *outputLen, contextBuffer + PCID_MAIN_LEN, *outputLen);
+    if (ret != 0) {
         PRINT_ERR("strcpy_s failed.");
         FreeContextBuffer(contextBuffer);
+        free(outputStr);
+        *outputLen = 0;
         return false;
     }
 
@@ -152,13 +144,14 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     return true;
 }
 
-bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
+bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
 {
     errno_t nRet = 0;
-    uint16_t indexOfSyscap[OS_SYSCAP_BYTES * OS_SYSCAP_BYTES] = {0};
-    int countOfSyscap = 0, i, j;
+    uint16_t indexOfSyscap[BITS_OF_BYTE * OS_SYSCAP_BYTES] = {0};
+    uint16_t countOfSyscap = 0;
+    uint16_t i, j;
 
-    uint8_t *osSyscap = (uint8_t *)(input + 2); // 2, int[2] of pcid header
+    uint8_t *osSyscap = (uint8_t *)(input + 8); // 8, int[2] of pcid header
 
     for (i = 0; i < OS_SYSCAP_BYTES; i++) {
         for (j = 0; j < BITS_OF_BYTE; j++) {
@@ -170,7 +163,7 @@ bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
 
     *outputCnt = countOfSyscap;
     char (*strSyscap)[MAX_SYSCAP_STR_LEN] = NULL;
-    strSyscap= (char (*)[MAX_SYSCAP_STR_LEN])malloc(countOfSyscap * MAX_SYSCAP_STR_LEN);
+    strSyscap = (char (*)[MAX_SYSCAP_STR_LEN])malloc(countOfSyscap * MAX_SYSCAP_STR_LEN);
     if (strSyscap == NULL) {
         PRINT_ERR("malloc failed.");
         *outputCnt = 0;
@@ -178,7 +171,7 @@ bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
     }
     (void)memset_s(strSyscap, countOfSyscap * MAX_SYSCAP_STR_LEN, \
                    0, countOfSyscap * MAX_SYSCAP_STR_LEN);
-    char **strSyscapBak = (char **)strSyscap;
+    *output = strSyscap;
 
     for (i = 0; i < countOfSyscap; i++) {
         for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
@@ -188,6 +181,7 @@ bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
                     printf("strcpy_s failed. error = %d\n", nRet);
                     *outputCnt = 0;
                     free(strSyscap);
+                    strSyscap = NULL;
                     return false;
                 }
                 strSyscap++;
@@ -196,55 +190,56 @@ bool DecodeOsSyscap(int input[32], char (**output)[128], int *outputCnt)
         }
     }
 
-    *output = (char (*)[MAX_SYSCAP_STR_LEN])strSyscapBak;
     return true;
 }
 
 bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
 {
     char (*outputArray)[MAX_SYSCAP_STR_LEN] = NULL;
-    char *inputStr = input;
+    char *inputPos = input;
     uint16_t bufferLen;
-    int syscapCnt = 0, ret;
+    int ret;
+    int syscapCnt = 0;
 
-    while (*inputStr != '\0') {
-        if (*inputStr == ',') {
+    while (*inputPos != '\0') {
+        if (*inputPos == ',') {
             syscapCnt++;
         }
-        inputStr++;
+        inputPos++;
     }
-    inputStr = input;
+    inputPos = input;
 
     bufferLen = MAX_SYSCAP_STR_LEN * syscapCnt;
     outputArray = (char (*)[MAX_SYSCAP_STR_LEN])malloc(bufferLen);
     if (outputArray == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", bufferLen, errno);
-        syscapCnt = 0;
+        *outputCnt = 0;
         return false;
     }
     (void)memset_s(outputArray, bufferLen, 0, bufferLen);
-    char **outputArrayBak = (char **)outputArray;
-    char priSyscapStr[MAX_SYSCAP_STR_LEN - 17] = {0}; // 17. size of "SystemCapability."
-    char *tempPriSyscapStr = priSyscapStr;
-    while (*inputStr != '\0') {
-        if (*inputStr == ',') {
-            *tempPriSyscapStr = '\0';
-            ret = sprintf_s(*outputArray, MAX_SYSCAP_STR_LEN, "SystemCapability.%s", priSyscapStr);
+
+    *output = outputArray;
+    char buffer[MAX_SYSCAP_STR_LEN - 17] = {0}; // 17. size of "SystemCapability."
+    char *bufferPos = buffer;
+    while (*inputPos != '\0') {
+        if (*inputPos == ',') {
+            *bufferPos = '\0';
+            ret = sprintf_s(*outputArray, MAX_SYSCAP_STR_LEN, "SystemCapability.%s", buffer);
             if (ret == -1) {
                 PRINT_ERR("sprintf_s failed\n");
                 *outputCnt = 0;
                 free(outputArray);
+                outputArray = NULL;
                 return false;
             }
-            tempPriSyscapStr = priSyscapStr;
+            bufferPos = buffer;
             outputArray++;
-            inputStr++;
+            inputPos++;
             continue;
         }
-        *tempPriSyscapStr++ = *inputStr++;
+        *bufferPos++ = *inputPos++;
     }
 
     *outputCnt = syscapCnt;
-    *output = (char (*)[MAX_SYSCAP_STR_LEN])outputArrayBak;
     return true;
 }

@@ -34,9 +34,8 @@ void SyscapCodecTest::TearDown() {}
  */
 HWTEST_F(SyscapCodecTest, EncodeOsSyscap, TestSize.Level1)
 {
-    int *intOsInput = NULL;
-    EXPECT_TRUE(EncodeOsSyscap(&intOsInput));
-    free(intOsInput);
+    char OsInput[128] = {0};
+    EXPECT_TRUE(EncodeOsSyscap(OsInput));
 }
 
 /*
@@ -59,11 +58,12 @@ HWTEST_F(SyscapCodecTest, EncodePrivateSyscap, TestSize.Level1)
  */
 HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
 {
+    int osSyscap[32] = {1, 3, 3};
     char (*osOutput)[128] = NULL;
     int decodeOsCnt;
     char expectOsOutput001[] = "SystemCapability.Account.AppAccount";
     char expectOsOutput002[] = "SystemCapability.Account.OsAccount";
-    EXPECT_TRUE(DecodeOsSyscap(osSyscap, &osOutput, &decodeOsCnt));
+    EXPECT_TRUE(DecodeOsSyscap((char *)osSyscap, &osOutput, &decodeOsCnt));
     char (*tmpOsOutput)[128] = osOutput;
     EXPECT_STREQ(*tmpOsOutput, expectOsOutput001);
     EXPECT_STREQ(*(tmpOsOutput + 1), expectOsOutput002);
@@ -79,6 +79,7 @@ HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
 HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 {
     char (*priOutput)[128] = NULL;
+    char priSyscap[] = "Device.syscap1GEDR,Device.syscap2WREGW,Vendor.syscap3RGD,Vendor.syscap4RWEG,Vendor.syscap5REWGWE,";
     int decodePriCnt;
     char expectPriOutput001[] = "SystemCapability.Device.syscap1GEDR";
     char expectPriOutput002[] = "SystemCapability.Device.syscap2WREGW";
