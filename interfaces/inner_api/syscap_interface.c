@@ -36,8 +36,6 @@
         printf(__VA_ARGS__); \
     } while (0)
 
-static char *inputFile = "/system/etc/PCID.sc";
-
 static void FreeContextBuffer(char *contextBuffer)
 {
     (void)free(contextBuffer);
@@ -49,6 +47,7 @@ static int32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
+    const char *inputFile = "/system/etc/PCID.sc";
 
     ret = stat(inputFile, &statBuf);
     if (ret != 0) {
@@ -86,7 +85,7 @@ static int32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     return 0;
 }
 
-bool EncodeOsSyscap(char output[MAX_SYSCAP_STR_LEN], int length)
+bool EncodeOsSyscap(char output[MAX_SYSCAP_STR_LEN])
 {
     int32_t ret;
     int32_t res;
