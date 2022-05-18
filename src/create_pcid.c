@@ -47,9 +47,9 @@ static void FreeContextBuffer(char *contextBuffer)
     (void)free(contextBuffer);
 }
 
-static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *contextBufLen)
+static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *contextBufLen)
 {
-    uint32_t ret;
+    int32_t ret;
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
@@ -68,6 +68,7 @@ static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
         return -1;
     }
+
     fp = fopen(inputFile, "rb");
     if (fp == NULL) {
         PRINT_ERR("open file(%s) failed, errno = %d\n", inputFile, errno);
@@ -107,6 +108,10 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
         fileFullPath[pathLen] = '/';
     }
 
+    if (strlen(fileFullPath) + strlen(filename) + 1 > PATH_MAX) {
+        PRINT_ERR("length of path too long.\n");
+        return -1;
+    }
     ret = strncat_s(fileFullPath, PATH_MAX, filename, strlen(filename) + 1);
     if (ret != 0) {
         PRINT_ERR("strncat_s failed, (%s, %d, %s, %d), errno = %d\n",
@@ -120,8 +125,7 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
         return -1;
     }
 
-    ret = fwrite(convertedBuffer, contextBufLen, 1, fp);
-    if (ret != 1) {
+    if (fwrite(convertedBuffer, contextBufLen, 1, fp) != 1) {
         PRINT_ERR("can't write file(%s),errno = %d\n", fileFullPath, errno);
         (void)fclose(fp);
         return -1;
@@ -144,9 +148,8 @@ static cJSON *CreateWholeSyscapJsonObj(void)
 
 int32_t CreatePCID(char *inputFile, char *outDirPath)
 {
-    uint8_t sectorOfBits, posOfBits;
-    int32_t ret, i;
-    uint32_t contextBufLen, osCapSize, privateCapSize;
+    int32_t ret, osCapSize, sectorOfBits, posOfBits;
+    uint32_t i, contextBufLen, privateCapSize;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     char *systemType = NULL;
@@ -268,7 +271,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "system_type");
     if (jsonSyscapObj == NULL || !cJSON_IsString(jsonSyscapObj)) {
-        PRINT_ERR("get \"system_type\" failed, jsonSyscapObj = %p\n", jsonSyscapObj);
+        PRINT_ERR("get \"system_type\" failed\n");
         ret = -1;
         goto FREE_PCID_BUFFER_OUT;
     }
@@ -308,12 +311,12 @@ FREE_CONVERT_OUT:
 
 int32_t DecodePCID(char *inputFile, char *outDirPath)
 {
-    int32_t ret, i, j;
+    int32_t ret;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     uint8_t osSyscap[BYTES_OF_OS_SYSCAP] = {0};
-    uint16_t indexOfSyscap[960] = {0};
-    uint32_t contextBufLen, countOfSyscap = 0;
+    uint16_t indexOfSyscap[BYTES_OF_OS_SYSCAP * BITS_OF_ONE_BYTE] = {0};
+    uint32_t i, j, contextBufLen, countOfSyscap = 0;
 
     ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
     if (ret != 0) {
