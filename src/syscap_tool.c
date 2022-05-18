@@ -130,8 +130,8 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char
         return -1;
     }
 
-    ret = fwrite(convertedBuffer, bufferLen, 1, fp);
-    if (ret != 1) {
+    size_t retFwrite = fwrite(convertedBuffer, bufferLen, 1, fp);
+    if (retFwrite != 1) {
         PRINT_ERR("can`t write file(%s),errno = %d\n", fileFullPath, errno);
         (void)fclose(fp);
         return -1;
@@ -229,7 +229,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
 
     cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "system_type");
     if (cjsonObjectPtr == NULL || !cJSON_IsString(cjsonObjectPtr)) {
-        PRINT_ERR("get \"system_type\" failed, cjsonObjectPtr = %p\n", cjsonObjectPtr);
+        PRINT_ERR("get \"system_type\" failed.\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -482,7 +482,7 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
             goto FREE_SYSCAP_OUT;
         }
 
-        for (int32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
+        for (uint32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
             if (*(privateCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
                 PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
                 ret = -1;
@@ -617,6 +617,11 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     convertedBufLen += (2 * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LENGTH);
 
     convertedBuffer = (char *)malloc(convertedBufLen);
+    if (convertedBuffer == NULL) {
+        PRINT_ERR("malloc failed\n");
+        ret = -1;
+        goto FREE_CONTEXT_OUT;
+    }
     (void)memset_s(convertedBuffer, convertedBufLen, 0, convertedBufLen);
 
     headPtr = (RPCIDHead *)convertedBuffer;
