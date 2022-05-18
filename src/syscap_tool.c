@@ -54,9 +54,9 @@ static void FreeContextBuffer(char *contextBuffer)
     (void)free(contextBuffer);
 }
 
-static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
+static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
 {
-    uint32_t ret;
+    int32_t ret;
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
@@ -113,6 +113,10 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char
         fileFullPath[pathLen] = '/';
     }
 
+    if (strlen(filename) + 1 > PATH_MAX) {
+        PRINT_ERR("filename(%s) too long.\n", filename);
+        return -1;
+    }
     ret = strncat_s(fileFullPath, PATH_MAX, filename, strlen(filename) + 1);
     if (ret != 0) {
         PRINT_ERR("strncat_s failed, (%s, %d, %s, %d), errno = %d\n",
@@ -143,11 +147,10 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
     int32_t ret;
     char productName[NAME_MAX] = {0};
     char *contextBuffer = NULL;
-    uint32_t bufferLen;
+    uint32_t bufferLen, osCapSize, privateCapSize;
     char *convertedBuffer = NULL;
     uint32_t convertedBufLen = sizeof(PCIDHead);
     char *systemType = NULL;
-    int32_t osCapSize, privateCapSize;
     PCIDHead *headPtr = NULL;
     char *fillTmpPtr = NULL;
     cJSON *cjsonObjectRoot = NULL;
@@ -206,6 +209,11 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
     }
 
     convertedBuffer = (char *)malloc(convertedBufLen);
+    if (convertedBuffer == NULL) {
+        PRINT_ERR("malloc failed.\n");
+        ret = -1;
+        goto FREE_CONTEXT_OUT;
+    }
 
     (void)memset_s(convertedBuffer, convertedBufLen, 0, convertedBufLen);
 
@@ -250,7 +258,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
     // fill osCap Length
     *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(osCapSize * SINGLE_FEAT_LENGTH));
     fillTmpPtr += sizeof(uint16_t);
-    for (int32_t i = 0; i < osCapSize; i++) {
+    for (uint32_t i = 0; i < osCapSize; i++) {
         arrayItemPtr = cJSON_GetArrayItem(osCapPtr, i);
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
@@ -280,7 +288,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
         // fill privateCap Length
         *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(privateCapSize * SINGLE_FEAT_LENGTH));
         fillTmpPtr += sizeof(uint16_t);
-        for (int32_t i = 0; i < privateCapSize; i++) {
+        for (uint32_t i = 0; i < privateCapSize; i++) {
             arrayItemPtr = cJSON_GetArrayItem(privateCapPtr, i);
             char *pointPos = strchr(arrayItemPtr->valuestring, '.');
             if (pointPos == NULL) {
@@ -425,7 +433,7 @@ int32_t PCIDDecode(char *inputFile, char *outDirPath)
         ret = -1;
         goto FREE_SYSCAP_OUT;
     }
-    for (int32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
+    for (uint32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
         if (*(osCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
             PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
             ret = -1;
@@ -569,10 +577,9 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
 {
     int32_t ret;
     char *contextBuffer = NULL;
-    uint32_t bufferLen;
+    uint32_t bufferLen, sysCapSize;
     char *convertedBuffer = NULL;
     uint32_t convertedBufLen = sizeof(RPCIDHead);
-    int32_t sysCapSize;
     RPCIDHead *headPtr = NULL;
     char *fillTmpPtr = NULL;
     cJSON *cjsonObjectRoot = NULL;
@@ -595,7 +602,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
 
     sysCapPtr = cJSON_GetObjectItem(cjsonObjectRoot, "syscap");
     if (sysCapPtr == NULL || !cJSON_IsArray(sysCapPtr)) {
-        PRINT_ERR("get \"syscap\" object failed, sysCapPtr = %p\n", sysCapPtr);
+        PRINT_ERR("get \"syscap\" object failed.\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -629,7 +636,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     // fill osCap Length
     *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LENGTH));
     fillTmpPtr += sizeof(uint16_t);
-    for (int32_t i = 0; i < sysCapSize; i++) {
+    for (uint32_t i = 0; i < sysCapSize; i++) {
         arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, i);
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
@@ -668,7 +675,7 @@ FREE_CONTEXT_OUT:
 
 int32_t RPCIDDecode(char *inputFile, char *outDirPath)
 {
-    uint32_t ret;
+    int32_t ret;
     char *contextBuffer = NULL;
     char *contextBufferTail = NULL;
     uint32_t bufferLen;
