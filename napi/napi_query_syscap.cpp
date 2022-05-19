@@ -70,7 +70,7 @@ static char* getSystemCapability()
     char osCapArray[OS_SYSCAP_U32_NUM][U32_TO_STR_MAX_LEN] = {};
     char (*priCapArray)[SYSCAP_STR_MAX_LEN] = nullptr;
 
-    retBool = EncodeOsSyscap(osOutput, SYSCAP_STR_MAX_LEN);
+    retBool = EncodeOsSyscap(osOutput);
     if (!retBool) {
         PRINT_ERR("get encoded os syscap failed.");
         return nullptr;
