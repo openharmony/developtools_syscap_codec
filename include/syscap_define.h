@@ -280,7 +280,7 @@ static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.Security.DeviceAuth", SECURITY_DEVICEAUTH},
     {"SystemCapability.Security.DeviceSecurityLevel", SECURITY_DEVICESECURITYLEVEL},
     {"SystemCapability.Security.Huks", SECURITY_HUKS},
-    {"SystemCapability.Sensors.Medical_sensor", SENSORS_MEDICAL_SENSOR},
+    {"SystemCapability.Sensors.Medical.Sensor", SENSORS_MEDICAL_SENSOR},
     {"SystemCapability.Sensors.MiscDevice", SENSORS_MISCDEVICE},
     {"SystemCapability.Sensors.Sensor", SENSORS_SENSOR},
     {"SystemCapability.Sensors.Sensor.Lite", SENSORS_SENSOR_LITE},

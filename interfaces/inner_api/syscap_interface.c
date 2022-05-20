@@ -25,10 +25,10 @@
 #include "syscap_interface.h"
 
 #define PCID_OUT_BUFFER 32
-#define MAX_SYSCAP_STR_LEN 128
 #define OS_SYSCAP_BYTES 120
 #define BITS_OF_BYTE 8
 #define PCID_MAIN_LEN 128
+#define PATH_MAX 4096
 
 #define PRINT_ERR(...) \
     do { \
@@ -36,19 +36,19 @@
         printf(__VA_ARGS__); \
     } while (0)
 
-static char *inputFile = "/system/etc/PCID.sc";
-
 static void FreeContextBuffer(char *contextBuffer)
 {
     (void)free(contextBuffer);
 }
 
-static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
+static int32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
 {
-    uint32_t ret;
+    int32_t ret;
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
+    const char *inputFile = "/system/etc/PCID.sc";
+
     ret = stat(inputFile, &statBuf);
     if (ret != 0) {
         PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", inputFile, errno);
@@ -63,6 +63,7 @@ static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
         return -1;
     }
+
     fp = fopen(inputFile, "rb");
     if (fp == NULL) {
         PRINT_ERR("open file(%s) failed, errno = %d\n", inputFile, errno);
@@ -84,7 +85,7 @@ static uint32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
     return 0;
 }
 
-bool EncodeOsSyscap(char output[128])
+bool EncodeOsSyscap(char output[MAX_SYSCAP_STR_LEN])
 {
     int32_t ret;
     int32_t res;
@@ -130,7 +131,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     }
     (void)memset_s(outputStr, *outputLen, 0, *outputLen);
 
-    ret = strncpy_s(outputStr, *outputLen, contextBuffer + PCID_MAIN_LEN, *outputLen);
+    ret = strncpy_s(outputStr, *outputLen, contextBuffer + PCID_MAIN_LEN, *outputLen - 1);
     if (ret != 0) {
         PRINT_ERR("strcpy_s failed.");
         FreeContextBuffer(contextBuffer);
@@ -197,8 +198,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
 {
     char (*outputArray)[MAX_SYSCAP_STR_LEN] = NULL;
     char *inputPos = input;
-    uint16_t bufferLen;
-    int ret;
+    int bufferLen, ret;
     int syscapCnt = 0;
 
     while (*inputPos != '\0') {

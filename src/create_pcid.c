@@ -47,20 +47,33 @@ static void FreeContextBuffer(char *contextBuffer)
     (void)free(contextBuffer);
 }
 
-static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *contextBufLen)
+static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *contextBufLen)
 {
-    uint32_t ret;
+    int32_t ret;
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
+    char path[PATH_MAX + 1] = {0x00};
 
-    ret = stat(inputFile, &statBuf);
+#ifdef _POSIX_
+    if (strlen(inputFile) > PATH_MAX || strncpy_s(path, PATH_MAX, inputFile, strlen(inputFile)) != EOK) {
+        PRINT_ERR("get path(%s) failed\n", inputFile);
+        return -1;
+    }
+#else
+    if (strlen(inputFile) > PATH_MAX || realpath(inputFile, path) == NULL) {
+        PRINT_ERR("get file(%s) real path failed\n", inputFile);
+        return -1;
+    }
+#endif
+    
+    ret = stat(path, &statBuf);
     if (ret != 0) {
-        PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", inputFile, errno);
+        PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", path, errno);
         return -1;
     }
     if (!(statBuf.st_mode & S_IRUSR)) {
-        PRINT_ERR("don't have permission to read the file(%s)\n", inputFile);
+        PRINT_ERR("don't have permission to read the file(%s)\n", path);
         return -1;
     }
     contextBuffer = (char *)malloc(statBuf.st_size + 1);
@@ -68,15 +81,16 @@ static uint32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
         return -1;
     }
-    fp = fopen(inputFile, "rb");
+
+    fp = fopen(path, "rb");
     if (fp == NULL) {
-        PRINT_ERR("open file(%s) failed, errno = %d\n", inputFile, errno);
+        PRINT_ERR("open file(%s) failed, errno = %d\n", path, errno);
         FreeContextBuffer(contextBuffer);
         return -1;
     }
     ret = fread(contextBuffer, statBuf.st_size, 1, fp);
     if (ret != 1) {
-        PRINT_ERR("read file(%s) failed, errno = %d\n", inputFile, errno);
+        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
         FreeContextBuffer(contextBuffer);
         (void)fclose(fp);
         return -1;
@@ -94,35 +108,44 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
 {
     int32_t ret;
     FILE *fp = NULL;
-    char fileFullPath[PATH_MAX] = {0};
     int32_t pathLen = strlen(outDirPath);
+    char path[PATH_MAX + 1] = {0x00};
 
-    ret = strncpy_s(fileFullPath, PATH_MAX, outDirPath, pathLen + 1);
-    if (ret != 0) {
-        PRINT_ERR("strncpy_s failed, source string:%s, len = %d, errno = %d\n", outDirPath, pathLen + 1, errno);
+#ifdef _POSIX_
+    if (strlen(outDirPath) > PATH_MAX || strncpy_s(path, PATH_MAX, outDirPath, strlen(outDirPath)) != EOK) {
+        PRINT_ERR("get path(%s) failed\n", outDirPath);
         return -1;
     }
+#else
+    if (strlen(outDirPath) > PATH_MAX || realpath(outDirPath, path) == NULL) {
+        PRINT_ERR("get file(%s) real path failed\n", outDirPath);
+        return -1;
+    }
+#endif
 
-    if (fileFullPath[pathLen - 1] != '/' && fileFullPath[pathLen - 1] != '\\') {
-        fileFullPath[pathLen] = '/';
+    if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
+        path[pathLen] = '/';
     }
 
-    ret = strncat_s(fileFullPath, PATH_MAX, filename, strlen(filename) + 1);
+    if (strlen(path) + strlen(filename) + 1 > PATH_MAX) {
+        PRINT_ERR("length of path too long.\n");
+        return -1;
+    }
+    ret = strncat_s(path, PATH_MAX, filename, strlen(filename) + 1);
     if (ret != 0) {
         PRINT_ERR("strncat_s failed, (%s, %d, %s, %d), errno = %d\n",
-                  fileFullPath, PATH_MAX, filename, (int32_t)strlen(filename) + 1, errno);
+                  path, PATH_MAX, filename, (int32_t)strlen(filename) + 1, errno);
         return -1;
     }
 
-    fp = fopen(fileFullPath, "wb");
+    fp = fopen(path, "wb");
     if (fp == NULL) {
-        PRINT_ERR("can't create file(%s), errno = %d\n", fileFullPath, errno);
+        PRINT_ERR("can't create file(%s), errno = %d\n", path, errno);
         return -1;
     }
 
-    ret = fwrite(convertedBuffer, contextBufLen, 1, fp);
-    if (ret != 1) {
-        PRINT_ERR("can't write file(%s),errno = %d\n", fileFullPath, errno);
+    if (fwrite(convertedBuffer, contextBufLen, 1, fp) != 1) {
+        PRINT_ERR("can't write file(%s),errno = %d\n", path, errno);
         (void)fclose(fp);
         return -1;
     }
@@ -144,9 +167,8 @@ static cJSON *CreateWholeSyscapJsonObj(void)
 
 int32_t CreatePCID(char *inputFile, char *outDirPath)
 {
-    uint8_t sectorOfBits, posOfBits;
-    int32_t ret, i;
-    uint32_t contextBufLen, osCapSize, privateCapSize;
+    int32_t ret, sectorOfBits, posOfBits;
+    uint32_t i, contextBufLen, privateCapSize, osCapSize;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     char *systemType = NULL;
@@ -268,7 +290,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "system_type");
     if (jsonSyscapObj == NULL || !cJSON_IsString(jsonSyscapObj)) {
-        PRINT_ERR("get \"system_type\" failed, jsonSyscapObj = %p\n", jsonSyscapObj);
+        PRINT_ERR("get \"system_type\" failed\n");
         ret = -1;
         goto FREE_PCID_BUFFER_OUT;
     }
@@ -308,12 +330,12 @@ FREE_CONVERT_OUT:
 
 int32_t DecodePCID(char *inputFile, char *outDirPath)
 {
-    int32_t ret, i, j;
+    int32_t ret;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     uint8_t osSyscap[BYTES_OF_OS_SYSCAP] = {0};
-    uint16_t indexOfSyscap[960] = {0};
-    uint32_t contextBufLen, countOfSyscap = 0;
+    uint16_t indexOfSyscap[BYTES_OF_OS_SYSCAP * BITS_OF_ONE_BYTE] = {0};
+    uint32_t i, j, contextBufLen, countOfSyscap = 0;
 
     ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
     if (ret != 0) {
