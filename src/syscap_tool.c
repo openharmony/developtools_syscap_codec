@@ -94,8 +94,8 @@ static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *b
         FreeContextBuffer(contextBuffer);
         return -1;
     }
-    ret = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (ret != 1) {
+    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
+    if (retFread != 1) {
         PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
         FreeContextBuffer(contextBuffer);
         (void)fclose(fp);
@@ -193,36 +193,37 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
 
     cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "syscap");
     if (cjsonObjectPtr == NULL || !cJSON_IsObject(cjsonObjectPtr)) {
-        PRINT_ERR("get \"syscap\" object failed, cjsonObjectPtr = %p\n", cjsonObjectPtr);
+        PRINT_ERR("get \"syscap\" object failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
 
     osCapPtr = cJSON_GetObjectItem(cjsonObjectPtr, "os");
     if (osCapPtr == NULL || !cJSON_IsArray(osCapPtr)) {
-        PRINT_ERR("get \"os\" array failed, osCapPtr = %p\n", osCapPtr);
+        PRINT_ERR("get \"os\" array failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
-    osCapSize = cJSON_GetArraySize(osCapPtr);
-    if (osCapSize < 0) {
+    ret = cJSON_GetArraySize(osCapPtr);
+    if (ret < 0) {
         PRINT_ERR("get \"os\" array size failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
+    osCapSize = (uint32_t)ret;
     // 2, to save osSysCaptype & osSysCapLength
     convertedBufLen += (2 * sizeof(uint16_t) + osCapSize * SINGLE_FEAT_LENGTH);
 
     privateCapPtr = cJSON_GetObjectItem(cjsonObjectPtr, "private");
     if (privateCapPtr != NULL && cJSON_IsArray(privateCapPtr)) {
-        privateCapSize = cJSON_GetArraySize(privateCapPtr);
+        privateCapSize = (uint32_t)cJSON_GetArraySize(privateCapPtr);
         // 2, to save privateSysCaptype & privateSysCapLength
         convertedBufLen += (2 * sizeof(uint16_t) * !!privateCapSize +
             privateCapSize * SINGLE_FEAT_LENGTH);
     } else if (privateCapPtr == NULL) {
         privateCapSize = 0;
     } else {
-        PRINT_ERR("get \"private\" array failed, privateCapPtr = %p\n", privateCapPtr);
+        PRINT_ERR("get \"private\" array failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -239,7 +240,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
     headPtr = (PCIDHead *)convertedBuffer;
     cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "api_version");
     if (cjsonObjectPtr == NULL || !cJSON_IsNumber(cjsonObjectPtr)) {
-        PRINT_ERR("get \"api_version\" failed, cjsonObjectPtr = %p\n", cjsonObjectPtr);
+        PRINT_ERR("get \"api_version\" failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -264,7 +265,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
 
     cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "manufacturer_id");
     if (cjsonObjectPtr == NULL || !cJSON_IsNumber(cjsonObjectPtr)) {
-        PRINT_ERR("get \"manufacturer_id\" failed, cjsonObjectPtr = %p\n", cjsonObjectPtr);
+        PRINT_ERR("get \"manufacturer_id\" failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -334,7 +335,7 @@ int32_t PCIDEncode(char *inputFile, char *outDirPath)
 
     cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "product");
     if (cjsonObjectPtr == NULL || !cJSON_IsString(cjsonObjectPtr)) {
-        PRINT_ERR("get \"product\" failed, cjsonObjectPtr = %p\n", cjsonObjectPtr);
+        PRINT_ERR("get \"product\" failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -646,7 +647,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     headPtr = (RPCIDHead *)convertedBuffer;
     apiVerItem = cJSON_GetObjectItem(cjsonObjectRoot, "api_version");
     if (apiVerItem == NULL || !cJSON_IsNumber(apiVerItem)) {
-        PRINT_ERR("get \"api_version\" failed, apiVerItem = %p\n", apiVerItem);
+        PRINT_ERR("get \"api_version\" failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
