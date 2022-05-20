@@ -61,7 +61,7 @@ static char* getSystemCapability()
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
     int i = 0;
-    char osOutput[128] = {};
+    char osOutput[SYSCAP_STR_MAX_LEN] = {};
     errno_t err = EOK;
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
