@@ -70,8 +70,8 @@ static int32_t GetFileContext(char **contextBufPtr, uint32_t *bufferLen)
         FreeContextBuffer(contextBuffer);
         return -1;
     }
-    ret = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (ret != 1) {
+    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
+    if (retFread != 1) {
         PRINT_ERR("read file(%s) failed, errno = %d\n", inputFile, errno);
         FreeContextBuffer(contextBuffer);
         (void)fclose(fp);

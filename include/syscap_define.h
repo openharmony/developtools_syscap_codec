@@ -161,6 +161,7 @@ typedef enum SystemCapabilityNum {
     USERIAM_USERAUTH_FACEAUTH,
     USERIAM_USERAUTH_PINAUTH,
     USERIAM_USERIDM,
+    SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
 /* sort by enum */
