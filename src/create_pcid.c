@@ -88,8 +88,8 @@ static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *c
         FreeContextBuffer(contextBuffer);
         return -1;
     }
-    ret = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (ret != 1) {
+    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
+    if (retFread != 1) {
         PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
         FreeContextBuffer(contextBuffer);
         (void)fclose(fp);
@@ -195,23 +195,24 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "syscap");
     if (jsonSyscapObj == NULL || !cJSON_IsObject(jsonSyscapObj)) {
-        PRINT_ERR("get \"syscap\" object failed, jsonSyscapObj = %p\n", jsonSyscapObj);
+        PRINT_ERR("get \"syscap\" object failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
 
     jsonOsSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "os");
     if (jsonOsSyscapObj == NULL || !cJSON_IsArray(jsonOsSyscapObj)) {
-        PRINT_ERR("get \"os\" array failed, jsonOsSyscapObj = %p\n", jsonOsSyscapObj);
+        PRINT_ERR("get \"os\" array failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
-    osCapSize = cJSON_GetArraySize(jsonOsSyscapObj);
-    if (osCapSize < 0) {
+    ret = cJSON_GetArraySize(jsonOsSyscapObj);
+    if (ret < 0) {
         PRINT_ERR("get \"os\" array size failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
+    osCapSize = (uint32_t)ret;
 
     jsonPriSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "private");
     if (jsonPriSyscapObj != NULL && cJSON_IsArray(jsonPriSyscapObj)) {
@@ -219,7 +220,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     } else if (jsonPriSyscapObj == NULL) {
         privateCapSize = 0;
     } else {
-        PRINT_ERR("get \"private\" array failed, jsonPriSyscapObj = %p\n", jsonPriSyscapObj);
+        PRINT_ERR("get \"private\" array failed\n");
         ret = -1;
         goto FREE_CONVERT_OUT;
     }
@@ -281,7 +282,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "api_version");
     if (jsonSyscapObj == NULL || !cJSON_IsNumber(jsonSyscapObj)) {
-        PRINT_ERR("get \"api_version\" failed, jsonSyscapObj = %p\n", jsonSyscapObj);
+        PRINT_ERR("get \"api_version\" failed\n");
         ret = -1;
         goto FREE_PCID_BUFFER_OUT;
     }
@@ -306,7 +307,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "manufacturer_id");
     if (jsonSyscapObj == NULL || !cJSON_IsNumber(jsonSyscapObj)) {
-        PRINT_ERR("get \"manufacturer_id\" failed, jsonSyscapObj = %p\n", jsonSyscapObj);
+        PRINT_ERR("get \"manufacturer_id\" failed\n");
         ret = -1;
         goto FREE_PCID_BUFFER_OUT;
     }
