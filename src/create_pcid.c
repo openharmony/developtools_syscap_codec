@@ -216,7 +216,13 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     jsonPriSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "private");
     if (jsonPriSyscapObj != NULL && cJSON_IsArray(jsonPriSyscapObj)) {
-        privateCapSize = cJSON_GetArraySize(jsonPriSyscapObj);
+        ret = cJSON_GetArraySize(jsonPriSyscapObj);
+        if (ret < 0) {
+            PRINT_ERR("get \"private syscap\" array size failed\n");
+            ret = -1;
+            goto FREE_CONVERT_OUT;
+        }
+        privateCapSize = (uint32_t)ret;
     } else if (jsonPriSyscapObj == NULL) {
         privateCapSize = 0;
     } else {
