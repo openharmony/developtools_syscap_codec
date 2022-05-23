@@ -108,7 +108,6 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
 {
     int32_t ret;
     FILE *fp = NULL;
-    int32_t pathLen = strlen(outDirPath);
     char path[PATH_MAX + 1] = {0x00};
 
 #ifdef _POSIX_
@@ -122,7 +121,7 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
         return -1;
     }
 #endif
-
+    int32_t pathLen = strlen(path);
     if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
         path[pathLen] = '/';
     }
