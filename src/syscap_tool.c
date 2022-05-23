@@ -627,12 +627,13 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
         goto FREE_CONTEXT_OUT;
     }
 
-    sysCapSize = cJSON_GetArraySize(sysCapPtr);
-    if (sysCapSize < 0) {
+    ret = cJSON_GetArraySize(sysCapPtr);
+    if (ret < 0) {
         PRINT_ERR("get \"syscap\" array size failed\n");
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
+    sysCapSize = (uint32_t)ret;
     // 2, to save SysCaptype & SysCapLength
     convertedBufLen += (2 * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LENGTH);
 
