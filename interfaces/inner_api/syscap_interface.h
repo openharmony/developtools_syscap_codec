@@ -25,9 +25,7 @@ extern "C" {
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-#define MAX_SYSCAP_STR_LEN 128
-
-bool EncodeOsSyscap(char output[MAX_SYSCAP_STR_LEN]);
+bool EncodeOsSyscap(char *output, int len);
 bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt);
 bool EncodePrivateSyscap(char **output, int *outputLen);
 bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt);
