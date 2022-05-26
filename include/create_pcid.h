@@ -19,6 +19,8 @@
 #include <stdint.h>
 
 #define MAX_OS_SYSCAP_NUM 960
+#define TYPE_FILE 1
+#define TYPE_STRING 2
 
 typedef struct ProductCompatibilityID {
     uint16_t apiVersion : 15;
@@ -31,5 +33,5 @@ typedef struct ProductCompatibilityID {
 
 int32_t CreatePCID(char *inputFile, char *outDirPath);
 int32_t DecodePCID(char *inputFile, char *outDirPath);
-
+int32_t DecodeStringPCID(char *input, char *outDirPath, int type);
 #endif
