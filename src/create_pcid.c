@@ -33,12 +33,12 @@
 #define SINGLE_FEAT_LENGTH  (32 * 8)
 #define PER_SYSCAP_LEN_MAX 128
 #define PRIVATE_SYSCAP_SIZE 1000
-#define BITS_OF_ONE_BYTE 8
+#define UINT8_BIT 8
 #define BYTES_OF_OS_SYSCAP 120
 
 #define PRINT_ERR(...) \
     do { \
-        printf("ERROR: in file %s at line %d -> ", __FILE__, __LINE__); \
+        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
 
@@ -108,7 +108,6 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
 {
     int32_t ret;
     FILE *fp = NULL;
-    int32_t pathLen = strlen(outDirPath);
     char path[PATH_MAX + 1] = {0x00};
 
 #ifdef _POSIX_
@@ -122,7 +121,7 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
         return -1;
     }
 #endif
-
+    int32_t pathLen = strlen(path);
     if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
         path[pathLen] = '/';
     }
@@ -261,8 +260,8 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
-        sectorOfBits = (osCapIndex->valueint) / BITS_OF_ONE_BYTE;
-        posOfBits = (osCapIndex->valueint) % BITS_OF_ONE_BYTE;
+        sectorOfBits = (osCapIndex->valueint) / UINT8_BIT;
+        posOfBits = (osCapIndex->valueint) % UINT8_BIT;
         if (sectorOfBits >= BYTES_OF_OS_SYSCAP) {
             PRINT_ERR("num of \"os syscap\" is out of 960\n");
             ret = -1;
@@ -341,7 +340,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     uint8_t osSyscap[BYTES_OF_OS_SYSCAP] = {0};
-    uint16_t indexOfSyscap[BYTES_OF_OS_SYSCAP * BITS_OF_ONE_BYTE] = {0};
+    uint16_t indexOfSyscap[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
     uint32_t i, j, contextBufLen, countOfSyscap = 0;
 
     ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
@@ -383,9 +382,9 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         goto FREE_VECTOR_OUT;
     }
     for (i = 0; i < BYTES_OF_OS_SYSCAP; i++) {
-        for (j = 0; j < BITS_OF_ONE_BYTE; j++) {
+        for (j = 0; j < UINT8_BIT; j++) {
             if (osSyscap[i] & (0x01 << j)) {
-                indexOfSyscap[countOfSyscap++] = i * BITS_OF_ONE_BYTE + j;
+                indexOfSyscap[countOfSyscap++] = i * UINT8_BIT + j;
             }
         }
     }
@@ -509,5 +508,221 @@ FREE_VECTOR_OUT:
     cJSON_Delete(capVectorPtr);
 FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
+    return ret;
+}
+
+#define U32_TO_STR_MAX_LEN 11
+#define OS_SYSCAP_NUM 30
+#define PCID_HEADER 2
+static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSyscapNum,
+                                 uint32_t *header, uint32_t headerLen)
+{
+    uint32_t tempNum;
+    uint32_t i = 0;
+    size_t inputLen = strlen(input);
+
+    if (osSyscapNum != OS_SYSCAP_NUM || headerLen != PCID_HEADER) {
+        PRINT_ERR("Input osSyscapNum(%u) or headerLen(%u) error.\n", osSyscapNum, headerLen);
+        return -1;
+    }
+
+    if (sscanf_s(input, "%u,%u,%s", &header[0], &header[1], input, inputLen) != 3) { // 3, return val of "%u,%u,%s"
+        PRINT_ERR("Get pcid header failed.\n");
+        return -1;
+    }
+
+    while (sscanf_s(input, "%u,%s", &tempNum, input, inputLen) == 2) { // 2, return val of "%u,%s"
+        if (i >= OS_SYSCAP_NUM) {
+            PRINT_ERR("Get os syscap numbers(%u) greater than %u.\n", i + 1, osSyscapNum);
+            return -1;
+        }
+        osSyscap[i++] = tempNum;
+    }
+
+    return 0;
+}
+
+static int32_t AddHeaderToJsonObj(uint32_t *pcidHeader, uint32_t pcidHeaderLen, cJSON *rootObj)
+{
+    if (pcidHeaderLen != PCID_HEADER) {
+        PRINT_ERR("input pcidHeader(%u) error.\n", pcidHeaderLen);
+        return -1;
+    }
+    typedef struct pcidHeader {
+        uint16_t apiVersion : 15;
+        uint16_t apiVersionType : 1;
+        uint16_t systemType : 3;
+        uint16_t reserved : 13;
+        uint32_t manufacturerID;
+    } PCIDHeader;
+
+    PCIDHeader *header = (PCIDHeader *)pcidHeader;
+    // trans system type to string
+    char *systemType = header->systemType  == 0b001 ? "mini" :
+                       (header->systemType == 0b010 ? "small" :
+                       (header->systemType == 0b100 ? "standard" : NULL));
+    if (systemType == NULL) {
+        PRINT_ERR("prase system type failed.\n");
+        return -1;
+    }
+
+    // add to json
+    if (!cJSON_AddNumberToObject(rootObj, "api_version", NtohsInter(header->apiVersion))) {
+        PRINT_ERR("add api_version(%u) to json object failed.\n", NtohsInter(header->apiVersion));
+        return -1;
+    }
+    if (!cJSON_AddNumberToObject(rootObj, "manufacturer_id", NtohlInter(header->manufacturerID))) {
+        PRINT_ERR("add manufacturer_id(%u) to json object failed\n", NtohlInter(header->manufacturerID));
+        return -1;
+    }
+    if (!cJSON_AddStringToObject(rootObj, "system_type", systemType)) {
+        PRINT_ERR("add system_type(%s) to json object failed\n", systemType);
+        return -1;
+    }
+    return 0;
+}
+
+static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapArrayLen, cJSON *sysCapObj)
+{
+    cJSON *sysCapArray = cJSON_CreateArray();
+    if (sysCapArray == NULL) {
+        PRINT_ERR("Create cJSON array failed.\n");
+        return -1;
+    }
+
+    if (osSyscapArrayLen != OS_SYSCAP_NUM) {
+        PRINT_ERR("Input os syscap array len error.\n");
+        free(sysCapArray);
+        return -1;
+    }
+    uint8_t *osSysCapArrayUint8 = (uint8_t *)osSyscapArray;
+
+    uint32_t i, j;
+    uint32_t osSyscapCount = 0;
+    int32_t index[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
+    for (i = 0; i < BYTES_OF_OS_SYSCAP; i++) {
+        for (j = 0; j < UINT8_BIT; j++) {
+            if (osSysCapArrayUint8[i] & (0x01 << j)) {
+                index[osSyscapCount++] = i * UINT8_BIT + j;
+            }
+        }
+    }
+
+    for (i = 0; i < osSyscapCount; i++) {
+        for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
+            if (index[i] != arraySyscap[j].num) {
+                continue;
+            }
+            if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(arraySyscap[j].syscapStr))) {
+                PRINT_ERR("Add os syscap string to json failed.\n");
+                free(sysCapArray);
+                return -1;
+            }
+            break;
+        }
+    }
+
+    if (!cJSON_AddItemToObject(sysCapObj, "os", sysCapArray)) {
+        PRINT_ERR("Add os syscap item to json object failed.\n");
+        free(sysCapArray);
+        return -1;
+    }
+    return 0;
+}
+
+static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapStringLen, cJSON *sysCapObj)
+{
+    char *token = NULL;
+
+    cJSON *sysCapArray = cJSON_CreateArray();
+    if (sysCapArray == NULL) {
+        PRINT_ERR("Create cJSON array failed.\n");
+        free(sysCapArray);
+        return -1;
+    }
+
+    token = strtok(priSyscapString, ",");
+    while (token != NULL) {
+        if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(token))) {
+            PRINT_ERR("Add private syscap string to json failed.\n");
+            free(sysCapArray);
+            return -1;
+        }
+        token = strtok(NULL, ",");
+    }
+    if (!cJSON_AddItemToObject(sysCapObj, "private", sysCapArray)) {
+        PRINT_ERR("Add private syscap array to json failed.\n");
+        free(sysCapArray);
+        return -1;
+    }
+    return 0;
+}
+
+int32_t DecodeStringPCID(char *input, char *outDirPath, int type)
+{
+    int32_t ret = -1;
+    uint32_t osSyscapUintArray[OS_SYSCAP_NUM] = {0};
+    uint32_t pcidHeader[PCID_HEADER];
+    uint32_t fileContextLen;
+    char *fileContext = NULL;
+    char *priSyscapStr = NULL;
+
+    // judge input type
+    if (type == TYPE_FILE) {
+        if (GetFileContext(input, &fileContext, &fileContextLen)) {
+            PRINT_ERR("GetFileContext failed, input file : %s\n", input);
+            goto PARSE_FAILED;
+        }
+        if (ParseStringSyscap(fileContext, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
+            PRINT_ERR("Parse string syscap failed.\n");
+            goto PARSE_FAILED;
+        }
+        priSyscapStr = fileContext;
+    } else if (type == TYPE_STRING) {
+        if (ParseStringSyscap(input, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
+            PRINT_ERR("Parse string syscap failed.\n");
+            goto PARSE_FAILED;
+        }
+        priSyscapStr = input;
+    } else {
+        PRINT_ERR("Input type failed.\n");
+        goto PARSE_FAILED;
+    }
+    // add to json object
+    cJSON *sysCapObj = cJSON_CreateObject();
+    cJSON *rootObj = cJSON_CreateObject();
+    if (!cJSON_AddItemToObject(rootObj, "syscap", sysCapObj)) {
+        PRINT_ERR("Add syscap to json failed.\n");
+        goto ADD_JSON_FAILED;
+    }
+    if (AddHeaderToJsonObj(pcidHeader, PCID_HEADER, rootObj)) {
+        PRINT_ERR("Add header to json object failed.\n");
+        goto ADD_JSON_FAILED;
+    }
+    if (AddOsSyscapToJsonObj(osSyscapUintArray, OS_SYSCAP_NUM, sysCapObj)) {
+        PRINT_ERR("Add os syscap json object failed.\n");
+        goto ADD_JSON_FAILED;
+    }
+    if (AddPriSyscapToJsonObj(priSyscapStr, strlen(priSyscapStr), sysCapObj)) {
+        PRINT_ERR("Add private syscap json object failed.\n");
+        goto ADD_JSON_FAILED;
+    }
+    // save as json file
+    char *jsonBuffer = cJSON_Print(rootObj);
+    const char outputFileName[] = "syscap.json";
+    if (ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer))) {
+        PRINT_ERR("Save as json file failed.\n");
+        goto SAVE_FAILED;
+    }
+    ret = 0;
+
+SAVE_FAILED:
+    free(jsonBuffer);
+ADD_JSON_FAILED:
+    cJSON_Delete(rootObj);
+PARSE_FAILED:
+    if (type == TYPE_FILE) {
+        free(fileContext);
+    }
     return ret;
 }
