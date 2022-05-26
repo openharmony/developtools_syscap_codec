@@ -25,6 +25,7 @@
 namespace OHOS {
 EXTERN_C_START
 constexpr size_t OS_SYSCAP_U32_NUM = 30;
+constexpr size_t PCID_MAIN_U32 = OS_SYSCAP_U32_NUM + 2;
 constexpr size_t U32_TO_STR_MAX_LEN = 11;
 constexpr size_t SYSCAP_STR_MAX_LEN = 128;
 constexpr size_t PCID_MAIN_LEN = 128;
@@ -32,7 +33,7 @@ constexpr size_t KEY_BUFFER_SIZE = 32;
 
 #define PRINT_ERR(...) \
     do { \
-        printf("ERROR: in file %s at line %d -> ", __FILE__, __LINE__); \
+        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
 
@@ -68,7 +69,7 @@ static char* getSystemCapability()
     char *priOutput = nullptr;
     char *temp = nullptr;
     char *allSyscapBUffer = nullptr;
-    char osCapArray[OS_SYSCAP_U32_NUM][U32_TO_STR_MAX_LEN] = {};
+    char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN] = {};
     char (*priCapArray)[SYSCAP_STR_MAX_LEN] = nullptr;
 
     retBool = EncodeOsSyscap(osOutput, PCID_MAIN_LEN);
@@ -82,8 +83,8 @@ static char* getSystemCapability()
         goto FREE_PRIOUTPUT;
     }
 
-    osCapU32 = reinterpret_cast<uint32_t *>(osOutput + 8);  // 8, header of pcid.sc
-    for (i = 0; i < OS_SYSCAP_U32_NUM; i++) {
+    osCapU32 = reinterpret_cast<uint32_t *>(osOutput);
+    for (i = 0; i < PCID_MAIN_U32; i++) { // 2, header of pcid.sc
         retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
         if (retError == -1) {
             PRINT_ERR("get uint32_t syscap string failed.");
@@ -99,13 +100,13 @@ static char* getSystemCapability()
 
     // calculate all string length
     sumLen = 0;
-    for (i = 0; i < OS_SYSCAP_U32_NUM; i++) {
+    for (i = 0; i < PCID_MAIN_U32; i++) {
         sumLen += strlen(osCapArray[i]);
     }
     for (i = 0; i < priCapArrayCnt; i++) {
         sumLen += strlen(*(priCapArray + i));
     }
-    sumLen += (OS_SYSCAP_U32_NUM + priCapArrayCnt + 1);  // split with ','
+    sumLen += (PCID_MAIN_U32 + priCapArrayCnt + 1);  // split with ','
 
     // splicing string
     allSyscapBUffer = (char *)malloc(sumLen);
@@ -122,7 +123,7 @@ static char* getSystemCapability()
     }
     temp = *osCapArray;
 
-    for (i = 1; i < OS_SYSCAP_U32_NUM; i++) {
+    for (i = 1; i < PCID_MAIN_U32; i++) {
         retError = sprintf_s(allSyscapBUffer, sumLen, "%s,%s", temp, osCapArray[i]);
         if (retError == -1) {
             PRINT_ERR("splicing os syscap string failed.");

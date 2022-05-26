@@ -22,31 +22,40 @@
 #include "syscap_tool.h"
 #include "create_pcid.h"
 
+#define PRINT_ERR(...) \
+    do { \
+        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
+        printf(__VA_ARGS__); \
+    } while (0)
+
 int main(int argc, char **argv)
 {
-    int32_t ret, optIndex;
-    char curpath[PATH_MAX] = {0};
+    int32_t optIndex;
+    int32_t ret = 0;
     int32_t rpcid = 0;
     int32_t pcid = 0;
     int32_t encode = 0;
     int32_t decode = 0;
+    int32_t stringDecode = 0;
     int32_t help = 0;
+    char curpath[PATH_MAX] = {0};
     char *inputfile = NULL;
     char *outputpath = getcwd(curpath, sizeof(curpath));
 
     while (1) {
         static struct option long_options[] = {
-            {"help",    no_argument,       0,  'h' },
-            {"RPCID",   no_argument,       0,  'R' },
-            {"PCID",    no_argument,       0,  'P' },
-            {"encode",  no_argument,       0,  'e' },
-            {"decode",  no_argument,       0,  'd' },
-            {"input",   required_argument, 0,  'i' },
-            {"output",  required_argument, 0,  'o' },
-            {0,         0,                 0,  0 }
+            {"help",           no_argument,       0,  'h' },
+            {"RPCID",          no_argument,       0,  'R' },
+            {"PCID",           no_argument,       0,  'P' },
+            {"encode",         no_argument,       0,  'e' },
+            {"decode",         no_argument,       0,  'd' },
+            {"string-decode",  no_argument,       0,  's' },
+            {"input",          required_argument, 0,  'i' },
+            {"output",         required_argument, 0,  'o' },
+            {0,                0,                 0,  0   }
         };
 
-        int32_t flag = getopt_long(argc, argv, "hRPedi:o:", long_options, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hRPedsi:o:", long_options, &optIndex);
         if (flag == -1) {
             break;
         }
@@ -56,6 +65,9 @@ int main(int argc, char **argv)
                 break;
             case 'd':
                 decode = 1;
+                break;
+            case 's':
+                stringDecode = 1;
                 break;
             case 'R':
                 rpcid = 1;
@@ -83,6 +95,8 @@ int main(int argc, char **argv)
         ret = CreatePCID(inputfile, outputpath);
     } else if (!rpcid && pcid && !encode && decode && inputfile && !help) {
         ret = DecodePCID(inputfile, outputpath);
+    } else if (!rpcid && !pcid && !encode && !decode && stringDecode && inputfile && !help) {
+        ret = DecodeStringPCID(inputfile, outputpath, TYPE_FILE);
     } else {
         printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
         printf("-h, --help : how to use\n");
@@ -90,15 +104,15 @@ int main(int argc, char **argv)
         printf("-P, --PCID : encode or decode PCID\n");
         printf("-e, --encode : to encode\n");
         printf("-d, --encode : to decode\n");
+        printf("-s, --string-decode : decode string pcid to json\n");
         printf("-i filepath, --input filepath : input file\n");
         printf("-o outpath, --input outpath : output path\n");
         exit(0);
     }
 
     if (ret != 0) {
-        printf("ERROR: in file %s at line %d -> ", __FILE__, __LINE__);
-        printf("input file(%s) prase failed\n", inputfile);
+        PRINT_ERR("syscap_tool failed to complete. input: %s\n", inputfile);
     }
 
-    return 0;
+    return ret;
 }
