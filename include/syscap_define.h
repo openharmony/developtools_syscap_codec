@@ -18,7 +18,7 @@
 
 typedef struct SystemCapabilityWithNum {
     char syscapStr[128];
-    int num;
+    uint16_t num;
 } SyscapWithNum;
 
 /* sort by alphabet */
