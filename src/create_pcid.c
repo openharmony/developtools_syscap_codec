@@ -599,7 +599,7 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
 
     uint32_t i, j;
     uint32_t osSyscapCount = 0;
-    int32_t index[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
+    uint16_t index[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
     for (i = 0; i < BYTES_OF_OS_SYSCAP; i++) {
         for (j = 0; j < UINT8_BIT; j++) {
             if (osSysCapArrayUint8[i] & (0x01 << j)) {
