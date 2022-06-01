@@ -23,9 +23,10 @@
 #include <libgen.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <securec.h>
+#include "securec.h"
 #include "endian_internal.h"
 #include "cJSON.h"
+#include "syscap_define.h"
 #include "syscap_tool.h"
 
 typedef struct ProductCompatibilityIDHead {
@@ -41,7 +42,11 @@ typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersionType : 1;
 } RPCIDHead;
 
-#define SINGLE_FEAT_LENGTH  (32 * 8)
+#define SINGLE_FEAT_LENGTH  128
+#define UINT8_BIT 8
+#define RPCID_OUT_BUFFER 32
+#define BYTES_OF_OS_SYSCAP 120
+#define U32_TO_STR_MAX_LEN 11
 
 #define PRINT_ERR(...) \
     do { \
@@ -109,12 +114,12 @@ static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *b
     return 0;
 }
 
-static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char *convertedBuffer, uint32_t bufferLen)
+static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename,
+                                          char *convertedBuffer, uint32_t bufferLen)
 {
     int32_t ret;
     FILE *fp = NULL;
     char path[PATH_MAX + 1] = {0x00};
-    int32_t pathLen = strlen(outDirPath);
 
 #ifdef _POSIX_
     if (strlen(outDirPath) > PATH_MAX || strncpy_s(path, PATH_MAX, outDirPath, strlen(outDirPath)) != EOK) {
@@ -128,6 +133,7 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char
     }
 #endif
 
+    int32_t pathLen = strlen(path);
     if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
         path[pathLen] = '/';
     }
@@ -161,436 +167,14 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, char *filename, char
     return 0;
 }
 
-int32_t PCIDEncode(char *inputFile, char *outDirPath)
+static cJSON *CreateWholeSyscapJsonObj(void)
 {
-    int32_t ret;
-    char productName[NAME_MAX] = {0};
-    char *contextBuffer = NULL;
-    uint32_t bufferLen, osCapSize, privateCapSize;
-    char *convertedBuffer = NULL;
-    uint32_t convertedBufLen = sizeof(PCIDHead);
-    char *systemType = NULL;
-    PCIDHead *headPtr = NULL;
-    char *fillTmpPtr = NULL;
-    cJSON *cjsonObjectRoot = NULL;
-    cJSON *cjsonObjectPtr = NULL;
-    cJSON *osCapPtr = NULL;
-    cJSON *privateCapPtr = NULL;
-    cJSON *arrayItemPtr = NULL;
-
-    ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
-    if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
-        return -1;
+    size_t numOfSyscapAll = sizeof(arraySyscap) / sizeof(SyscapWithNum);
+    cJSON *root =  cJSON_CreateObject();
+    for (size_t i = 0; i < numOfSyscapAll; i++) {
+        cJSON_AddItemToObject(root, arraySyscap[i].syscapStr, cJSON_CreateNumber(arraySyscap[i].num));
     }
-
-    cjsonObjectRoot = cJSON_ParseWithLength(contextBuffer, bufferLen);
-    if (cjsonObjectRoot == NULL) {
-        PRINT_ERR("cJSON_Parse failed, context buffer is:\n%s\n", contextBuffer);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "syscap");
-    if (cjsonObjectPtr == NULL || !cJSON_IsObject(cjsonObjectPtr)) {
-        PRINT_ERR("get \"syscap\" object failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    osCapPtr = cJSON_GetObjectItem(cjsonObjectPtr, "os");
-    if (osCapPtr == NULL || !cJSON_IsArray(osCapPtr)) {
-        PRINT_ERR("get \"os\" array failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    ret = cJSON_GetArraySize(osCapPtr);
-    if (ret < 0) {
-        PRINT_ERR("get \"os\" array size failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    osCapSize = (uint32_t)ret;
-    // 2, to save osSysCaptype & osSysCapLength
-    convertedBufLen += (2 * sizeof(uint16_t) + osCapSize * SINGLE_FEAT_LENGTH);
-
-    privateCapPtr = cJSON_GetObjectItem(cjsonObjectPtr, "private");
-    if (privateCapPtr != NULL && cJSON_IsArray(privateCapPtr)) {
-        privateCapSize = (uint32_t)cJSON_GetArraySize(privateCapPtr);
-        // 2, to save privateSysCaptype & privateSysCapLength
-        convertedBufLen += (2 * sizeof(uint16_t) * !!privateCapSize +
-            privateCapSize * SINGLE_FEAT_LENGTH);
-    } else if (privateCapPtr == NULL) {
-        privateCapSize = 0;
-    } else {
-        PRINT_ERR("get \"private\" array failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    convertedBuffer = (char *)malloc(convertedBufLen);
-    if (convertedBuffer == NULL) {
-        PRINT_ERR("malloc failed.\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    (void)memset_s(convertedBuffer, convertedBufLen, 0, convertedBufLen);
-
-    headPtr = (PCIDHead *)convertedBuffer;
-    cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "api_version");
-    if (cjsonObjectPtr == NULL || !cJSON_IsNumber(cjsonObjectPtr)) {
-        PRINT_ERR("get \"api_version\" failed\n");
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-    headPtr->apiVersion = HtonsInter((uint16_t)cjsonObjectPtr->valueint);
-    headPtr->apiVersionType = 0;
-
-    cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "system_type");
-    if (cjsonObjectPtr == NULL || !cJSON_IsString(cjsonObjectPtr)) {
-        PRINT_ERR("get \"system_type\" failed.\n");
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-    systemType = cjsonObjectPtr->valuestring;
-    headPtr->systemType = !strcmp(systemType, "mini") ? 0b001 :
-                          (!strcmp(systemType, "small") ? 0b010 :
-                          (!strcmp(systemType, "standard") ? 0b100 : 0));
-    if (headPtr->systemType == 0) {
-        PRINT_ERR("\"system_type\" is invalid, systemType = \"%s\"\n", systemType);
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-
-    cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "manufacturer_id");
-    if (cjsonObjectPtr == NULL || !cJSON_IsNumber(cjsonObjectPtr)) {
-        PRINT_ERR("get \"manufacturer_id\" failed\n");
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-    headPtr->manufacturerID = HtonlInter((uint32_t)cjsonObjectPtr->valueint);
-
-    fillTmpPtr = convertedBuffer + sizeof(PCIDHead);
-
-    *(uint16_t *)fillTmpPtr = HtonsInter(0); // 0, SysCap Type, 0: osCap
-    fillTmpPtr += sizeof(uint16_t);
-    // fill osCap Length
-    *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(osCapSize * SINGLE_FEAT_LENGTH));
-    fillTmpPtr += sizeof(uint16_t);
-    for (uint32_t i = 0; i < osCapSize; i++) {
-        arrayItemPtr = cJSON_GetArrayItem(osCapPtr, i);
-        char *pointPos = strchr(arrayItemPtr->valuestring, '.');
-        if (pointPos == NULL) {
-            PRINT_ERR("context of \"os\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-        ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
-        if (ret != 0) {
-            PRINT_ERR("context of \"os\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-
-        ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
-        if (ret != 0) {
-            PRINT_ERR("context of \"os\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-        fillTmpPtr += SINGLE_FEAT_LENGTH;
-    }
-
-    if (privateCapSize != 0) {
-        *(uint16_t *)fillTmpPtr = HtonsInter(1); // 1, SysCap Type, 1: privateCap
-        fillTmpPtr += sizeof(uint16_t);
-        // fill privateCap Length
-        *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(privateCapSize * SINGLE_FEAT_LENGTH));
-        fillTmpPtr += sizeof(uint16_t);
-        for (uint32_t i = 0; i < privateCapSize; i++) {
-            arrayItemPtr = cJSON_GetArrayItem(privateCapPtr, i);
-            char *pointPos = strchr(arrayItemPtr->valuestring, '.');
-            if (pointPos == NULL) {
-                PRINT_ERR("context of \"private\" array is invalid\n");
-                ret = -1;
-                goto FREE_CONVERT_OUT;
-            }
-            ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
-            if (ret != 0) {
-                PRINT_ERR("context of \"private\" array is invalid\n");
-                ret = -1;
-                goto FREE_CONVERT_OUT;
-            }
-
-            ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
-            if (ret != 0) {
-                PRINT_ERR("context of \"private\" array is invalid\n");
-                ret = -1;
-                goto FREE_CONVERT_OUT;
-            }
-            fillTmpPtr += SINGLE_FEAT_LENGTH;
-        }
-    }
-
-    cjsonObjectPtr = cJSON_GetObjectItem(cjsonObjectRoot, "product");
-    if (cjsonObjectPtr == NULL || !cJSON_IsString(cjsonObjectPtr)) {
-        PRINT_ERR("get \"product\" failed\n");
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-
-    ret = strncpy_s(productName, NAME_MAX, cjsonObjectPtr->valuestring, strlen(cjsonObjectPtr->valuestring));
-    if (ret != 0) {
-        PRINT_ERR("strncpy_s failed, source string:%s, len = %d, errno = %d\n",
-                  cjsonObjectPtr->valuestring, (int32_t)strlen(cjsonObjectPtr->valuestring), errno);
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-
-    ret = strncat_s(productName, NAME_MAX, ".sc", 4); // 4. '.' 's' 'c' '\0'
-    if (ret != 0) {
-        PRINT_ERR("strncat_s failed, (%s, %d, \".sc\", 4), errno = %d\n", productName, NAME_MAX, errno);
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-
-    productName[NAME_MAX - 1] = '\0';
-    ret = ConvertedContextSaveAsFile(outDirPath, productName, convertedBuffer, convertedBufLen);
-    if (ret != 0) {
-        PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, productName);
-        ret = -1;
-        goto FREE_CONVERT_OUT;
-    }
-    ret = 0;
-
-FREE_CONVERT_OUT:
-    free(convertedBuffer);
-FREE_CONTEXT_OUT:
-    FreeContextBuffer(contextBuffer);
-    return ret;
-}
-
-int32_t PCIDDecode(char *inputFile, char *outDirPath)
-{
-    int32_t ret;
-    char *contextBuffer = NULL;
-    char *contextBufferTail = NULL;
-    uint32_t bufferLen;
-    char *convertedBuffer = NULL;
-    uint16_t sysCaptype, sysCapLength;
-    PCIDHead *headPtr = NULL;
-    char *osCapArrayPtr = NULL;
-    char *privateCapArrayPtr = NULL;
-    cJSON *cjsonObjectRoot = NULL;
-    cJSON *sysCapObjectPtr = NULL;
-    cJSON *capVectorPtr = NULL;
-    char productName[NAME_MAX] = {0};
-    char *inputFileName = basename(inputFile);
-    uint16_t inputFileNameLen = strlen(inputFileName);
-    char *pointPos = strchr(inputFileName, '.');
-    uint16_t productNameLen = pointPos ? (pointPos - inputFileName) : inputFileNameLen;
-
-    ret = strncpy_s(productName, NAME_MAX, inputFileName, productNameLen);
-    if (ret != 0) {
-        PRINT_ERR("strncpy_s failed, source string:%s, len = %d\n", inputFileName, productNameLen);
-        return -1;
-    }
-    productName[NAME_MAX - 1] = '\0';
-
-    ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
-    if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
-        return -1;
-    }
-
-    contextBufferTail = contextBuffer + bufferLen;
-    // 2, to save osSysCaptype & osSysCapLength
-    osCapArrayPtr = contextBuffer + sizeof(PCIDHead) + 2 * sizeof(uint16_t);
-    if (contextBufferTail <= osCapArrayPtr) {
-        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    headPtr = (PCIDHead *)contextBuffer;
-    if (headPtr->apiVersionType != 0) {
-        PRINT_ERR("prase file failed, apiVersionType is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    char *systemType = headPtr->systemType == 0b001 ? "mini" :
-                       (headPtr->systemType == 0b010 ? "small" :
-                       (headPtr->systemType == 0b100 ? "standard" : NULL));
-    if (systemType == NULL) {
-        PRINT_ERR("prase file failed, systemType is invalid, %d\n", headPtr->systemType);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    sysCaptype = NtohsInter(*(uint16_t *)(osCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
-    if (sysCaptype != 0) {
-        PRINT_ERR("prase file failed, sysCaptype is invalid, %d\n", sysCaptype);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    sysCapLength = NtohsInter(*(uint16_t *)(osCapArrayPtr - sizeof(uint16_t)));
-    if (contextBufferTail < osCapArrayPtr + sysCapLength) {
-        PRINT_ERR("prase file(%s) failed\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    sysCapObjectPtr = cJSON_CreateObject();
-    if (sysCapObjectPtr == NULL) {
-        PRINT_ERR("cJSON_CreateObject failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    capVectorPtr = cJSON_CreateArray();
-    if (capVectorPtr == NULL) {
-        PRINT_ERR("cJSON_CreateArray failed\n");
-        ret = -1;
-        goto FREE_SYSCAP_OUT;
-    }
-    for (uint32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
-        if (*(osCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-            ret = -1;
-            goto FREE_VECTOR_OUT;
-        }
-        char buffer[SINGLE_FEAT_LENGTH + 17] = "SystemCapability."; // 17, sizeof "SystemCapability."
-
-        ret = strncat_s(buffer, sizeof(buffer), osCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-        if (ret != 0) {
-            PRINT_ERR("strncat_s failed, (%s, %d, %s, %d)\n",
-                      buffer, (int32_t)sizeof(buffer), osCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-        if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(buffer))) {
-            PRINT_ERR("cJSON_AddItemToArray or cJSON_CreateString failed\n");
-            ret = -1;
-            goto FREE_VECTOR_OUT;
-        }
-    }
-    if (!cJSON_AddItemToObject(sysCapObjectPtr, "os", capVectorPtr)) {
-        PRINT_ERR("cJSON_AddItemToObject failed\n");
-        ret = -1;
-        goto FREE_VECTOR_OUT;
-    }
-    capVectorPtr = NULL;
-    privateCapArrayPtr = osCapArrayPtr + sysCapLength + 2 * sizeof(uint16_t); // 2, for type & length
-    if (contextBufferTail >= privateCapArrayPtr) {
-        sysCaptype = NtohsInter(*(uint16_t *)(privateCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
-        if (sysCaptype != 1) {
-            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-            ret = -1;
-            goto FREE_SYSCAP_OUT;
-        }
-        sysCapLength = NtohsInter(*(uint16_t *)(privateCapArrayPtr - sizeof(uint16_t)));
-        if (contextBufferTail < privateCapArrayPtr + sysCapLength) {
-            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-            ret = -1;
-            goto FREE_SYSCAP_OUT;
-        }
-
-        capVectorPtr = cJSON_CreateArray();
-        if (capVectorPtr == NULL) {
-            PRINT_ERR("cJSON_CreateArray failed\n");
-            ret = -1;
-            goto FREE_SYSCAP_OUT;
-        }
-
-        for (uint32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
-            if (*(privateCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-                PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-                ret = -1;
-                goto FREE_VECTOR_OUT;
-            }
-
-            char buffer[SINGLE_FEAT_LENGTH + 17] = "SystemCapability."; // 17, sizeof "SystemCapability."
-
-            ret = strncat_s(buffer, sizeof(buffer), privateCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-            if (ret != 0) {
-                PRINT_ERR("strncat_s failed, (%s, %d, %s, %d)\n", buffer,
-                          (int32_t)sizeof(buffer), privateCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-                ret = -1;
-                goto FREE_CONVERT_OUT;
-            }
-
-            if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(buffer))) {
-                PRINT_ERR("cJSON_AddItemToArray or cJSON_CreateString failed\n");
-                ret = -1;
-                goto FREE_VECTOR_OUT;
-            }
-        }
-        if (!cJSON_AddItemToObject(sysCapObjectPtr, "private", capVectorPtr)) {
-            PRINT_ERR("cJSON_AddItemToObject failed\n");
-            ret = -1;
-            goto FREE_VECTOR_OUT;
-        }
-        capVectorPtr = NULL;
-    }
-
-    cjsonObjectRoot = cJSON_CreateObject();
-    if (cjsonObjectRoot == NULL) {
-        PRINT_ERR("cJSON_CreateObject failed\n");
-        ret = -1;
-        goto FREE_SYSCAP_OUT;
-    }
-    if (!cJSON_AddStringToObject(cjsonObjectRoot, "product", productName)) {
-        PRINT_ERR("cJSON_AddStringToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
-    }
-    if (!cJSON_AddNumberToObject(cjsonObjectRoot, "api_version", NtohsInter(headPtr->apiVersion))) {
-        PRINT_ERR("cJSON_AddNumberToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
-    }
-    if (!cJSON_AddNumberToObject(cjsonObjectRoot, "manufacturer_id", NtohlInter(headPtr->manufacturerID))) {
-        PRINT_ERR("cJSON_AddNumberToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
-    }
-    if (!cJSON_AddStringToObject(cjsonObjectRoot, "system_type", systemType)) {
-        PRINT_ERR("cJSON_AddStringToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
-    }
-    if (!cJSON_AddItemToObject(cjsonObjectRoot, "syscap", sysCapObjectPtr)) {
-        PRINT_ERR("cJSON_AddItemToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
-    }
-    sysCapObjectPtr = NULL;
-    convertedBuffer = cJSON_Print(cjsonObjectRoot);
-
-    ret = strncat_s(productName, NAME_MAX, ".json", 6); // 6. '.' 'j' 's' 'o' 'n' '\0'
-    if (ret != 0) {
-        PRINT_ERR("strncat_s failed, (%s, %d, .json, 6), errno = %d\n", productName, NAME_MAX, errno);
-        goto FREE_CONVERT_OUT;
-    }
-
-    productName[NAME_MAX - 1] = '\0';
-    ret = ConvertedContextSaveAsFile(outDirPath, productName, convertedBuffer, strlen(convertedBuffer));
-    if (ret != 0) {
-        PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, productName);
-        goto FREE_CONVERT_OUT;
-    }
-
-FREE_CONVERT_OUT:
-    free(convertedBuffer);
-FREE_ROOT_OUT:
-    cJSON_Delete(cjsonObjectRoot);
-FREE_VECTOR_OUT:
-    cJSON_Delete(capVectorPtr);
-FREE_SYSCAP_OUT:
-    cJSON_Delete(sysCapObjectPtr);
-FREE_CONTEXT_OUT:
-    FreeContextBuffer(contextBuffer);
-    return ret;
+    return root;
 }
 
 int32_t RPCIDEncode(char *inputFile, char *outDirPath)
@@ -699,114 +283,277 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-int32_t RPCIDDecode(char *inputFile, char *outDirPath)
+static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson)
 {
-    int32_t ret;
-    char *contextBuffer = NULL;
-    char *contextBufferTail = NULL;
-    uint32_t bufferLen;
-    char *convertedBuffer = NULL;
-    uint16_t sysCaptype, sysCapLength;
-    RPCIDHead *headPtr = NULL;
-    char *sysCapArrayPtr = NULL;
-    cJSON *cjsonObjectRoot = NULL;
-    cJSON *sysCapObjectPtr = NULL;
-
-    ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
-    if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
-        return -1;
-    }
-
-    contextBufferTail = contextBuffer + bufferLen;
-    // 2, to save osSysCaptype & osSysCapLength
-    sysCapArrayPtr = contextBuffer + sizeof(RPCIDHead) + 2 * sizeof(uint16_t);
-    if (contextBufferTail <= sysCapArrayPtr) {
-        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    headPtr = (RPCIDHead *)contextBuffer;
-    if (headPtr->apiVersionType != 1) {
-        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    sysCaptype = NtohsInter(*(uint16_t *)(sysCapArrayPtr - 2 * sizeof(uint16_t))); // 2, for type & length
-    if (sysCaptype != 2) { // 2, app syscap type
-        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    sysCapLength = NtohsInter(*(uint16_t *)(sysCapArrayPtr - sizeof(uint16_t)));
-    if (contextBufferTail < sysCapArrayPtr + sysCapLength) {
-        PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-
-    sysCapObjectPtr = cJSON_CreateArray();
-    if (sysCapObjectPtr == NULL) {
-        PRINT_ERR("cJSON_CreateArray failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
-    }
-    for (uint32_t i = 0; i < (sysCapLength / SINGLE_FEAT_LENGTH); i++) {
-        if (*(sysCapArrayPtr + (i + 1) * SINGLE_FEAT_LENGTH - 1) != '\0') {
-            PRINT_ERR("prase file failed, format is invalid, input file : %s\n", inputFile);
+    uint32_t i;
+    int32_t ret = 0;
+    uint16_t sysCapLength = NtohsInter(*(uint16_t *)(input + sizeof(uint32_t)));
+    uint16_t sysCapCount = sysCapLength / SINGLE_FEAT_LENGTH;
+    char *sysCapBegin = input + sizeof(RPCIDHead) + sizeof(uint32_t);
+    RPCIDHead *rpcidHeader = (RPCIDHead *)input;
+    cJSON *sysCapJson = cJSON_CreateArray();
+    for (i = 0; i < sysCapCount; i++) {
+        char *temp = sysCapBegin + i * SINGLE_FEAT_LENGTH;
+        if (strlen(temp) >= SINGLE_FEAT_LENGTH) {
+            PRINT_ERR("Get SysCap failed, string length too long.\n");
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
         char buffer[SINGLE_FEAT_LENGTH + 17] = "SystemCapability."; // 17, sizeof "SystemCapability."
-
-        ret = strncat_s(buffer, sizeof(buffer), sysCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-        if (ret != 0) {
-            PRINT_ERR("strncat_s failed, (%s, %d, %s, %d)\n",
-                      buffer, (int32_t)sizeof(buffer), sysCapArrayPtr + i * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH);
-            ret = -1;
+        
+        ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LENGTH);
+        if (ret != EOK) {
+            PRINT_ERR("strncat_s failed.\n");
             goto FREE_SYSCAP_OUT;
         }
-        if (!cJSON_AddItemToArray(sysCapObjectPtr, cJSON_CreateString(buffer))) {
-            PRINT_ERR("cJSON_AddItemToArray or cJSON_CreateString failed\n");
+
+        if (!cJSON_AddItemToArray(sysCapJson, cJSON_CreateString(buffer))) {
+            PRINT_ERR("Add syscap string to json failed.\n");
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
     }
 
-    cjsonObjectRoot = cJSON_CreateObject();
-    if (cjsonObjectRoot == NULL) {
-        PRINT_ERR("cJSON_CreateObject failed\n");
+    if (!cJSON_AddNumberToObject(rpcidJson, "api_version", NtohsInter(rpcidHeader->apiVersion))) {
+        PRINT_ERR("Add api_version to json failed.\n");
         ret = -1;
         goto FREE_SYSCAP_OUT;
     }
-    if (!cJSON_AddNumberToObject(cjsonObjectRoot, "api_version", NtohsInter(headPtr->apiVersion))) {
-        PRINT_ERR("cJSON_AddNumberToObject failed\n");
+    if (!cJSON_AddItemToObject(rpcidJson, "syscap", sysCapJson)) {
+        PRINT_ERR("Add syscap to json failed.\n");
         ret = -1;
-        goto FREE_ROOT_OUT;
+        goto FREE_SYSCAP_OUT;
     }
-    if (!cJSON_AddItemToObject(cjsonObjectRoot, "syscap", sysCapObjectPtr)) {
-        PRINT_ERR("cJSON_AddNumberToObject failed\n");
-        ret = -1;
-        goto FREE_ROOT_OUT;
+
+    return 0;
+FREE_SYSCAP_OUT:
+    cJSON_Delete(sysCapJson);
+    return ret;
+}
+
+static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
+{
+    uint32_t bufferLen;
+    uint16_t sysCaptype, sysCapLength;
+    char *contextBuffer = NULL;
+    RPCIDHead *rpcidHeader = NULL;
+
+    if (GetFileContext(inputFile, &contextBuffer, &bufferLen)) {
+        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
+        return -1;
     }
-    sysCapObjectPtr = NULL;
+    if (bufferLen < (2 * sizeof(uint32_t))) { // 2, header of rpcid.sc
+        PRINT_ERR("Parse file failed(format is invalid), input file : %s\n", inputFile);
+        return -1;
+    }
+    rpcidHeader = (RPCIDHead *)contextBuffer;
+    if (rpcidHeader->apiVersionType != 1) {
+        PRINT_ERR("Parse file failed(apiVersionType != 1), input file : %s\n", inputFile);
+        return -1;
+    }
+    sysCaptype = NtohsInter(*(uint16_t *)(rpcidHeader + 1));
+    if (sysCaptype != 2) { // 2, app syscap type
+        PRINT_ERR("Parse file failed(sysCaptype != 2), input file : %s\n", inputFile);
+        return -1;
+    }
+    sysCapLength = NtohsInter(*(uint16_t *)((char *)(rpcidHeader + 1) + sizeof(uint16_t)));
+    if (bufferLen < sizeof(RPCIDHead) + sizeof(uint32_t) + sysCapLength) {
+        PRINT_ERR("Parse file failed(SysCap length exceeded), input file : %s\n", inputFile);
+        return -1;
+    }
 
-    convertedBuffer = cJSON_Print(cjsonObjectRoot);
+    *Buffer = contextBuffer;
+    *Len = bufferLen;
+    return 0;
+}
 
+int32_t RPCIDDecode(char *inputFile, char *outDirPath)
+{
+    int32_t ret = 0;
+    char *contextBuffer = NULL;
+    char *convertedBuffer = NULL;
+    uint32_t bufferLen;
+
+    // check rpcid.sc
+    if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen)) {
+        PRINT_ERR("Check rpcid.sc format failed. Input failed: %s\n", inputFile);
+        goto FREE_CONTEXT_OUT;
+    }
+
+    // parse rpcid to json
+    cJSON *rpcidRoot = cJSON_CreateObject();
+    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot)) {
+        PRINT_ERR("Prase rpcid to json failed. Input failed: %s\n", inputFile);
+        goto FREE_RPCID_ROOT;
+    }
+
+    // save to json file
+    convertedBuffer = cJSON_Print(rpcidRoot);
     ret = ConvertedContextSaveAsFile(outDirPath, "rpcid.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:rpcid.json\n", outDirPath);
-        goto FREE_CONVERT_OUT;
+        goto FREE_RPCID_ROOT;
     }
 
-FREE_CONVERT_OUT:
-    free(convertedBuffer);
-FREE_ROOT_OUT:
-    cJSON_Delete(cjsonObjectRoot);
-FREE_SYSCAP_OUT:
-    cJSON_Delete(sysCapObjectPtr);
+FREE_RPCID_ROOT:
+    cJSON_Delete(rpcidRoot);
+FREE_CONTEXT_OUT:
+    FreeContextBuffer(contextBuffer);
+    return ret;
+}
+
+static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, uint16_t *index, uint16_t indexLen)
+{
+    uint16_t sector, pos;
+
+    if (outLen != BYTES_OF_OS_SYSCAP) {
+        PRINT_ERR("Input array error.\n");
+        return -1;
+    }
+
+    for (uint16_t i = 0; i < indexLen; i++) {
+        sector = index[i] / UINT8_BIT;
+        pos = index[i] % UINT8_BIT;
+        if (sector >= BYTES_OF_OS_SYSCAP) {
+            PRINT_ERR("Syscap num(%u) out of range(120).\n", sector);
+            return -1;
+        }
+        out[sector] |=  (1 << pos);
+    }
+    return 0;
+}
+
+int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
+{
+    int32_t ret = 0;
+    int32_t sysCapArraySize;
+    uint32_t bufferLen, i;
+    uint16_t indexOs = 0;
+    uint16_t indexPri = 0;
+    uint16_t *osSysCapIndex;
+    char *contextBuffer = NULL;
+    char *priSyscapArray = NULL;
+    char *priSyscap = NULL;
+    cJSON *cJsonTemp = NULL;
+    cJSON *rpcidRoot = NULL;
+    cJSON *sysCapDefine = NULL;
+    cJSON *sysCapArray = NULL;
+
+    // check rpcid.sc
+    if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen)) {
+        PRINT_ERR("Check rpcid.sc format failed. Input file: %s\n", inputFile);
+        goto FREE_CONTEXT_OUT;
+    }
+
+    // parse rpcid to json
+    rpcidRoot = cJSON_CreateObject();
+    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot)) {
+        PRINT_ERR("Prase rpcid to json failed. Input file: %s\n", inputFile);
+        goto FREE_RPCID_ROOT;
+    }
+
+    // trans to string format
+    sysCapDefine =  CreateWholeSyscapJsonObj();
+    sysCapArray = cJSON_GetObjectItem(rpcidRoot, "syscap");
+    if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
+        PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
+        goto FREE_WHOLE_SYSCAP;
+    }
+    sysCapArraySize = cJSON_GetArraySize(sysCapArray);
+    if (sysCapArraySize < 0) {
+        PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
+        goto FREE_WHOLE_SYSCAP;
+    }
+    // malloc for save os syscap index
+    osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t) * sysCapArraySize);
+    if (osSysCapIndex == NULL) {
+        PRINT_ERR("malloc failed.\n");
+        goto FREE_WHOLE_SYSCAP;
+    }
+    (void)memset_s(osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
+                   0, sizeof(uint16_t) * sysCapArraySize);
+    // malloc for save private syscap string
+    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_FEAT_LENGTH);
+    if (priSyscapArray == NULL) {
+        PRINT_ERR("malloc(%u) failed.\n", sysCapArraySize * SINGLE_FEAT_LENGTH);
+        goto FREE_MALLOC_OSSYSCAP;
+    }
+    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
+                   0, sysCapArraySize * SINGLE_FEAT_LENGTH);
+    priSyscap = priSyscapArray;
+    // part os syscap and ptivate syscap
+    for (i = 0; i < (uint32_t)sysCapArraySize; i++) {
+        cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
+        cJsonTemp = cJSON_GetObjectItem(sysCapDefine, cJsonItem->valuestring);
+        if (cJsonTemp != NULL) {
+            osSysCapIndex[indexOs++] = cJsonTemp->valueint;
+        } else {
+            ret = strncpy_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
+                            cJsonItem->valuestring, SINGLE_FEAT_LENGTH - 1);
+            if (ret != EOK) {
+                PRINT_ERR("strcpy_s failed.\n");
+                goto FREE_MALLOC_PRISYSCAP;
+            }
+            priSyscapArray += SINGLE_FEAT_LENGTH;
+            indexPri++;
+        }
+    }
+    uint32_t outUint[RPCID_OUT_BUFFER] = {0};
+    outUint[0] = NtohsInter(((RPCIDHead *)contextBuffer)->apiVersion);
+    outUint[1] = NtohsInter(*(uint16_t *)(contextBuffer + sizeof(uint32_t)));
+    uint8_t *osOutUint = (uint8_t *)(outUint + 2);
+    if (SetOsSysCapBitMap(osOutUint, 120, osSysCapIndex, indexOs)) {  // 120, len of osOutUint
+        PRINT_ERR("Set os syscap bit map failed.\n");
+        goto FREE_MALLOC_PRISYSCAP;
+    }
+
+    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
+                            + (SINGLE_FEAT_LENGTH + 1) * sysCapArraySize;
+    char *outBuffer = (char *)malloc(outBufferLen);
+    if (outBuffer == NULL) {
+        PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
+        goto FREE_MALLOC_PRISYSCAP;
+    }
+    (void)memset_s(outBuffer, outBufferLen, 0, outBufferLen);
+
+    ret = sprintf_s(outBuffer, outBufferLen, "%u", outUint[0]);
+    if (ret == -1) {
+        PRINT_ERR("sprintf_s failed.\n");
+        goto FREE_OUTBUFFER;
+    }
+    for (i = 1; i < RPCID_OUT_BUFFER; i++) {
+        ret = sprintf_s(outBuffer, outBufferLen, "%s,%u", outBuffer, outUint[i]);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed.\n");
+            goto FREE_OUTBUFFER;
+        }
+    }
+
+    for (i = 0; i < indexPri; i++) {
+        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer, priSyscap + i * SINGLE_FEAT_LENGTH);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed.\n");
+            goto FREE_OUTBUFFER;
+        }
+    }
+
+    const char outputFilename[] = "RPCID.txt";
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFilename, outBuffer, strlen(outBuffer));
+    if (ret != 0) {
+        PRINT_ERR("Save to txt file failed. Output path:%s/%s\n", outDirPath, outputFilename);
+        goto FREE_OUTBUFFER;
+    }
+
+FREE_OUTBUFFER:
+    free(outBuffer);
+FREE_MALLOC_PRISYSCAP:
+    free(priSyscap);
+FREE_MALLOC_OSSYSCAP:
+    free(osSysCapIndex);
+FREE_WHOLE_SYSCAP:
+    cJSON_Delete(sysCapDefine);
+FREE_RPCID_ROOT:
+    cJSON_Delete(rpcidRoot);
 FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
     return ret;
