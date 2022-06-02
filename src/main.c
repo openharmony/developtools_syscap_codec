@@ -89,8 +89,10 @@ int main(int argc, char **argv)
 
     if (rpcid && !pcid && encode && !decode && inputfile && !help) {
         ret = RPCIDEncode(inputfile, outputpath);
-    } else if (rpcid && !pcid && !encode && decode && inputfile && !help) {
+    } else if (rpcid && !pcid && !encode && decode && !stringDecode && inputfile && !help) {
         ret = RPCIDDecode(inputfile, outputpath);
+    } else if (rpcid && !pcid && !encode && decode && stringDecode && inputfile && !help) {
+        ret = DecodeRpcidToString(inputfile, outputpath);
     } else if (!rpcid && pcid && encode && !decode && inputfile && !help) {
         ret = CreatePCID(inputfile, outputpath);
     } else if (!rpcid && pcid && !encode && decode && inputfile && !help) {
