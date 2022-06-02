@@ -548,13 +548,6 @@ static int32_t AddHeaderToJsonObj(uint32_t *pcidHeader, uint32_t pcidHeaderLen, 
         PRINT_ERR("input pcidHeader(%u) error.\n", pcidHeaderLen);
         return -1;
     }
-    typedef struct pcidHeader {
-        uint16_t apiVersion : 15;
-        uint16_t apiVersionType : 1;
-        uint16_t systemType : 3;
-        uint16_t reserved : 13;
-        uint32_t manufacturerID;
-    } PCIDHeader;
 
     PCIDHeader *header = (PCIDHeader *)pcidHeader;
     // trans system type to string
@@ -709,7 +702,7 @@ int32_t DecodeStringPCID(char *input, char *outDirPath, int type)
     }
     // save as json file
     char *jsonBuffer = cJSON_Print(rootObj);
-    const char outputFileName[] = "syscap.json";
+    const char outputFileName[] = "PCID.json";
     if (ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer))) {
         PRINT_ERR("Save as json file failed.\n");
         goto SAVE_FAILED;

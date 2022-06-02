@@ -34,6 +34,8 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath);
 int32_t RPCIDDecode(char *inputFile, char *outputPath);
 /* in: inputFile, out: outputPath/rpcid.json */
 int32_t DecodeRpcidToString(char *inputFile, char *outDirPath);
+/* in: pcidFile, rpcidFile */
+int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile);
 
 #ifdef __cplusplus
 #if __cplusplus

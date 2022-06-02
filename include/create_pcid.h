@@ -31,6 +31,14 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[MAX_OS_SYSCAP_NUM / 8];
 } PCIDMain;
 
+typedef struct pcidHeader {
+    uint16_t apiVersion : 15;
+    uint16_t apiVersionType : 1;
+    uint16_t systemType : 3;
+    uint16_t reserved : 13;
+    uint32_t manufacturerID;
+} PCIDHeader;
+
 int32_t CreatePCID(char *inputFile, char *outDirPath);
 int32_t DecodePCID(char *inputFile, char *outDirPath);
 int32_t DecodeStringPCID(char *input, char *outDirPath, int type);
