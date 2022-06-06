@@ -40,6 +40,8 @@ int main(int argc, char **argv)
     int32_t help = 0;
     char curpath[PATH_MAX] = {0};
     char *inputfile = NULL;
+    char *pcidfile = NULL;
+    char *rpcidfile = NULL;
     char *outputpath = getcwd(curpath, sizeof(curpath));
 
     while (1) {
@@ -47,15 +49,16 @@ int main(int argc, char **argv)
             {"help",           no_argument,       0,  'h' },
             {"RPCID",          no_argument,       0,  'R' },
             {"PCID",           no_argument,       0,  'P' },
+            {"compare",        required_argument, 0,  'C' },
             {"encode",         no_argument,       0,  'e' },
             {"decode",         no_argument,       0,  'd' },
-            {"string-decode",  no_argument,       0,  's' },
+            {"string",         no_argument,       0,  's' },
             {"input",          required_argument, 0,  'i' },
             {"output",         required_argument, 0,  'o' },
             {0,                0,                 0,  0   }
         };
 
-        int32_t flag = getopt_long(argc, argv, "hRPedsi:o:", long_options, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hRPC:edsi:o:", long_options, &optIndex);
         if (flag == -1) {
             break;
         }
@@ -75,6 +78,10 @@ int main(int argc, char **argv)
             case 'P':
                 pcid = 1;
                 break;
+            case 'C':
+                pcidfile = optarg;
+                rpcidfile = argv[optind];
+                break;
             case 'i':
                 inputfile = optarg;
                 break;
@@ -87,28 +94,30 @@ int main(int argc, char **argv)
         }
     }
 
-    if (rpcid && !pcid && encode && !decode && inputfile && !help) {
+    if (rpcid && !pcid && encode && !decode && inputfile && !stringDecode && !help) {
         ret = RPCIDEncode(inputfile, outputpath);
     } else if (rpcid && !pcid && !encode && decode && !stringDecode && inputfile && !help) {
         ret = RPCIDDecode(inputfile, outputpath);
     } else if (rpcid && !pcid && !encode && decode && stringDecode && inputfile && !help) {
         ret = DecodeRpcidToString(inputfile, outputpath);
-    } else if (!rpcid && pcid && encode && !decode && inputfile && !help) {
+    } else if (!rpcid && !pcid && !encode && !decode && !stringDecode && pcidfile && rpcidfile && !inputfile && !help) {
+        ret = ComparePcidWithRpcidString(pcidfile, rpcidfile);
+    } else if (!rpcid && pcid && encode && !decode && inputfile && !stringDecode && !help) {
         ret = CreatePCID(inputfile, outputpath);
-    } else if (!rpcid && pcid && !encode && decode && inputfile && !help) {
+    } else if (!rpcid && pcid && !encode && decode && inputfile && !stringDecode && !help) {
         ret = DecodePCID(inputfile, outputpath);
-    } else if (!rpcid && !pcid && !encode && !decode && stringDecode && inputfile && !help) {
+    } else if (!rpcid && pcid && !encode && decode && stringDecode && inputfile && !help) {
         ret = DecodeStringPCID(inputfile, outputpath, TYPE_FILE);
     } else {
         printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
-        printf("-h, --help : how to use\n");
-        printf("-R, --RPCID : encode or decode RPCID\n");
-        printf("-P, --PCID : encode or decode PCID\n");
-        printf("-e, --encode : to encode\n");
-        printf("-d, --encode : to decode\n");
-        printf("-s, --string-decode : decode string pcid to json\n");
-        printf("-i filepath, --input filepath : input file\n");
-        printf("-o outpath, --input outpath : output path\n");
+        printf("-h, --help\t: how to use\n");
+        printf("-R, --RPCID\t: encode or decode RPCID\n");
+        printf("-P, --PCID\t: encode or decode PCID\n");
+        printf("-C, --compare\t: compare pcid with rpcid string format.\n");
+        printf("-e, --encode\t: decode to sc format.\n");
+        printf("-d, --encode\t: decode to json format.\n\t-s, --string : decode (to) string format.\n");
+        printf("-i filepath, --input filepath\t: input file\n");
+        printf("-o outpath, --input outpath\t: output path\n");
         exit(0);
     }
 

@@ -27,6 +27,7 @@
 #include "endian_internal.h"
 #include "cJSON.h"
 #include "syscap_define.h"
+#include "create_pcid.h"
 #include "syscap_tool.h"
 
 typedef struct ProductCompatibilityIDHead {
@@ -44,13 +45,15 @@ typedef struct RequiredProductCompatibilityIDHead {
 
 #define SINGLE_FEAT_LENGTH  128
 #define UINT8_BIT 8
+#define INT_BIT 32
 #define RPCID_OUT_BUFFER 32
+#define PCID_OUT_BUFFER RPCID_OUT_BUFFER
 #define BYTES_OF_OS_SYSCAP 120
 #define U32_TO_STR_MAX_LEN 11
 
 #define PRINT_ERR(...) \
     do { \
-        printf("ERROR: in file %s at line %d -> ", __FILE__, __LINE__); \
+        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
 
@@ -556,5 +559,118 @@ FREE_RPCID_ROOT:
     cJSON_Delete(rpcidRoot);
 FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
+    return ret;
+}
+
+static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
+                                        char **priSyscap, uint32_t *priSyscapLen)
+{
+    int32_t ret = 0;
+    uint32_t i, inputLen;
+    uint32_t count = 0;
+    char *temp = NULL;
+    char *tok = NULL;
+    char *private = NULL;
+
+    if (osArraySize != PCID_OUT_BUFFER) {
+        return -1;
+    }
+
+    inputLen = strlen(input);
+    for (i = 0; i < PCID_OUT_BUFFER; i++) {
+        ret = sscanf_s(input, "%u,%s", &osArray[i], input, inputLen);
+        if (ret == -1) {
+            PRINT_ERR("sscanf_s failed.\n");
+            return -1;
+        }
+    }
+
+    // count private syscap
+    if (*input == '\0') {
+        *priSyscap = 0;
+        *priSyscapLen = 0;
+        goto SKIP_PRI_SYSCAP;
+    }
+    for (i = 0; *(input + i) != '\0'; i++) {
+        if (*(input + i) == ',') {
+            count++;
+        }
+    }
+    count++;
+    // get private syscap string
+    char *priSysCapOut = (char *)malloc(SINGLE_FEAT_LENGTH * count);
+    if (priSysCapOut == NULL) {
+        PRINT_ERR("sscanf_s failed.\n");
+        return -1;
+    }
+    (void)memset_s(priSysCapOut, SINGLE_FEAT_LENGTH * count, 0, SINGLE_FEAT_LENGTH * count);
+    private = priSysCapOut;
+
+    temp = strtok_r(input, ",", &tok);
+    while (temp) {
+        ret = strncpy_s(priSysCapOut, SINGLE_FEAT_LENGTH * count,
+                        temp, SINGLE_FEAT_LENGTH - 1);
+        if (ret != EOK) {
+            PRINT_ERR("strncpy_s failed.\n");
+            free(priSysCapOut);
+            return -1;
+        }
+        temp = strtok_r(NULL, ",", &tok);
+        priSysCapOut += SINGLE_FEAT_LENGTH;
+    }
+
+    *priSyscap = private;
+    *priSyscapLen = count;
+
+SKIP_PRI_SYSCAP:
+    return ret;
+}
+
+int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
+{
+    int32_t ret = 0;
+    char *pcidContent = NULL;
+    char *rpcidContent = NULL;
+    char *pcidPriSyscap = NULL;
+    char *rpcidPriSyscap = NULL;
+    uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen, i;
+    uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
+    uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
+
+    if (GetFileContext(pcidFile, &pcidContent, &pcidContentLen)) {
+        PRINT_ERR("Get pcid file context failed, input file : %s\n", pcidFile);
+        return -1;
+    }
+
+    if (GetFileContext(rpcidFile, &rpcidContent, &rpcidContentLen)) {
+        PRINT_ERR("Get rpcid file context failed, input file : %s\n", rpcidFile);
+        free(pcidContent);
+        return -1;
+    }
+
+    SeparateSyscapFromString(pcidContent, pcidOsAarry, PCID_OUT_BUFFER,
+                             &pcidPriSyscap, &pcidPriSyscapLen);
+    SeparateSyscapFromString(rpcidContent, rpcidOsAarry, RPCID_OUT_BUFFER,
+                             &rpcidPriSyscap, &rpcidPriSyscapLen);
+    // compare version
+    uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
+    uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
+    if (pcidVersion < rpcidVersion) {
+        PRINT_ERR("Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
+    }
+    // compare os sysscap
+    for (i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
+        uint32_t temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
+        uint32_t temp2 = temp1 & rpcidOsAarry[i];
+        if (!temp2) {
+            continue;
+        }
+        for (uint8_t j = 0; j < INT_BIT; j++) {
+            if (temp2 & (0x1 << j)) {
+                // 2, header of pcid & rpcid
+                printf("Miss: %s\n", arraySyscap[(i - 2) * INT_BIT + j].syscapStr);
+            }
+        }
+    }
     return ret;
 }
