@@ -601,8 +601,9 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
     int32_t prisyscapFlag = 0;
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
+    bool priSysFound;
     uint32_t pcidPriSyscapLen, rpcidPriSyscapLen;
-    uint32_t flag, i, j, temp1, temp2;
+    uint32_t i, j, temp1, temp2;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
 
@@ -637,20 +638,20 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
         }
     }
     // compare pri syscap
-    flag = 1;
+    priSysFound = false;
     for (i = 0; i < pcidPriSyscapLen; i++) {
         for (j = 0; j < rpcidPriSyscapLen; j++) {
             if (strcmp(pcidPriSyscap + SINGLE_FEAT_LENGTH * i,
                        rpcidPriSyscap + SINGLE_FEAT_LENGTH * j) == 0) {
-                flag = 0;
+                priSysFound = true;
                 break;
             }
         }
-        if (flag != 0) {
+        if (priSysFound != true) {
             printf("Miss: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
             prisyscapFlag += 1;
         }
-        flag = 1;
+        priSysFound = false;
     }
 
     if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
