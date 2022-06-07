@@ -502,8 +502,8 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
         }
     }
     uint32_t outUint[RPCID_OUT_BUFFER] = {0};
-    outUint[0] = NtohsInter(((RPCIDHead *)contextBuffer)->apiVersion);
-    outUint[1] = NtohsInter(*(uint16_t *)(contextBuffer + sizeof(uint32_t)));
+    outUint[0] = *(uint32_t *)contextBuffer;
+    outUint[1] = *(uint32_t *)(contextBuffer + sizeof(uint32_t));
     uint8_t *osOutUint = (uint8_t *)(outUint + 2);
     if (SetOsSysCapBitMap(osOutUint, 120, osSysCapIndex, indexOs)) {  // 120, len of osOutUint
         PRINT_ERR("Set os syscap bit map failed.\n");
@@ -633,7 +633,8 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     char *rpcidContent = NULL;
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
-    uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen, i;
+    uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen;
+    uint32_t flag, i, j;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
 
@@ -658,7 +659,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     if (pcidVersion < rpcidVersion) {
         PRINT_ERR("Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
     }
-    // compare os sysscap
+    // compare os syscap
     for (i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
         uint32_t temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
         uint32_t temp2 = temp1 & rpcidOsAarry[i];
@@ -671,6 +672,21 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
                 printf("Miss: %s\n", arraySyscap[(i - 2) * INT_BIT + j].syscapStr);
             }
         }
+    }
+    // compare pri syscap
+    flag = 1;
+    for (i = 0; i < pcidPriSyscapLen; i++) {
+        for (j = 0; j < rpcidPriSyscapLen; j++) {
+            if (strcmp(pcidPriSyscap + SINGLE_FEAT_LENGTH * i,
+                       rpcidPriSyscap + SINGLE_FEAT_LENGTH * j) == 0) {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag != 0) {
+            printf("Miss: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
+        }
+        flag = 1;
     }
     return ret;
 }
