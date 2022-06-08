@@ -35,6 +35,7 @@ if (defined(ohos_lite)) {
     sources = [
       "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
       "//developtools/syscap_codec/src/create_pcid.c",
+      "//developtools/syscap_codec/src/endian_internal.c",
       "syscap_codec_test.cpp",
     ]
 
@@ -72,6 +73,7 @@ if (defined(ohos_lite)) {
     sources = [
       "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
       "//developtools/syscap_codec/src/create_pcid.c",
+      "//developtools/syscap_codec/src/endian_internal.c",
       "syscap_codec_test.cpp",
     ]
 
