@@ -29,6 +29,8 @@ bool EncodeOsSyscap(char *output, int len);
 bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt);
 bool EncodePrivateSyscap(char **output, int *outputLen);
 bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt);
+char *DecodeRpcidToStringFormat(char *inputFile);
+bool ComparePcidString(char *pcidString, char *rpcidString);
 
 #ifdef __cplusplus
 #if __cplusplus

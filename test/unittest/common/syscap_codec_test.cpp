@@ -99,4 +99,40 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
     EXPECT_EQ(decodePriCnt, 5);
     free(priOutput);
 }
+
+/*
+ * @tc.name: DecodeRpcidToStringFormat
+ * @tc.desc: Check the DecodeRpcidToStringFormat Decoding.
+ * @tc.type: FUNC
+ */
+HWTEST_F(SyscapCodecTest, DecodeRpcidToStringFormat, TestSize.Level1)
+{
+    char inputfile[] = "/system/etc/rpcid.sc";
+    char *out = DecodeRpcidToStringFormat(inputfile);
+    EXPECT_TRUE(out);
+    if (out != NULL) {
+        printf("%s\n", out);
+        free(out);
+    }
+}
+
+/*
+ * @tc.name: ComparePcidString
+ * @tc.desc: Check the DecodeRpcidToStringFormat Decoding.
+ * @tc.type: FUNC
+ */
+HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
+{
+    char pcidString[] = "132096,385875968,12,17268736,2,344130,4,0,0,0,0,\
+                         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\
+                         SystemCapability.Device.xxx1,SystemCapability.Device.xxx2,\
+                         SystemCapability.Vendor.xxx1,SystemCapability.Vendor.xxx2";
+    char rpcidString[] = "33588224,1665236995,4,262144,0,0,4,0,0,0,0,0,\
+                          0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\
+                          SystemCapability.Device.xxx1,\
+                          SystemCapability.Device.xxx2,\
+                          SystemCapability.Vendor.xxx1,\
+                          SystemCapability.Vendor.xxx2";
+    EXPECT_TRUE(ComparePcidString(pcidString, rpcidString));
+}
 } // namespace Syscap
