@@ -32,9 +32,11 @@
 
 #define SINGLE_FEAT_LENGTH  (32 * 8)
 #define PER_SYSCAP_LEN_MAX 128
+#define PCID_OUT_BUFFER 32
 #define PRIVATE_SYSCAP_SIZE 1000
 #define UINT8_BIT 8
 #define BYTES_OF_OS_SYSCAP 120
+#define U32_TO_STR_MAX_LEN 11
 
 #define PRINT_ERR(...) \
     do { \
@@ -717,5 +719,115 @@ PARSE_FAILED:
     if (type == TYPE_FILE) {
         free(fileContext);
     }
+    return ret;
+}
+
+int32_t DecodePcidToString(char *inputFile, char *outDirPath)
+{
+    int32_t ret = 0;
+    uint32_t bufferLen, privateSyscapLen, i, j, outputLen;
+    uint32_t *mainSyscap = NULL;
+    uint16_t priSyscapCount = 0;
+    char *contextBuffer = NULL;
+    char *privateSyscap = NULL;
+    char *priSyscapFull = NULL;
+    char *output = NULL;
+    PCIDMain *pcidMain = NULL;
+
+    ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
+    if (ret != 0) {
+        PRINT_ERR("Get pcid file failed, pcid file path: %s\n", inputFile);
+        return -1;
+    }
+
+    if (bufferLen > 1128) { // 1128, max size of pcid.sc
+        PRINT_ERR("Input pcid file too large, pcid file size: %u\n", bufferLen);
+        goto FREE_CONTEXT;
+    }
+
+    pcidMain = (PCIDMain *)contextBuffer;
+    privateSyscap = (char *)(pcidMain + 1);
+    privateSyscapLen = strlen(privateSyscap);
+
+    // process os syscap
+    mainSyscap = (uint32_t *)pcidMain;
+
+    // process private syscap
+    for (i = 0; i < privateSyscapLen; i++) {
+        if (privateSyscap[i] == ',') {
+            priSyscapCount++;
+        }
+    }
+    if (priSyscapCount == 0) {
+        goto OUT_PUT;
+    }
+    priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_FEAT_LENGTH);
+    if (priSyscapFull == NULL) {
+        PRINT_ERR("malloc failed\n");
+        goto FREE_PRISYSCAP_FULL;
+    }
+    (void)memset_s(priSyscapFull, priSyscapCount * SINGLE_FEAT_LENGTH,
+                   0, priSyscapCount * SINGLE_FEAT_LENGTH);
+    char tempSyscap[SINGLE_FEAT_LENGTH] = {0};
+    char *temp = tempSyscap;
+    for (i = 0, j = 0; i < privateSyscapLen; i++) {
+        if (*privateSyscap == ',') {
+            *temp = '\0';
+            ret = sprintf_s(priSyscapFull + j * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH,
+                            "SystemCapability.%s", tempSyscap);
+            if (ret == -1) {
+                PRINT_ERR("sprintf_s failed\n");
+                goto FREE_PRISYSCAP_FULL;
+            }
+            temp = tempSyscap;
+            privateSyscap++;
+            j++;
+            continue;
+        }
+        *temp++ = *privateSyscap++;
+    }
+    // output
+OUT_PUT:
+    // 17, size of "SystemCapability."
+    outputLen = U32_TO_STR_MAX_LEN * PCID_OUT_BUFFER + 17 * priSyscapCount + privateSyscapLen + 1;
+    output = (char *)malloc(outputLen);
+    if (output == NULL) {
+        PRINT_ERR("malloc failed\n");
+        goto FREE_PRISYSCAP_FULL;
+    }
+    (void)memset_s(output, outputLen, 0, outputLen);
+    ret = sprintf_s(output, outputLen, "%u", mainSyscap[0]);
+    if (ret == -1) {
+        PRINT_ERR("sprintf_s failed\n");
+        goto FREE_OUTPUT;
+    }
+    for (i = 1; i < PCID_OUT_BUFFER; i++) {
+        ret = sprintf_s(output, outputLen, "%s,%u", output, mainSyscap[i]);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed\n");
+            goto FREE_OUTPUT;
+        }
+    }
+    for (i = 0; i < priSyscapCount; i++) {
+        ret = sprintf_s(output, outputLen, "%s,%s", output, priSyscapFull + i * SINGLE_FEAT_LENGTH);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed\n");
+            goto FREE_OUTPUT;
+        }
+    }
+    // save as file
+    const char outputFileName[] = "PCID.txt";
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, output, strlen(output));
+    if (ret != 0) {
+        PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, outputFileName);
+        goto FREE_OUTPUT;
+    }
+
+FREE_OUTPUT:
+    free(output);
+FREE_PRISYSCAP_FULL:
+    free(priSyscapFull);
+FREE_CONTEXT:
+    free(contextBuffer);
     return ret;
 }

@@ -690,5 +690,9 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
         }
         priSysFound = false;
     }
+
+    if (ret == 0) {
+        printf("Succeed! The pcid contains rpcid.\n");
+    }
     return ret;
 }
