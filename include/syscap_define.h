@@ -209,7 +209,7 @@ static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.RelationalStore.Core", DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE},
     {"SystemCapability.DistributedHardware.DeviceManager", DISTRIBUTEDHARDWARE_DEVICEMANAGER},
     {"SystemCapability.DistributedHardware.DistributedCamera", DISTRIBUTEDHARDWARE_DISTRIBUTED_CAMERA},
-    {"SystemCapability.distributedhardware.distributed_hardware_fwk", DISTRIBUTEDHARDWARE_DISTRIBUTED_HARDWARE_FWK},
+    {"SystemCapability.DistributedHardware.DistributedHardwareFWK", DISTRIBUTEDHARDWARE_DISTRIBUTED_HARDWARE_FWK},
     {"SystemCapability.DistributedHardware.DistributedScreen", DISTRIBUTEDHARDWARE_DISTRIBUTED_SCREEN},
     {"SystemCapability.DistributedHardware.DistributedInput", DISTRIBUTEDHARDWARE_DISTRIBUTED_INPUT},
     {"SystemCapability.FileManagement.FileManagerService", FILEMANAGEMENT_FILEMANAGERSERVICE},
