@@ -80,6 +80,10 @@ int main(int argc, char **argv)
                 break;
             case 'C':
                 pcidfile = optarg;
+                if (optind < 0 || optind > argc) {
+                    PRINT_ERR("Input file path too few or too many.\n");
+                    return -1;
+                }
                 rpcidfile = argv[optind];
                 break;
             case 'i':
