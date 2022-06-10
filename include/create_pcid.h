@@ -42,4 +42,5 @@ typedef struct pcidHeader {
 int32_t CreatePCID(char *inputFile, char *outDirPath);
 int32_t DecodePCID(char *inputFile, char *outDirPath);
 int32_t DecodeStringPCID(char *input, char *outDirPath, int type);
+int32_t DecodePcidToString(char *inputFile, char *outDirPath);
 #endif

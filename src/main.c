@@ -98,8 +98,10 @@ int main(int argc, char **argv)
         ret = RPCIDEncode(inputfile, outputpath);
     } else if (rpcid && !pcid && !encode && decode && !stringDecode && inputfile && !help) {
         ret = RPCIDDecode(inputfile, outputpath);
-    } else if (rpcid && !pcid && !encode && decode && stringDecode && inputfile && !help) {
+    } else if (rpcid && !pcid && encode && !decode && stringDecode && inputfile && !help) {
         ret = DecodeRpcidToString(inputfile, outputpath);
+    } else if (!rpcid && pcid && encode && !decode && stringDecode && inputfile && !help) {
+        ret = DecodePcidToString(inputfile, outputpath);
     } else if (!rpcid && !pcid && !encode && !decode && !stringDecode && pcidfile && rpcidfile && !inputfile && !help) {
         ret = ComparePcidWithRpcidString(pcidfile, rpcidfile);
     } else if (!rpcid && pcid && encode && !decode && inputfile && !stringDecode && !help) {
@@ -114,8 +116,8 @@ int main(int argc, char **argv)
         printf("-R, --RPCID\t: encode or decode RPCID\n");
         printf("-P, --PCID\t: encode or decode PCID\n");
         printf("-C, --compare\t: compare pcid with rpcid string format.\n");
-        printf("-e, --encode\t: decode to sc format.\n");
-        printf("-d, --encode\t: decode to json format.\n\t-s, --string : decode (to) string format.\n");
+        printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
+        printf("-d, --decode\t: decode to json format.\n\t-s, --string : decode string format.\n");
         printf("-i filepath, --input filepath\t: input file\n");
         printf("-o outpath, --input outpath\t: output path\n");
         exit(0);
