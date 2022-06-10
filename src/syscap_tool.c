@@ -490,9 +490,9 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
         cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
         cJsonTemp = cJSON_GetObjectItem(sysCapDefine, cJsonItem->valuestring);
         if (cJsonTemp != NULL) {
-            osSysCapIndex[indexOs++] = cJsonTemp->valueint;
+            osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
-            ret = strncpy_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
+            ret = strncpy_s(priSyscapArray, SINGLE_FEAT_LENGTH,
                             cJsonItem->valuestring, SINGLE_FEAT_LENGTH - 1);
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
@@ -512,7 +512,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     }
 
     uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + (SINGLE_FEAT_LENGTH + 1) * sysCapArraySize;
+                            + (SINGLE_FEAT_LENGTH + 1) * (uint16_t)sysCapArraySize;
     char *outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
@@ -609,7 +609,7 @@ static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t
 
     temp = strtok_r(input, ",", &tok);
     while (temp) {
-        ret = strncpy_s(priSysCapOut, SINGLE_FEAT_LENGTH * count,
+        ret = strncpy_s(priSysCapOut, SINGLE_FEAT_LENGTH,
                         temp, SINGLE_FEAT_LENGTH - 1);
         if (ret != EOK) {
             PRINT_ERR("strncpy_s failed.\n");
