@@ -26,6 +26,7 @@ typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
     ACE_ACEENGINELITE,
+    ACE_UI_APPEARANCE,
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
     BARRIERFREE_ACCESSIBILITY_CORE,
@@ -176,6 +177,7 @@ typedef enum SystemCapabilityNum {
 static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
+    {"SystemCapability.Ace.UiAppearance", ACE_UI_APPEARANCE},
     {"SystemCapability.Ace.AceEngineLite", ACE_ACEENGINELITE},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
