@@ -479,7 +479,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     // malloc for save private syscap string
     priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_FEAT_LENGTH);
     if (priSyscapArray == NULL) {
-        PRINT_ERR("malloc(%u) failed.\n", sysCapArraySize * SINGLE_FEAT_LENGTH);
+        PRINT_ERR("malloc(%d) failed.\n", sysCapArraySize * SINGLE_FEAT_LENGTH);
         goto FREE_MALLOC_OSSYSCAP;
     }
     (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
