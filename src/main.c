@@ -80,8 +80,8 @@ int main(int argc, char **argv)
                 break;
             case 'C':
                 pcidfile = optarg;
-                if (optind < 0 || optind > argc) {
-                    PRINT_ERR("Input file path too few or too many.\n");
+                if (argc != 4 || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
+                    PRINT_ERR("Input file too few or too many.\n");
                     return -1;
                 }
                 rpcidfile = argv[optind];
