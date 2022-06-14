@@ -451,7 +451,7 @@ char *DecodeRpcidToStringFormat(char *inputFile)
     // malloc for save private syscap string
     priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_FEAT_LENGTH);
     if (priSyscapArray == NULL) {
-        PRINT_ERR("malloc(%u) failed.\n", sysCapArraySize * SINGLE_FEAT_LENGTH);
+        PRINT_ERR("malloc(%u) failed.\n", (uint32_t)sysCapArraySize * SINGLE_FEAT_LENGTH);
         goto FREE_MALLOC_OSSYSCAP;
     }
     (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
@@ -462,7 +462,7 @@ char *DecodeRpcidToStringFormat(char *inputFile)
         cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
         cJsonTemp = cJSON_GetObjectItem(sysCapDefine, cJsonItem->valuestring);
         if (cJsonTemp != NULL) {
-            osSysCapIndex[indexOs++] = cJsonTemp->valueint;
+            osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
             ret = strncpy_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
                             cJsonItem->valuestring, SINGLE_FEAT_LENGTH - 1);
@@ -483,8 +483,8 @@ char *DecodeRpcidToStringFormat(char *inputFile)
         goto FREE_MALLOC_PRISYSCAP;
     }
 
-    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + (SINGLE_FEAT_LENGTH + 1) * sysCapArraySize;
+    uint32_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
+                            + (SINGLE_FEAT_LENGTH + 1) * (uint32_t)sysCapArraySize;
     outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
