@@ -101,22 +101,6 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 }
 
 /*
- * @tc.name: DecodeRpcidToStringFormat
- * @tc.desc: Check the DecodeRpcidToStringFormat Decoding.
- * @tc.type: FUNC
- */
-HWTEST_F(SyscapCodecTest, DecodeRpcidToStringFormat, TestSize.Level1)
-{
-    char inputfile[] = "/system/etc/rpcid.sc";
-    char *out = DecodeRpcidToStringFormat(inputfile);
-    EXPECT_TRUE(out);
-    if (out != NULL) {
-        printf("%s\n", out);
-        free(out);
-    }
-}
-
-/*
  * @tc.name: ComparePcidString
  * @tc.desc: Check the DecodeRpcidToStringFormat Decoding.
  * @tc.type: FUNC
