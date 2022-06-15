@@ -355,7 +355,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     
     /* api version */
     if (pcidMain->apiVersionType != 0) {
-        PRINT_ERR("prase file failed, apiVersionType is invaild, input file : %s\n", inputFile);
+        PRINT_ERR("Prase file failed, apiVersionType is invaild, input file : %s\n", inputFile);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }

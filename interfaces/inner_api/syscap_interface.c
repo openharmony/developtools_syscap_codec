@@ -632,7 +632,7 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
         for (uint8_t k = 0; k < INT_BIT; k++) {
             if (temp2 & (0x1 << k)) {
                 // 2, header of pcid & rpcid
-                printf("Miss: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
+                printf("Missing: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
                 ossyscapFlag += 1;
             }
         }
@@ -648,7 +648,7 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
             }
         }
         if (priSysFound != true) {
-            printf("Miss: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
+            printf("Missing: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
             prisyscapFlag += 1;
         }
         priSysFound = false;
