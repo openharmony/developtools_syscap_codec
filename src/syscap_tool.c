@@ -44,7 +44,9 @@ typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersionType : 1;
 } RPCIDHead;
 
-#define SINGLE_FEAT_LENGTH  128
+#define SINGLE_SYSCAP_LEN 128
+#define SYSCAP_PREFIX_LEN 17
+#define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
 #define UINT8_BIT 8
 #define INT_BIT 32
 #define RPCID_OUT_BUFFER 32
@@ -223,7 +225,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     }
     sysCapSize = (uint32_t)ret;
     // 2, to save SysCaptype & SysCapLength
-    convertedBufLen += (2 * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LENGTH);
+    convertedBufLen += (2 * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LEN);
 
     convertedBuffer = (char *)malloc(convertedBufLen);
     if (convertedBuffer == NULL) {
@@ -248,7 +250,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     *(uint16_t *)fillTmpPtr = HtonsInter(2); // 2, SysCap Type, 2: request Cap
     fillTmpPtr += sizeof(uint16_t);
     // fill osCap Length
-    *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LENGTH));
+    *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LEN));
     fillTmpPtr += sizeof(uint16_t);
     for (uint32_t i = 0; i < sysCapSize; i++) {
         arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, i);
@@ -265,16 +267,16 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
             goto FREE_CONVERT_OUT;
         }
 
-        ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LENGTH, pointPos + 1, strlen(pointPos + 1));
+        ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LEN, pointPos + 1, strlen(pointPos + 1));
         if (ret != 0) {
             PRINT_ERR("context of \"syscap\" array is invalid\n");
             ret = -1;
             goto FREE_CONVERT_OUT;
         }
-        fillTmpPtr += SINGLE_FEAT_LENGTH;
+        fillTmpPtr += SINGLE_FEAT_LEN;
     }
 
-    ret = ConvertedContextSaveAsFile(outDirPath, "rpcid.sc", convertedBuffer, convertedBufLen);
+    ret = ConvertedContextSaveAsFile(outDirPath, "RPCID.sc", convertedBuffer, convertedBufLen);
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:rpcid.sc\n", outDirPath);
         goto FREE_CONVERT_OUT;
@@ -292,20 +294,20 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
     uint32_t i;
     int32_t ret = 0;
     uint16_t sysCapLength = NtohsInter(*(uint16_t *)(input + sizeof(uint32_t)));
-    uint16_t sysCapCount = sysCapLength / SINGLE_FEAT_LENGTH;
+    uint16_t sysCapCount = sysCapLength / SINGLE_FEAT_LEN;
     char *sysCapBegin = input + sizeof(RPCIDHead) + sizeof(uint32_t);
     RPCIDHead *rpcidHeader = (RPCIDHead *)input;
     cJSON *sysCapJson = cJSON_CreateArray();
     for (i = 0; i < sysCapCount; i++) {
-        char *temp = sysCapBegin + i * SINGLE_FEAT_LENGTH;
-        if (strlen(temp) >= SINGLE_FEAT_LENGTH) {
-            PRINT_ERR("Get SysCap failed, string length too long.\n");
+        char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
+        if (strlen(temp) >= SINGLE_FEAT_LEN || strlen(temp) == 0) {
+            PRINT_ERR("Get SysCap failed, string length(%u) error.\n", (uint32_t)strlen(temp));
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
-        char buffer[SINGLE_FEAT_LENGTH + 17] = "SystemCapability."; // 17, sizeof "SystemCapability."
+        char buffer[SINGLE_SYSCAP_LEN] = "SystemCapability.";
         
-        ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LENGTH);
+        ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LEN);
         if (ret != EOK) {
             PRINT_ERR("strncat_s failed.\n");
             goto FREE_SYSCAP_OUT;
@@ -393,7 +395,7 @@ int32_t RPCIDDecode(char *inputFile, char *outDirPath)
 
     // save to json file
     convertedBuffer = cJSON_Print(rpcidRoot);
-    ret = ConvertedContextSaveAsFile(outDirPath, "rpcid.json", convertedBuffer, strlen(convertedBuffer));
+    ret = ConvertedContextSaveAsFile(outDirPath, "RPCID.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:rpcid.json\n", outDirPath);
         goto FREE_RPCID_ROOT;
@@ -477,13 +479,13 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     (void)memset_s(osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
                    0, sizeof(uint16_t) * sysCapArraySize);
     // malloc for save private syscap string
-    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_FEAT_LENGTH);
+    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_SYSCAP_LEN);
     if (priSyscapArray == NULL) {
-        PRINT_ERR("malloc(%d) failed.\n", sysCapArraySize * SINGLE_FEAT_LENGTH);
+        PRINT_ERR("malloc(%d) failed.\n", sysCapArraySize * SINGLE_SYSCAP_LEN);
         goto FREE_MALLOC_OSSYSCAP;
     }
-    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
-                   0, sysCapArraySize * SINGLE_FEAT_LENGTH);
+    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_SYSCAP_LEN,
+                   0, sysCapArraySize * SINGLE_SYSCAP_LEN);
     priSyscap = priSyscapArray;
     // part os syscap and ptivate syscap
     for (i = 0; i < (uint32_t)sysCapArraySize; i++) {
@@ -492,13 +494,13 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
         if (cJsonTemp != NULL) {
             osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
-            ret = strncpy_s(priSyscapArray, SINGLE_FEAT_LENGTH,
-                            cJsonItem->valuestring, SINGLE_FEAT_LENGTH - 1);
+            ret = strncpy_s(priSyscap, SINGLE_SYSCAP_LEN,
+                            cJsonItem->valuestring, SINGLE_SYSCAP_LEN - 1);
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
                 goto FREE_MALLOC_PRISYSCAP;
             }
-            priSyscapArray += SINGLE_FEAT_LENGTH;
+            priSyscap += SINGLE_SYSCAP_LEN;
             indexPri++;
         }
     }
@@ -512,7 +514,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     }
 
     uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + (SINGLE_FEAT_LENGTH + 1) * (uint16_t)sysCapArraySize;
+                            + (SINGLE_SYSCAP_LEN + 1) * (uint16_t)sysCapArraySize;
     char *outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
@@ -534,7 +536,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     }
 
     for (i = 0; i < indexPri; i++) {
-        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer, priSyscap + i * SINGLE_FEAT_LENGTH);
+        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer, priSyscap + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
             goto FREE_OUTBUFFER;
@@ -551,7 +553,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
 FREE_OUTBUFFER:
     free(outBuffer);
 FREE_MALLOC_PRISYSCAP:
-    free(priSyscap);
+    free(priSyscapArray);
 FREE_MALLOC_OSSYSCAP:
     free(osSysCapIndex);
 FREE_WHOLE_SYSCAP:
@@ -599,28 +601,28 @@ static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t
     }
     count++;
     // get private syscap string
-    char *priSysCapOut = (char *)malloc(SINGLE_FEAT_LENGTH * count);
+    char *priSysCapOut = (char *)malloc(SINGLE_SYSCAP_LEN * count);
     if (priSysCapOut == NULL) {
         PRINT_ERR("sscanf_s failed.\n");
         return -1;
     }
-    (void)memset_s(priSysCapOut, SINGLE_FEAT_LENGTH * count, 0, SINGLE_FEAT_LENGTH * count);
+    (void)memset_s(priSysCapOut, SINGLE_SYSCAP_LEN * count, 0, SINGLE_SYSCAP_LEN * count);
     private = priSysCapOut;
 
     temp = strtok_r(input, ",", &tok);
     while (temp) {
-        ret = strncpy_s(priSysCapOut, SINGLE_FEAT_LENGTH,
-                        temp, SINGLE_FEAT_LENGTH - 1);
+        ret = strncpy_s(private, SINGLE_SYSCAP_LEN,
+                        temp, SINGLE_SYSCAP_LEN - 1);
         if (ret != EOK) {
             PRINT_ERR("strncpy_s failed.\n");
-            free(priSysCapOut);
+            free(private);
             return -1;
         }
         temp = strtok_r(NULL, ",", &tok);
-        priSysCapOut += SINGLE_FEAT_LENGTH;
+        private += SINGLE_SYSCAP_LEN;
     }
 
-    *priSyscap = private;
+    *priSyscap = priSysCapOut;
     *priSyscapLen = count;
 
 SKIP_PRI_SYSCAP:
@@ -629,13 +631,16 @@ SKIP_PRI_SYSCAP:
 
 int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
 {
-    int32_t ret = 0;
+    int32_t ret;
+    int32_t versionFlag = 0;
+    int32_t ossyscapFlag = 0;
+    int32_t prisyscapFlag = 0;
     char *pcidContent = NULL;
     char *rpcidContent = NULL;
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
     uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen;
-    uint32_t i, j;
+    uint32_t i, j, temp1, temp2;
     bool priSysFound;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
@@ -651,27 +656,33 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
         return -1;
     }
 
-    SeparateSyscapFromString(pcidContent, pcidOsAarry, PCID_OUT_BUFFER,
-                             &pcidPriSyscap, &pcidPriSyscapLen);
-    SeparateSyscapFromString(rpcidContent, rpcidOsAarry, RPCID_OUT_BUFFER,
-                             &rpcidPriSyscap, &rpcidPriSyscapLen);
+    ret =  SeparateSyscapFromString(pcidContent, pcidOsAarry, PCID_OUT_BUFFER,
+                                    &pcidPriSyscap, &pcidPriSyscapLen);
+    ret += SeparateSyscapFromString(rpcidContent, rpcidOsAarry, RPCID_OUT_BUFFER,
+                                    &rpcidPriSyscap, &rpcidPriSyscapLen);
+    if (ret != 0) {
+        PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
+        return false;
+    }
     // compare version
     uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
     uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
     if (pcidVersion < rpcidVersion) {
         PRINT_ERR("Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
+        versionFlag = 1;
     }
     // compare os syscap
     for (i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
-        uint32_t temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
-        uint32_t temp2 = temp1 & rpcidOsAarry[i];
+        temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
+        temp2 = temp1 & rpcidOsAarry[i];
         if (!temp2) {
             continue;
         }
         for (uint8_t k = 0; k < INT_BIT; k++) {
             if (temp2 & (0x1 << k)) {
                 // 2, header of pcid & rpcid
-                printf("Miss: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
+                printf("Missing: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
+                ossyscapFlag += 1;
             }
         }
     }
@@ -679,20 +690,23 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     priSysFound = false;
     for (i = 0; i < pcidPriSyscapLen; i++) {
         for (j = 0; j < rpcidPriSyscapLen; j++) {
-            if (strcmp(pcidPriSyscap + SINGLE_FEAT_LENGTH * i,
-                       rpcidPriSyscap + SINGLE_FEAT_LENGTH * j) == 0) {
+            if (strcmp(pcidPriSyscap + SINGLE_SYSCAP_LEN * i,
+                       rpcidPriSyscap + SINGLE_SYSCAP_LEN * j) == 0) {
                 priSysFound = true;
                 break;
             }
         }
         if (priSysFound != true) {
-            printf("Miss: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
+            printf("Missing: %s\n", pcidPriSyscap + SINGLE_SYSCAP_LEN * i);
+            prisyscapFlag += 1;
         }
         priSysFound = false;
     }
 
-    if (ret == 0) {
-        printf("Succeed! The pcid contains rpcid.\n");
+    if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
+        printf("Succeed! The pcid meets the rpcid.\n");
+        return 0;
+    } else {
+        return -1;
     }
-    return ret;
 }
