@@ -365,7 +365,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
                        (pcidMain->systemType == 0b010 ? "small" :
                        (pcidMain->systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
-        PRINT_ERR("prase file failed, systemType is invaild, %d\n", pcidMain->systemType);
+        PRINT_ERR("prase file failed, systemType is invaild, %u\n", pcidMain->systemType);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
@@ -653,7 +653,7 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     return 0;
 }
 
-int32_t DecodeStringPCID(char *input, char *outDirPath, int type)
+int32_t DecodeStringPCIDToJson(char *input, char *outDirPath, int type)
 {
     int32_t ret = -1;
     uint32_t osSyscapUintArray[OS_SYSCAP_NUM] = {0};
@@ -722,7 +722,7 @@ PARSE_FAILED:
     return ret;
 }
 
-int32_t DecodePcidToString(char *inputFile, char *outDirPath)
+int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     uint32_t bufferLen, privateSyscapLen, i, j, outputLen;

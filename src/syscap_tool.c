@@ -44,7 +44,7 @@ typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersionType : 1;
 } RPCIDHead;
 
-#define SINGLE_SYSCAP_LEN 128
+#define SINGLE_SYSCAP_LEN 256
 #define SYSCAP_PREFIX_LEN 17
 #define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
 #define UINT8_BIT 8
@@ -429,7 +429,7 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, uint16_t *index, uin
     return 0;
 }
 
-int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
+int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     int32_t sysCapArraySize;
@@ -494,8 +494,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
         if (cJsonTemp != NULL) {
             osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
-            ret = strncpy_s(priSyscap, SINGLE_SYSCAP_LEN,
-                            cJsonItem->valuestring, SINGLE_SYSCAP_LEN - 1);
+            ret = strcpy_s(priSyscap, SINGLE_SYSCAP_LEN, cJsonItem->valuestring);
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
                 goto FREE_MALLOC_PRISYSCAP;
@@ -514,7 +513,7 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     }
 
     uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + (SINGLE_SYSCAP_LEN + 1) * (uint16_t)sysCapArraySize;
+                            + SINGLE_SYSCAP_LEN * indexPri;
     char *outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
@@ -536,7 +535,8 @@ int32_t DecodeRpcidToString(char *inputFile, char *outDirPath)
     }
 
     for (i = 0; i < indexPri; i++) {
-        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer, priSyscap + i * SINGLE_SYSCAP_LEN);
+        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer,
+                        priSyscapArray + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
             goto FREE_OUTBUFFER;
@@ -626,7 +626,7 @@ static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t
     *priSyscapLen = count;
 
 SKIP_PRI_SYSCAP:
-    return ret;
+    return 0;
 }
 
 int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
@@ -662,7 +662,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
                                     &rpcidPriSyscap, &rpcidPriSyscapLen);
     if (ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
-        return false;
+        return -1;
     }
     // compare version
     uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
@@ -688,16 +688,16 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     }
     // compare pri syscap
     priSysFound = false;
-    for (i = 0; i < pcidPriSyscapLen; i++) {
-        for (j = 0; j < rpcidPriSyscapLen; j++) {
-            if (strcmp(pcidPriSyscap + SINGLE_SYSCAP_LEN * i,
-                       rpcidPriSyscap + SINGLE_SYSCAP_LEN * j) == 0) {
+    for (i = 0; i < rpcidPriSyscapLen; i++) {
+        for (j = 0; j < pcidPriSyscapLen; j++) {
+            if (strcmp(rpcidPriSyscap + SINGLE_SYSCAP_LEN * i,
+                       pcidPriSyscap + SINGLE_SYSCAP_LEN * j) == 0) {
                 priSysFound = true;
                 break;
             }
         }
         if (priSysFound != true) {
-            printf("Missing: %s\n", pcidPriSyscap + SINGLE_SYSCAP_LEN * i);
+            printf("Missing: %s\n", rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
             prisyscapFlag += 1;
         }
         priSysFound = false;
@@ -705,8 +705,8 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
 
     if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
         printf("Succeed! The pcid meets the rpcid.\n");
-        return 0;
     } else {
-        return -1;
+        printf("Fail! The pcid does not meet the rpcid\n");
     }
+    return 0;
 }
