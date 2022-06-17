@@ -17,7 +17,7 @@
 #define _SYSCAP_DEFINE_H
 
 typedef struct SystemCapabilityWithNum {
-    char syscapStr[128];
+    char syscapStr[256];
     uint16_t num;
 } SyscapWithNum;
 

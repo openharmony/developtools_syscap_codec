@@ -30,8 +30,7 @@
 #include "syscap_define.h"
 #include "create_pcid.h"
 
-#define SINGLE_FEAT_LENGTH  (32 * 8)
-#define PER_SYSCAP_LEN_MAX 128
+#define SINGLE_SYSCAP_LEN  256
 #define PCID_OUT_BUFFER 32
 #define PRIVATE_SYSCAP_SIZE 1000
 #define UINT8_BIT 8
@@ -423,9 +422,9 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
 
     char *ptrPrivateSyscap = (char *)(pcidMain + 1);
     uint16_t privateSyscapLen = contextBufLen - sizeof(PCIDMain) - 1;
-    char priSyscapStr[PER_SYSCAP_LEN_MAX] = {0};
+    char priSyscapStr[SINGLE_SYSCAP_LEN] = {0};
     char *tempPriSyscapStr = priSyscapStr;
-    char fullPriSyscapStr[PER_SYSCAP_LEN_MAX] = {0};
+    char fullPriSyscapStr[SINGLE_SYSCAP_LEN] = {0};
     if (privateSyscapLen < 0) {
         PRINT_ERR("parse private syscap failed.");
         ret = -1;
@@ -437,7 +436,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     while (*ptrPrivateSyscap != '\0') {
         if (*ptrPrivateSyscap == ',') {
             *tempPriSyscapStr = '\0';
-            ret = sprintf_s(fullPriSyscapStr, PER_SYSCAP_LEN_MAX, "SystemCapability.%s", priSyscapStr);
+            ret = sprintf_s(fullPriSyscapStr, SINGLE_SYSCAP_LEN, "SystemCapability.%s", priSyscapStr);
             if (ret == -1) {
                 printf("sprintf_s failed\n");
                 goto FREE_VECTOR_OUT;
@@ -761,19 +760,19 @@ int32_t DecodePcidToString(char *inputFile, char *outDirPath)
     if (priSyscapCount == 0) {
         goto OUT_PUT;
     }
-    priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_FEAT_LENGTH);
+    priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_SYSCAP_LEN);
     if (priSyscapFull == NULL) {
         PRINT_ERR("malloc failed\n");
         goto FREE_PRISYSCAP_FULL;
     }
-    (void)memset_s(priSyscapFull, priSyscapCount * SINGLE_FEAT_LENGTH,
-                   0, priSyscapCount * SINGLE_FEAT_LENGTH);
-    char tempSyscap[SINGLE_FEAT_LENGTH] = {0};
+    (void)memset_s(priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
+                   0, priSyscapCount * SINGLE_SYSCAP_LEN);
+    char tempSyscap[SINGLE_SYSCAP_LEN] = {0};
     char *temp = tempSyscap;
     for (i = 0, j = 0; i < privateSyscapLen; i++) {
         if (*privateSyscap == ',') {
             *temp = '\0';
-            ret = sprintf_s(priSyscapFull + j * SINGLE_FEAT_LENGTH, SINGLE_FEAT_LENGTH,
+            ret = sprintf_s(priSyscapFull + j * SINGLE_SYSCAP_LEN, SINGLE_SYSCAP_LEN,
                             "SystemCapability.%s", tempSyscap);
             if (ret == -1) {
                 PRINT_ERR("sprintf_s failed\n");
@@ -809,7 +808,7 @@ OUT_PUT:
         }
     }
     for (i = 0; i < priSyscapCount; i++) {
-        ret = sprintf_s(output, outputLen, "%s,%s", output, priSyscapFull + i * SINGLE_FEAT_LENGTH);
+        ret = sprintf_s(output, outputLen, "%s,%s", output, priSyscapFull + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed\n");
             goto FREE_OUTPUT;
