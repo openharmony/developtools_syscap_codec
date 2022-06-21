@@ -17,7 +17,6 @@
 #define _SYSCAP_CODEC_TEST_H
 
 #include <gtest/gtest.h>
-#include "syscap_interface.h"
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -565,8 +565,8 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
-                                        char **priSyscap, uint32_t *priSyscapLen)
+int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
+                                 char **priSyscap, uint32_t *priSyscapLen)
 {
     int32_t ret = 0;
     uint32_t i, inputLen;
