@@ -19,18 +19,32 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define MAX_MISS_SYSCAP 512
+#define SINGLE_SYSCAP_LEN 256
+#define PCID_MAIN_BYTES 128
+#define E_OK 0
+#define E_APIVERSION 1
+#define E_SYSCAP 2
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
+typedef struct CompareErrorMessage {
+    char *syscap[MAX_MISS_SYSCAP];
+    uint16_t missSyscapNum;
+    uint16_t targetApiVersion;
+} CompareError;
+
 bool EncodeOsSyscap(char *output, int len);
-bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt);
+bool DecodeOsSyscap(char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt);
 bool EncodePrivateSyscap(char **output, int *outputLen);
-bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt);
+bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt);
 char *DecodeRpcidToStringFormat(char *inputFile);
-bool ComparePcidString(char *pcidString, char *rpcidString);
+int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *result);
+int32_t FreeCompareError(CompareError *result);
 
 #ifdef __cplusplus
 #if __cplusplus
