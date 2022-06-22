@@ -13,12 +13,14 @@
  * limitations under the License.
  */
 
+#include <getopt.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <limits.h>
+#include "securec.h"
 #include "syscap_tool.h"
 #include "create_pcid.h"
 
@@ -27,17 +29,30 @@
         printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
+#define SYSCAP_VERSION "1.0.0"
+#define OUTPUT_VERSION_LEN 200
+#define ENCODE 0
+#define DECODE 1
+#define STRING_DECODE 2
+#define RPCID 3
+#define PCID 4
+#define PCID_STRING 5
+#define RPCID_STRING 6
+#define VERSION 7
+#define INPUT_FILE 8
+#define OUTPUT_FILE 9
+#define HELP 10
+
+void PrintHelp(void);
+void PrintVersion(void);
+void OutputVersion(char *arg, int opt);
+void OutputHelp(void);
 
 int main(int argc, char **argv)
 {
     int32_t optIndex;
     int32_t ret = 0;
-    int32_t rpcid = 0;
-    int32_t pcid = 0;
-    int32_t encode = 0;
-    int32_t decode = 0;
-    int32_t stringDecode = 0;
-    int32_t help = 0;
+    uint16_t bitMap = 0x0;
     char curpath[PATH_MAX] = {0};
     char *inputfile = NULL;
     char *pcidfile = NULL;
@@ -47,6 +62,7 @@ int main(int argc, char **argv)
     while (1) {
         static struct option long_options[] = {
             {"help",           no_argument,       0,  'h' },
+            {"version",        no_argument,       0,  'v' },
             {"RPCID",          no_argument,       0,  'R' },
             {"PCID",           no_argument,       0,  'P' },
             {"compare",        required_argument, 0,  'C' },
@@ -58,78 +74,119 @@ int main(int argc, char **argv)
             {0,                0,                 0,  0   }
         };
 
-        int32_t flag = getopt_long(argc, argv, "hRPC:edsi:o:", long_options, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", long_options, &optIndex);
         if (flag == -1) {
             break;
         }
         switch (flag) {
             case 'e':
-                encode = 1;
+                bitMap |= 0x1 << ENCODE;
                 break;
             case 'd':
-                decode = 1;
+                bitMap |= 0x1 << DECODE;
                 break;
             case 's':
-                stringDecode = 1;
+                bitMap |= 0x1 << STRING_DECODE;
                 break;
             case 'R':
-                rpcid = 1;
+                bitMap |= 0x1 << RPCID;
                 break;
             case 'P':
-                pcid = 1;
+                bitMap |= 0x1 << PCID;
                 break;
             case 'C':
-                pcidfile = optarg;
+                bitMap |= 0x1 << PCID_STRING;
+                bitMap |= 0x1 << RPCID_STRING;
                 if (argc != 4 || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
                     PRINT_ERR("Input file too few or too many.\n");
                     return -1;
                 }
+                pcidfile = optarg;
                 rpcidfile = argv[optind];
                 break;
             case 'i':
+                bitMap |= 0x1 << INPUT_FILE;
                 inputfile = optarg;
                 break;
             case 'o':
                 outputpath = optarg;
                 break;
+            case 'v':
+                bitMap |= 0x1 << VERSION;
+                break;
             case 'h':
             default:
-                help = 1;
+                bitMap |= 0x1 << HELP;;
         }
     }
 
-    if (rpcid && !pcid && encode && !decode && inputfile && !stringDecode && !help) {
-        ret = RPCIDEncode(inputfile, outputpath);
-    } else if (rpcid && !pcid && !encode && decode && !stringDecode && inputfile && !help) {
-        ret = RPCIDDecode(inputfile, outputpath);
-    } else if (rpcid && !pcid && encode && !decode && stringDecode && inputfile && !help) {
-        ret = DecodeRpcidToString(inputfile, outputpath);
-    } else if (!rpcid && pcid && encode && !decode && stringDecode && inputfile && !help) {
-        ret = DecodePcidToString(inputfile, outputpath);
-    } else if (!rpcid && !pcid && !encode && !decode && !stringDecode && pcidfile && rpcidfile && !inputfile && !help) {
-        ret = ComparePcidWithRpcidString(pcidfile, rpcidfile);
-    } else if (!rpcid && pcid && encode && !decode && inputfile && !stringDecode && !help) {
-        ret = CreatePCID(inputfile, outputpath);
-    } else if (!rpcid && pcid && !encode && decode && inputfile && !stringDecode && !help) {
-        ret = DecodePCID(inputfile, outputpath);
-    } else if (!rpcid && pcid && !encode && decode && stringDecode && inputfile && !help) {
-        ret = DecodeStringPCID(inputfile, outputpath, TYPE_FILE);
-    } else {
-        printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
-        printf("-h, --help\t: how to use\n");
-        printf("-R, --RPCID\t: encode or decode RPCID\n");
-        printf("-P, --PCID\t: encode or decode PCID\n");
-        printf("-C, --compare\t: compare pcid with rpcid string format.\n");
-        printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
-        printf("-d, --decode\t: decode to json format.\n\t-s, --string : decode string format.\n");
-        printf("-i filepath, --input filepath\t: input file\n");
-        printf("-o outpath, --input outpath\t: output path\n");
-        exit(0);
+    switch (bitMap) {
+        case 0x109: // 0x109, -Rei inputfile
+            ret = RPCIDEncode(inputfile, outputpath); break;
+        case 0x10A: // 0x10A, -Rdi inputfile
+            ret = RPCIDDecode(inputfile, outputpath); break;
+        case 0x10D:
+            ret = EncodeRpcidscToString(inputfile, outputpath); break;
+        case 0x115:
+            ret = EncodePcidscToString(inputfile, outputpath); break;
+        case 0x60:
+            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile); break;
+        case 0x111:
+            ret = CreatePCID(inputfile, outputpath); break;
+        case 0x112:
+            ret = DecodePCID(inputfile, outputpath); break;
+        case 0x116:
+            ret = DecodeStringPCIDToJson(inputfile, outputpath, TYPE_FILE); break;
+        case 0x80:
+            (void)OutputVersion(argv[optind], optind);  break;
+        default:
+            (void)OutputHelp();
     }
 
     if (ret != 0) {
         PRINT_ERR("syscap_tool failed to complete. input: %s\n", inputfile);
     }
-
     return ret;
+}
+
+void PrintVersion(void)
+{
+    char output_version[OUTPUT_VERSION_LEN] = {0};
+    int ret = sprintf_s(output_version, OUTPUT_VERSION_LEN, "syscap_tool v%s", SYSCAP_VERSION);
+    if (ret == -1) {
+        PRINT_ERR("sprintf_s failed.\n");
+        exit(-1);
+    }
+    printf("%s\n", output_version);
+}
+
+void PrintHelp(void)
+{
+    printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
+    printf("-h, --help\t: how to use\n");
+    printf("-R, --RPCID\t: encode or decode RPCID\n");
+    printf("-P, --PCID\t: encode or decode PCID\n");
+    printf("-C, --compare\t: compare pcid with rpcid string format.\n");
+    printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
+    printf("-d, --decode\t: decode to json format.\n\t-s, --string : decode string format.\n");
+    printf("-i filepath, --input filepath\t: input file\n");
+    printf("-o outpath, --input outpath\t: output path\n");
+    printf("-v, --version\t: print syscap_tool version information.\n");
+}
+
+void OutputVersion(char *arg, int opt)
+{
+    if (arg != NULL && opt > 1) {
+        printf("syscap_tool: extra operand \"%s\"\n", arg);
+        printf("Try 'syscap_tool --help' for more information.\n");
+    } else {
+        (void)PrintVersion();
+    }
+}
+
+void OutputHelp(void)
+{
+    (void)PrintHelp();
+    printf("\n");
+    (void)PrintVersion();
 }
