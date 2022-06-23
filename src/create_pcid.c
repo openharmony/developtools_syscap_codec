@@ -365,7 +365,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
                        (pcidMain->systemType == 0b010 ? "small" :
                        (pcidMain->systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
-        PRINT_ERR("prase file failed, systemType is invaild, %d\n", pcidMain->systemType);
+        PRINT_ERR("prase file failed, systemType is invaild, %u\n", pcidMain->systemType);
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
