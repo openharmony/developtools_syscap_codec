@@ -19,9 +19,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifndef SINGLE_SYSCAP_LEN
+#define SINGLE_SYSCAP_LEN (256 + 17)
+#endif // SINGLE_SYSCAP_LEN
 #define MAX_MISS_SYSCAP 512
-#define SINGLE_SYSCAP_LEN 256
 #define PCID_MAIN_BYTES 128
+#define PCID_MAIN_INTS  32
+
 #define E_OK 0
 #define E_APIVERSION 1
 #define E_SYSCAP 2
