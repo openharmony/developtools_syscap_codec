@@ -247,8 +247,13 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
         }
         inputPos++;
     }
-    inputPos = input;
+    if (syscapCnt == 0) {
+        *output = outputArray;
+        *outputCnt = syscapCnt;
+        return true;
+    }
 
+    inputPos = input;
     bufferLen = SINGLE_SYSCAP_LEN * syscapCnt;
     outputArray = (char (*)[SINGLE_SYSCAP_LEN])malloc(bufferLen);
     if (outputArray == NULL) {
