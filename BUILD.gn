@@ -150,7 +150,8 @@ build_ext_component("generate_pcid") {
     cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_tool"
   }
   command = "chmod 777 $cmd"
-  command += " && $cmd -P -e -i ${preload_path}/${product_name}/system/etc/SystemCapability.json"
+  command +=
+      " && $cmd -P -e -i ${preload_path}/system/etc/SystemCapability.json"
   if (defined(ohos_lite)) {
     command += " && mkdir -p $exec_path/system/etc && cp $exec_path/PCID.sc $exec_path/system/etc/PCID.sc"
   }
