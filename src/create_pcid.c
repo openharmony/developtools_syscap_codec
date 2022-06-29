@@ -30,11 +30,12 @@
 #include "syscap_define.h"
 #include "create_pcid.h"
 
-#define SINGLE_SYSCAP_LEN  256
+#define SYSCAP_PREFIX_LEN 17
+#define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
 #define PCID_OUT_BUFFER 32
 #define PRIVATE_SYSCAP_SIZE 1000
 #define UINT8_BIT 8
-#define BYTES_OF_OS_SYSCAP 120
+
 #define U32_TO_STR_MAX_LEN 11
 
 #define PRINT_ERR(...) \
@@ -263,7 +264,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
         }
         sectorOfBits = (osCapIndex->valueint) / UINT8_BIT;
         posOfBits = (osCapIndex->valueint) % UINT8_BIT;
-        if (sectorOfBits >= BYTES_OF_OS_SYSCAP) {
+        if (sectorOfBits >= OS_SYSCAP_BYTES) {
             PRINT_ERR("num of \"os syscap\" is out of 960\n");
             ret = -1;
             goto FREE_PCID_BUFFER_OUT;
@@ -340,8 +341,8 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     int32_t ret;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
-    uint8_t osSyscap[BYTES_OF_OS_SYSCAP] = {0};
-    uint16_t indexOfSyscap[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
+    uint8_t osSyscap[OS_SYSCAP_BYTES] = {0};
+    uint16_t indexOfSyscap[OS_SYSCAP_BYTES * UINT8_BIT] = {0};
     uint32_t i, j, contextBufLen, countOfSyscap = 0;
 
     ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
@@ -368,7 +369,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         ret = -1;
         goto FREE_CONTEXT_OUT;
     }
-    
+
     cJSON *capVectorPtr = cJSON_CreateArray();
     if (capVectorPtr == NULL) {
         PRINT_ERR("cJSON_CreateArray failed\n");
@@ -376,13 +377,13 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         goto FREE_CONTEXT_OUT;
     }
 
-    nRet = memcpy_s(osSyscap, BYTES_OF_OS_SYSCAP, (uint8_t *)pcidMain + 8, BYTES_OF_OS_SYSCAP); // 8, bytes of pcid header
+    nRet = memcpy_s(osSyscap, OS_SYSCAP_BYTES, (uint8_t *)pcidMain + 8, OS_SYSCAP_BYTES); // 8, bytes of pcid header
     if (EOK != nRet) {
         PRINT_ERR("memcpy_s failed.");
         ret = -1;
         goto FREE_VECTOR_OUT;
     }
-    for (i = 0; i < BYTES_OF_OS_SYSCAP; i++) {
+    for (i = 0; i < OS_SYSCAP_BYTES; i++) {
         for (j = 0; j < UINT8_BIT; j++) {
             if (osSyscap[i] & (0x01 << j)) {
                 indexOfSyscap[countOfSyscap++] = i * UINT8_BIT + j;
@@ -593,8 +594,8 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
 
     uint32_t i, j;
     uint32_t osSyscapCount = 0;
-    uint16_t index[BYTES_OF_OS_SYSCAP * UINT8_BIT] = {0};
-    for (i = 0; i < BYTES_OF_OS_SYSCAP; i++) {
+    uint16_t index[OS_SYSCAP_BYTES * UINT8_BIT] = {0};
+    for (i = 0; i < OS_SYSCAP_BYTES; i++) {
         for (j = 0; j < UINT8_BIT; j++) {
             if (osSysCapArrayUint8[i] & (0x01 << j)) {
                 index[osSyscapCount++] = i * UINT8_BIT + j;

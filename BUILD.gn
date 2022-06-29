@@ -107,6 +107,7 @@ if (defined(ohos_lite)) {
     sources = [
       "./interfaces/inner_api/syscap_interface.c",
       "./src/endian_internal.c",
+      "./src/syscap_tool.c",
     ]
 
     deps = [
@@ -124,6 +125,7 @@ if (defined(ohos_lite)) {
     sources = [
       "./interfaces/inner_api/syscap_interface.c",
       "./src/endian_internal.c",
+      "./src/syscap_tool.c",
     ]
     deps = [
       "//third_party/bounds_checking_function:libsec_static",
