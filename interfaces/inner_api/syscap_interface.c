@@ -24,12 +24,13 @@
 #include <limits.h>
 #include "cJSON.h"
 #include "syscap_define.h"
+#include "syscap_tool.h"
 #include "endian_internal.h"
 #include "syscap_interface.h"
 
 #define OS_SYSCAP_BYTES 120
-#define PCID_MAIN_BYTES 128
-#define SINGLE_FEAT_LENGTH 128
+#define SYSCAP_PREFIX_LEN 17
+#define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
 #define RPCID_OUT_BUFFER 32
 #define PCID_OUT_BUFFER RPCID_OUT_BUFFER
 #define UINT8_BIT 8
@@ -127,7 +128,7 @@ bool EncodeOsSyscap(char *output, int len)
     uint32_t bufferLen;
 
     if (len != PCID_MAIN_BYTES) {
-        PRINT_ERR("Os Syscap input len must be equal to 128.\n");
+        PRINT_ERR("Os Syscap input len(%d) must be equal to 128.\n", len);
         return false;
     }
 
@@ -184,7 +185,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     return true;
 }
 
-bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
+bool DecodeOsSyscap(char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
 {
     errno_t nRet = 0;
     uint16_t indexOfSyscap[CHAR_BIT * OS_SYSCAP_BYTES] = {0};
@@ -202,21 +203,21 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
     }
 
     *outputCnt = countOfSyscap;
-    char (*strSyscap)[SINGLE_FEAT_LENGTH] = NULL;
-    strSyscap = (char (*)[SINGLE_FEAT_LENGTH])malloc(countOfSyscap * SINGLE_FEAT_LENGTH);
+    char (*strSyscap)[SINGLE_SYSCAP_LEN] = NULL;
+    strSyscap = (char (*)[SINGLE_SYSCAP_LEN])malloc(countOfSyscap * SINGLE_SYSCAP_LEN);
     if (strSyscap == NULL) {
         PRINT_ERR("malloc failed.");
         *outputCnt = 0;
         return false;
     }
-    (void)memset_s(strSyscap, countOfSyscap * SINGLE_FEAT_LENGTH, \
-                   0, countOfSyscap * SINGLE_FEAT_LENGTH);
+    (void)memset_s(strSyscap, countOfSyscap * SINGLE_SYSCAP_LEN, \
+                   0, countOfSyscap * SINGLE_SYSCAP_LEN);
     *output = strSyscap;
 
     for (i = 0; i < countOfSyscap; i++) {
         for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
             if (arraySyscap[j].num == indexOfSyscap[i]) {
-                nRet = strcpy_s(*strSyscap, SINGLE_FEAT_LENGTH, arraySyscap[j].syscapStr);
+                nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, arraySyscap[j].syscapStr);
                 if (nRet != EOK) {
                     printf("strcpy_s failed. error = %d\n", nRet);
                     *outputCnt = 0;
@@ -233,9 +234,9 @@ bool DecodeOsSyscap(char input[128], char (**output)[128], int *outputCnt)
     return true;
 }
 
-bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
+bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
 {
-    char (*outputArray)[SINGLE_FEAT_LENGTH] = NULL;
+    char (*outputArray)[SINGLE_SYSCAP_LEN] = NULL;
     char *inputPos = input;
     int bufferLen, ret;
     int syscapCnt = 0;
@@ -246,10 +247,15 @@ bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
         }
         inputPos++;
     }
-    inputPos = input;
+    if (syscapCnt == 0) {
+        *output = outputArray;
+        *outputCnt = syscapCnt;
+        return true;
+    }
 
-    bufferLen = SINGLE_FEAT_LENGTH * syscapCnt;
-    outputArray = (char (*)[SINGLE_FEAT_LENGTH])malloc(bufferLen);
+    inputPos = input;
+    bufferLen = SINGLE_SYSCAP_LEN * syscapCnt;
+    outputArray = (char (*)[SINGLE_SYSCAP_LEN])malloc(bufferLen);
     if (outputArray == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", bufferLen, errno);
         *outputCnt = 0;
@@ -258,12 +264,12 @@ bool DecodePrivateSyscap(char *input, char (**output)[128], int *outputCnt)
     (void)memset_s(outputArray, bufferLen, 0, bufferLen);
 
     *output = outputArray;
-    char buffer[SINGLE_FEAT_LENGTH - 17] = {0}; // 17. size of "SystemCapability."
+    char buffer[SINGLE_FEAT_LEN] = {0};
     char *bufferPos = buffer;
     while (*inputPos != '\0') {
         if (*inputPos == ',') {
             *bufferPos = '\0';
-            ret = sprintf_s(*outputArray, SINGLE_FEAT_LENGTH, "SystemCapability.%s", buffer);
+            ret = sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer);
             if (ret == -1) {
                 PRINT_ERR("sprintf_s failed\n");
                 *outputCnt = 0;
@@ -319,20 +325,20 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
     uint32_t i;
     int32_t ret = 0;
     uint16_t sysCapLength = NtohsInter(*(uint16_t *)(input + sizeof(uint32_t)));
-    uint16_t sysCapCount = sysCapLength / SINGLE_FEAT_LENGTH;
+    uint16_t sysCapCount = sysCapLength / SINGLE_FEAT_LEN;
     char *sysCapBegin = input + sizeof(RPCIDHead) + sizeof(uint32_t);
     RPCIDHead *rpcidHeader = (RPCIDHead *)input;
     cJSON *sysCapJson = cJSON_CreateArray();
     for (i = 0; i < sysCapCount; i++) {
-        char *temp = sysCapBegin + i * SINGLE_FEAT_LENGTH;
-        if (strlen(temp) >= SINGLE_FEAT_LENGTH) {
+        char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
+        if (strlen(temp) >= SINGLE_FEAT_LEN) {
             PRINT_ERR("Get SysCap failed, string length too long.\n");
             ret = -1;
             goto FREE_SYSCAP_OUT;
         }
-        char buffer[SINGLE_FEAT_LENGTH + 17] = "SystemCapability."; // 17, sizeof "SystemCapability."
+        char buffer[SINGLE_SYSCAP_LEN] = "SystemCapability.";
 
-        ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LENGTH);
+        ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LEN);
         if (ret != EOK) {
             PRINT_ERR("strncat_s failed.\n");
             goto FREE_SYSCAP_OUT;
@@ -449,13 +455,13 @@ char *DecodeRpcidToStringFormat(char *inputFile)
     (void)memset_s(osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
                    0, sizeof(uint16_t) * sysCapArraySize);
     // malloc for save private syscap string
-    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_FEAT_LENGTH);
+    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_SYSCAP_LEN);
     if (priSyscapArray == NULL) {
-        PRINT_ERR("malloc(%u) failed.\n", (uint32_t)sysCapArraySize * SINGLE_FEAT_LENGTH);
+        PRINT_ERR("malloc(%u) failed.\n", (uint32_t)sysCapArraySize * SINGLE_SYSCAP_LEN);
         goto FREE_MALLOC_OSSYSCAP;
     }
-    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
-                   0, sysCapArraySize * SINGLE_FEAT_LENGTH);
+    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_SYSCAP_LEN,
+                   0, sysCapArraySize * SINGLE_SYSCAP_LEN);
     priSyscap = priSyscapArray;
     // part os syscap and ptivate syscap
     for (i = 0; i < (uint32_t)sysCapArraySize; i++) {
@@ -464,13 +470,12 @@ char *DecodeRpcidToStringFormat(char *inputFile)
         if (cJsonTemp != NULL) {
             osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
-            ret = strncpy_s(priSyscapArray, sysCapArraySize * SINGLE_FEAT_LENGTH,
-                            cJsonItem->valuestring, SINGLE_FEAT_LENGTH - 1);
+            ret = strcpy_s(priSyscap, SINGLE_SYSCAP_LEN, cJsonItem->valuestring);
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
                 goto FREE_MALLOC_PRISYSCAP;
             }
-            priSyscapArray += SINGLE_FEAT_LENGTH;
+            priSyscapArray += SINGLE_SYSCAP_LEN;
             indexPri++;
         }
     }
@@ -483,8 +488,8 @@ char *DecodeRpcidToStringFormat(char *inputFile)
         goto FREE_MALLOC_PRISYSCAP;
     }
 
-    uint32_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + (SINGLE_FEAT_LENGTH + 1) * (uint32_t)sysCapArraySize;
+    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
+                            + SINGLE_SYSCAP_LEN * indexPri;
     outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
@@ -508,7 +513,8 @@ char *DecodeRpcidToStringFormat(char *inputFile)
     }
 
     for (i = 0; i < indexPri; i++) {
-        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer, priSyscap + i * SINGLE_FEAT_LENGTH);
+        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer,
+                        priSyscapArray + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
             outBuffer = NULL;
@@ -529,71 +535,7 @@ FREE_CONTEXT_OUT:
     return outBuffer;
 }
 
-static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
-                                        char **priSyscap, uint32_t *priSyscapLen)
-{
-    int32_t ret = 0;
-    uint32_t i, inputLen;
-    uint32_t count = 0;
-    char *temp = NULL;
-    char *tok = NULL;
-    char *private = NULL;
-
-    if (osArraySize != PCID_OUT_BUFFER) {
-        return -1;
-    }
-
-    inputLen = strlen(input);
-    for (i = 0; i < PCID_OUT_BUFFER; i++) {
-        ret = sscanf_s(input, "%u,%s", &osArray[i], input, inputLen);
-        if (ret == -1) {
-            PRINT_ERR("sscanf_s failed.\n");
-            return -1;
-        }
-    }
-
-    // count private syscap
-    if (*input == '\0') {
-        *priSyscap = 0;
-        *priSyscapLen = 0;
-        goto SKIP_PRI_SYSCAP;
-    }
-    for (i = 0; *(input + i) != '\0'; i++) {
-        if (*(input + i) == ',') {
-            count++;
-        }
-    }
-    count++;
-    // get private syscap string
-    char *priSysCapOut = (char *)malloc(SINGLE_FEAT_LENGTH * count);
-    if (priSysCapOut == NULL) {
-        PRINT_ERR("sscanf_s failed.\n");
-        return -1;
-    }
-    (void)memset_s(priSysCapOut, SINGLE_FEAT_LENGTH * count, 0, SINGLE_FEAT_LENGTH * count);
-    private = priSysCapOut;
-
-    temp = strtok_r(input, ",", &tok);
-    while (temp) {
-        ret = strncpy_s(priSysCapOut, SINGLE_FEAT_LENGTH * count,
-                        temp, SINGLE_FEAT_LENGTH - 1);
-        if (ret != EOK) {
-            PRINT_ERR("strncpy_s failed.\n");
-            free(priSysCapOut);
-            return -1;
-        }
-        temp = strtok_r(NULL, ",", &tok);
-        priSysCapOut += SINGLE_FEAT_LENGTH;
-    }
-
-    *priSyscap = private;
-    *priSyscapLen = count;
-
-SKIP_PRI_SYSCAP:
-    return ret;
-}
-
-bool ComparePcidString(char *pcidString, char *rpcidString)
+int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *result)
 {
     int32_t ret;
     int32_t versionFlag = 0;
@@ -613,13 +555,14 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
                                     &rpcidPriSyscap, &rpcidPriSyscapLen);
     if (ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
-        return false;
+        return -1;
     }
+    result->missSyscapNum = 0;
     // compare version
     uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
     uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
     if (pcidVersion < rpcidVersion) {
-        PRINT_ERR("Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
+        result->targetApiVersion = rpcidVersion;
         versionFlag = 1;
     }
     // compare os sysscap
@@ -631,32 +574,71 @@ bool ComparePcidString(char *pcidString, char *rpcidString)
         }
         for (uint8_t k = 0; k < INT_BIT; k++) {
             if (temp2 & (0x1 << k)) {
-                // 2, header of pcid & rpcid
-                printf("Missing: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
-                ossyscapFlag += 1;
+                char *temp = (char *)malloc(sizeof(char) * SINGLE_SYSCAP_LEN);
+                if (temp == NULL) {
+                    PRINT_ERR("malloc failed.\n");
+                    FreeCompareError(result);
+                    return -1;
+                }
+                result->missSyscapNum++;
+                ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
+                               arraySyscap[(i - 2) * INT_BIT + k].syscapStr); // 2, header of pcid & rpcid
+                if (ret != EOK) {
+                    PRINT_ERR("strcpy_s failed.\n");
+                    FreeCompareError(result);
+                    return -1;
+                }
+                result->syscap[ossyscapFlag++] = temp;
             }
         }
     }
     // compare pri syscap
     priSysFound = false;
-    for (i = 0; i < pcidPriSyscapLen; i++) {
-        for (j = 0; j < rpcidPriSyscapLen; j++) {
-            if (strcmp(pcidPriSyscap + SINGLE_FEAT_LENGTH * i,
-                       rpcidPriSyscap + SINGLE_FEAT_LENGTH * j) == 0) {
+    for (i = 0; i < rpcidPriSyscapLen; i++) {
+        for (j = 0; j < pcidPriSyscapLen; j++) {
+            if (strcmp(rpcidPriSyscap + SINGLE_SYSCAP_LEN * i,
+                       pcidPriSyscap + SINGLE_SYSCAP_LEN * j) == 0) {
                 priSysFound = true;
                 break;
             }
         }
         if (priSysFound != true) {
-            printf("Missing: %s\n", pcidPriSyscap + SINGLE_FEAT_LENGTH * i);
-            prisyscapFlag += 1;
+            char *temp = (char *)malloc(sizeof(char) * SINGLE_SYSCAP_LEN);
+            if (temp == NULL) {
+                PRINT_ERR("malloc failed.\n");
+                FreeCompareError(result);
+                return -1;
+            }
+            result->missSyscapNum++;
+            ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
+                           rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
+            if (ret != EOK) {
+                FreeCompareError(result);
+                PRINT_ERR("strcpy_s failed.\n");
+                return -1;
+            }
+            result->syscap[ossyscapFlag + prisyscapFlag] = temp;
+            ++prisyscapFlag;
         }
         priSysFound = false;
     }
 
-    if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
-        return true;
-    } else {
-        return false;
+    if (versionFlag) {
+        ret |= 0x1 << 0;
     }
+    if (ossyscapFlag || prisyscapFlag) {
+        ret |= 0x1 << 1;
+    }
+        return ret;
+}
+
+int32_t FreeCompareError(CompareError *result)
+{
+    if (result == NULL) {
+        return 0;
+    }
+    for (int i = 0; i < result->missSyscapNum; i++) {
+        free(result->syscap[i]);
+    }
+    return 0;
 }

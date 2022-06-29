@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 
-#define MAX_OS_SYSCAP_NUM 960
+#define OS_SYSCAP_BYTES 120
 #define TYPE_FILE 1
 #define TYPE_STRING 2
 
@@ -28,7 +28,7 @@ typedef struct ProductCompatibilityID {
     uint16_t systemType : 3;
     uint16_t reserved : 13;
     uint32_t manufacturerID;
-    uint8_t osSyscap[MAX_OS_SYSCAP_NUM / 8];
+    uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
 typedef struct pcidHeader {

@@ -27,8 +27,6 @@ EXTERN_C_START
 constexpr size_t OS_SYSCAP_U32_NUM = 30;
 constexpr size_t PCID_MAIN_U32 = OS_SYSCAP_U32_NUM + 2;
 constexpr size_t U32_TO_STR_MAX_LEN = 11;
-constexpr size_t SYSCAP_STR_MAX_LEN = 128;
-constexpr size_t PCID_MAIN_LEN = 128;
 constexpr size_t KEY_BUFFER_SIZE = 32;
 
 #define PRINT_ERR(...) \
@@ -63,16 +61,16 @@ static char* getSystemCapability()
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
     int i = 0;
-    char osOutput[SYSCAP_STR_MAX_LEN] = {};
+    char osOutput[SINGLE_SYSCAP_LEN] = {};
     errno_t err = EOK;
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
     char *temp = nullptr;
     char *allSyscapBUffer = nullptr;
     char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN] = {};
-    char (*priCapArray)[SYSCAP_STR_MAX_LEN] = nullptr;
+    char (*priCapArray)[SINGLE_SYSCAP_LEN] = nullptr;
 
-    retBool = EncodeOsSyscap(osOutput, PCID_MAIN_LEN);
+    retBool = EncodeOsSyscap(osOutput, PCID_MAIN_BYTES);
     if (!retBool) {
         PRINT_ERR("get encoded os syscap failed.");
         return nullptr;

@@ -44,7 +44,6 @@ typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersionType : 1;
 } RPCIDHead;
 
-#define SINGLE_SYSCAP_LEN 256
 #define SYSCAP_PREFIX_LEN 17
 #define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
 #define UINT8_BIT 8
@@ -565,8 +564,8 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-static int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
-                                        char **priSyscap, uint32_t *priSyscapLen)
+int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
+                                 char **priSyscap, uint32_t *priSyscapLen)
 {
     int32_t ret = 0;
     uint32_t i, inputLen;

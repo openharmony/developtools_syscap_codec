@@ -16,8 +16,12 @@
 #ifndef _SYSCAP_DEFINE_H
 #define _SYSCAP_DEFINE_H
 
+#include <stdint.h>
+
+#define SINGLE_SYSCAP_LEN (256 + 17)
+
 typedef struct SystemCapabilityWithNum {
-    char syscapStr[256];
+    char syscapStr[SINGLE_SYSCAP_LEN];
     uint16_t num;
 } SyscapWithNum;
 

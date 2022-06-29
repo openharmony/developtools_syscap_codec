@@ -125,19 +125,19 @@ int main(int argc, char **argv)
             ret = RPCIDEncode(inputfile, outputpath); break;
         case 0x10A: // 0x10A, -Rdi inputfile
             ret = RPCIDDecode(inputfile, outputpath); break;
-        case 0x10D:
+        case 0x10D: // 0x10D, -Resi inputfile
             ret = EncodeRpcidscToString(inputfile, outputpath); break;
-        case 0x115:
+        case 0x115: // 0x115, -Pesi inputfile
             ret = EncodePcidscToString(inputfile, outputpath); break;
-        case 0x60:
+        case 0x60:  // 0x60,  -C PCID.txt RPCID.txt
             ret = ComparePcidWithRpcidString(pcidfile, rpcidfile); break;
-        case 0x111:
+        case 0x111: // 0x111, -Pei inputfile
             ret = CreatePCID(inputfile, outputpath); break;
-        case 0x112:
+        case 0x112: // 0x112, -Pdi inputfile
             ret = DecodePCID(inputfile, outputpath); break;
-        case 0x116:
+        case 0x116: // 0x116, -Pdsi inputfile
             ret = DecodeStringPCIDToJson(inputfile, outputpath, TYPE_FILE); break;
-        case 0x80:
+        case 0x80:  // 0x80,  -v
             (void)OutputVersion(argv[optind], optind);  break;
         default:
             (void)OutputHelp();
