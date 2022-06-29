@@ -98,6 +98,28 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 }
 
 /*
+ * @tc.name: DecodePrivateSyscap1
+ * @tc.desc: Check the PrivateSyscap Decoding.
+ * @tc.type: FUNC
+ */
+HWTEST_F(SyscapCodecTest, DecodePrivateSyscap1, TestSize.Level1)
+{
+    char *charPriInput = NULL;
+    char (*priOutput)[SINGLE_SYSCAP_LEN] = NULL;
+    int priOutLen;
+    int decodePriCnt;
+
+    EXPECT_TRUE(EncodePrivateSyscap(&charPriInput, &priOutLen));
+    if (priOutLen == 0) {
+        EXPECT_TRUE(DecodePrivateSyscap(charPriInput, &priOutput, &decodePriCnt));
+        EXPECT_EQ((void *)priOutput, (void *)NULL);
+        EXPECT_EQ(decodePriCnt, 0);
+        free(priOutput);
+    }
+    free(charPriInput);
+}
+
+/*
  * @tc.name: ComparePcidString
  * @tc.desc: Check the DecodeRpcidToStringFormat Decoding.
  * @tc.type: FUNC
@@ -105,13 +127,13 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
 {
     CompareError result = {{0}, 0, 0};
-    char pcidString[] = "263168,0,3473408,0,0,0,1634,0,0,0,0,0,0,0,0,0,0,\
-                         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,SystemCapability.vendor.xxxxx3,\
-                         SystemCapability.device.xxxxx4";
-    char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,\
-                          0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\
-                          SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    char expect[][256] = {"SystemCapability.HiviewDFX.HiLog", "SystemCapability.HiviewDFX.Hiview",
+    char pcidString[] = "263168,0,3473408,0,0,0,1634,0,0,0,0,0,0,0,0,0,0,"\
+                        "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,SystemCapability.vendor.xxxxx3,"\
+                        "SystemCapability.device.xxxxx4";
+    char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
+                         "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
+                         "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
+    char expect[][256] = {"SystemCapability.HiviewDFX.HiDumper", "SystemCapability.HiviewDFX.HiSysEvent",
                           "SystemCapability.vendor.xxxxx1", "SystemCapability.device.xxxxx2"};
     int32_t ret = ComparePcidString(pcidString, rpcidString, &result);
     EXPECT_EQ(ret, 3);
@@ -121,5 +143,10 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
         EXPECT_STREQ(result.syscap[i], expect[i]);
     }
     (void)FreeCompareError(&result);
+    EXPECT_EQ(result.targetApiVersion, 0);
+    EXPECT_EQ(result.missSyscapNum, 0);
+    for (int i = 0; i < MAX_MISS_SYSCAP; i++) {
+        EXPECT_EQ((void *)result.syscap[i], (void *)NULL);
+    }
 }
 } // namespace Syscap
