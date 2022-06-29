@@ -25,7 +25,7 @@ typedef struct SystemCapabilityWithNum {
     uint16_t num;
 } SyscapWithNum;
 
-/* sort by alphabet */
+/* add last */
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
@@ -179,7 +179,7 @@ typedef enum SystemCapabilityNum {
 } SyscapNum;
 
 /* sort by enum */
-static SyscapWithNum arraySyscap[] = {
+const static SyscapWithNum arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
     {"SystemCapability.Ace.UiAppearance", ACE_UI_APPEARANCE},
