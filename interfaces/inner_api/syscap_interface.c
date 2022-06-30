@@ -161,8 +161,12 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
-    
+
     *outputLen = bufferLen - PCID_MAIN_BYTES - 1;
+    if (*outputLen == 0) {
+        *output = outputStr;
+        return true;
+    }
     outputStr = (char *)malloc(*outputLen);
     if (outputStr == NULL) {
         PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", *outputLen, errno);
@@ -185,7 +189,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     return true;
 }
 
-bool DecodeOsSyscap(char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
+bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
 {
     errno_t nRet = 0;
     uint16_t indexOfSyscap[CHAR_BIT * OS_SYSCAP_BYTES] = {0};
@@ -240,6 +244,12 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
     char *inputPos = input;
     int bufferLen, ret;
     int syscapCnt = 0;
+
+    if (input == NULL) {
+        *output = outputArray;
+        *outputCnt = syscapCnt;
+        return false;
+    }
 
     while (*inputPos != '\0') {
         if (*inputPos == ',') {
@@ -368,7 +378,7 @@ FREE_SYSCAP_OUT:
     return ret;
 }
 
-static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
+static int32_t CheckRpcidFormat(const char *inputFile, char **Buffer, uint32_t *Len)
 {
     uint32_t bufferLen;
     uint16_t sysCaptype, sysCapLength;
@@ -404,7 +414,7 @@ static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
     return 0;
 }
 
-char *DecodeRpcidToStringFormat(char *inputFile)
+char *DecodeRpcidToStringFormat(const char *inputFile)
 {
     int32_t ret = 0;
     int32_t sysCapArraySize;
@@ -580,7 +590,6 @@ int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *res
                     FreeCompareError(result);
                     return -1;
                 }
-                result->missSyscapNum++;
                 ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
                                arraySyscap[(i - 2) * INT_BIT + k].syscapStr); // 2, header of pcid & rpcid
                 if (ret != EOK) {
@@ -609,7 +618,6 @@ int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *res
                 FreeCompareError(result);
                 return -1;
             }
-            result->missSyscapNum++;
             ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
                            rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
             if (ret != EOK) {
@@ -628,8 +636,9 @@ int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *res
     }
     if (ossyscapFlag || prisyscapFlag) {
         ret |= 0x1 << 1;
+        result->missSyscapNum = ossyscapFlag + prisyscapFlag;
     }
-        return ret;
+    return ret;
 }
 
 int32_t FreeCompareError(CompareError *result)
@@ -639,6 +648,9 @@ int32_t FreeCompareError(CompareError *result)
     }
     for (int i = 0; i < result->missSyscapNum; i++) {
         free(result->syscap[i]);
+        result->syscap[i] = NULL;
     }
+    result->missSyscapNum = 0;
+    result->targetApiVersion = 0;
     return 0;
 }
