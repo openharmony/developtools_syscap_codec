@@ -26,6 +26,7 @@
 #define PCID_MAIN_BYTES 128
 #define PCID_MAIN_INTS  32
 
+#define E_EORROR (-1)
 #define E_OK 0
 #define E_APIVERSION 1
 #define E_SYSCAP 2
@@ -43,10 +44,29 @@ typedef struct CompareErrorMessage {
 } CompareError;
 
 bool EncodeOsSyscap(char *output, int len);
-bool DecodeOsSyscap(char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt);
+bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt);
 bool EncodePrivateSyscap(char **output, int *outputLen);
 bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt);
-char *DecodeRpcidToStringFormat(char *inputFile);
+char *DecodeRpcidToStringFormat(const char *inputFile);
+/*
+ * params:
+ *      pcidString, input string format pcid.
+ *      rpcidString, input string format rpcid.
+ *      result, output comparison results.
+ * retval:
+ *      E_EORROR, compare failed.
+ *      E_OK, compare successful and meet the requirements.
+ *      E_APIVERSION, compare successful but api version too low.
+ *      E_SYSCAP, compare successful but missing some syscaps.
+ *      E_APIVERSION | E_SYSCAP, none of api version and syscap
+ *                               meet the requirements.
+ * notes:
+ *      when return E_APIVERSION, the value of result.targetApiVersion
+ *                                is the require api version.
+ *      when return E_SYSCAP, the value of result.missSyscapNum is the missing syscaps's numbers.
+ *                            result.syscap[] is the array of points to syscap strings.
+ *      free variable result by function FreeCompareError.
+ */
 int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *result);
 int32_t FreeCompareError(CompareError *result);
 
