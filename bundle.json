@@ -16,10 +16,13 @@
     "feature": [],
     "adapted_system_type": [ "small", "standard" ],
     "deps": {
-      "components": [],
+      "components": [
+        "napi",
+        "hiviewdfx_hilog_native"
+      ],
       "third_party": [
         "bounds_checking_function",
-        "thirdparty_cjson"
+        "cjson"
       ]
     },
     "build": {
