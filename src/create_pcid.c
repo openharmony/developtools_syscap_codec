@@ -533,12 +533,15 @@ static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSys
         return -1;
     }
 
-    while (sscanf_s(input, "%u,%s", &tempNum, input, inputLen) == 2) { // 2, return val of "%u,%s"
-        if (i >= OS_SYSCAP_NUM) {
-            PRINT_ERR("Get os syscap numbers(%u) greater than %u.\n", i + 1, osSyscapNum);
-            return -1;
-        }
+    while (sscanf_s(input, "%u,%s", &tempNum, input, inputLen)) {
         osSyscap[i++] = tempNum;
+        if (i >= OS_SYSCAP_NUM) {
+            break;
+        }
+    }
+
+    if (strlen(input) <= 1) {
+        *input = '\0';
     }
 
     return 0;
@@ -635,6 +638,14 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
         free(sysCapArray);
         return -1;
     }
+    if (priSyscapStringLen == 0) {
+        if (!cJSON_AddItemToObject(sysCapObj, "private", sysCapArray)) {
+            PRINT_ERR("Add private syscap array to json failed.\n");
+            free(sysCapArray);
+            return -1;
+        }
+        return 0;
+    }
 
     token = strtok(priSyscapString, ",");
     while (token != NULL) {
@@ -653,7 +664,7 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     return 0;
 }
 
-int32_t DecodeStringPCIDToJson(char *input, char *outDirPath, int type)
+int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
 {
     int32_t ret = -1;
     uint32_t osSyscapUintArray[OS_SYSCAP_NUM] = {0};
@@ -662,27 +673,16 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath, int type)
     char *fileContext = NULL;
     char *priSyscapStr = NULL;
 
-    // judge input type
-    if (type == TYPE_FILE) {
-        if (GetFileContext(input, &fileContext, &fileContextLen)) {
-            PRINT_ERR("GetFileContext failed, input file : %s\n", input);
-            goto PARSE_FAILED;
-        }
-        if (ParseStringSyscap(fileContext, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
-            PRINT_ERR("Parse string syscap failed.\n");
-            goto PARSE_FAILED;
-        }
-        priSyscapStr = fileContext;
-    } else if (type == TYPE_STRING) {
-        if (ParseStringSyscap(input, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
-            PRINT_ERR("Parse string syscap failed.\n");
-            goto PARSE_FAILED;
-        }
-        priSyscapStr = input;
-    } else {
-        PRINT_ERR("Input type failed.\n");
+    if (GetFileContext(input, &fileContext, &fileContextLen)) {
+        PRINT_ERR("GetFileContext failed, input file : %s\n", input);
         goto PARSE_FAILED;
     }
+    if (ParseStringSyscap(fileContext, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
+        PRINT_ERR("Parse string syscap failed.\n");
+        goto PARSE_FAILED;
+    }
+    priSyscapStr = fileContext;
+    
     // add to json object
     cJSON *sysCapObj = cJSON_CreateObject();
     cJSON *rootObj = cJSON_CreateObject();
@@ -716,9 +716,7 @@ SAVE_FAILED:
 ADD_JSON_FAILED:
     cJSON_Delete(rootObj);
 PARSE_FAILED:
-    if (type == TYPE_FILE) {
-        free(fileContext);
-    }
+    free(fileContext);
     return ret;
 }
 

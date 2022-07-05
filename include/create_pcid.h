@@ -19,8 +19,6 @@
 #include <stdint.h>
 
 #define OS_SYSCAP_BYTES 120
-#define TYPE_FILE 1
-#define TYPE_STRING 2
 
 typedef struct ProductCompatibilityID {
     uint16_t apiVersion : 15;
@@ -41,6 +39,6 @@ typedef struct pcidHeader {
 
 int32_t CreatePCID(char *inputFile, char *outDirPath);
 int32_t DecodePCID(char *inputFile, char *outDirPath);
-int32_t DecodeStringPCIDToJson(char *input, char *outDirPath, int type);
+int32_t DecodeStringPCIDToJson(char *input, char *outDirPath);
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath);
 #endif
