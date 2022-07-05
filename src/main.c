@@ -29,7 +29,7 @@
         printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
-#define SYSCAP_VERSION "1.0.0"
+#define SYSCAP_VERSION "1.0.1"
 #define OUTPUT_VERSION_LEN 200
 #define ENCODE 0
 #define DECODE 1
@@ -136,7 +136,9 @@ int main(int argc, char **argv)
         case 0x112: // 0x112, -Pdi inputfile
             ret = DecodePCID(inputfile, outputpath); break;
         case 0x116: // 0x116, -Pdsi inputfile
-            ret = DecodeStringPCIDToJson(inputfile, outputpath, TYPE_FILE); break;
+            ret = DecodeStringPCIDToJson(inputfile, outputpath); break;
+        case 0x10E: // 0x10E, -Rdsi inputfile
+            printf("-Rdsi is not support currently.\n"); break;
         case 0x80:  // 0x80,  -v
             (void)OutputVersion(argv[optind], optind);  break;
         default:
