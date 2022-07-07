@@ -133,8 +133,10 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
     char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
                          "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
                          "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    char expect[][256] = {"SystemCapability.HiviewDFX.HiDumper", "SystemCapability.HiviewDFX.HiSysEvent",
-                          "SystemCapability.vendor.xxxxx1", "SystemCapability.device.xxxxx2"};
+    char expect[][256] = {"SystemCapability.HiviewDFX.HiChecker",
+                          "SystemCapability.HiviewDFX.HiProfiler.HiDebug",
+                          "SystemCapability.vendor.xxxxx1",
+                          "SystemCapability.device.xxxxx2"};
     int32_t ret = ComparePcidString(pcidString, rpcidString, &result);
     EXPECT_EQ(ret, 3);
     EXPECT_EQ(result.targetApiVersion, 7);
