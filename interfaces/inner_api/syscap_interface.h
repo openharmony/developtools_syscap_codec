@@ -67,7 +67,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile);
  *                            result.syscap[] is the array of points to syscap strings.
  *      free variable result by function FreeCompareError.
  */
-int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *result);
+int32_t ComparePcidString(const char *pcidString, const char *rpcidString, CompareError *result);
 int32_t FreeCompareError(CompareError *result);
 
 #ifdef __cplusplus

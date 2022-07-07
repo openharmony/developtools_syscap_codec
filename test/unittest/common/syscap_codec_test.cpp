@@ -127,16 +127,16 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap1, TestSize.Level1)
 HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
 {
     CompareError result = {{0}, 0, 0};
-    char pcidString[] = "263168,0,3473408,0,0,0,1634,0,0,0,0,0,0,0,0,0,0,"\
-                        "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,SystemCapability.vendor.xxxxx3,"\
-                        "SystemCapability.device.xxxxx4";
-    char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
-                         "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
-                         "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    char expect[][256] = {"SystemCapability.HiviewDFX.HiChecker",
-                          "SystemCapability.HiviewDFX.HiProfiler.HiDebug",
-                          "SystemCapability.vendor.xxxxx1",
-                          "SystemCapability.device.xxxxx2"};
+    const char pcidString[] = "263168,0,3473408,0,0,0,1634,0,0,0,0,0,0,0,0,0,0,"\
+                              "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,SystemCapability.vendor.xxxxx3,"\
+                              "SystemCapability.device.xxxxx4";
+    const char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
+                               "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
+                               "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
+    const char expect[][256] = {"SystemCapability.HiviewDFX.HiChecker",
+                                "SystemCapability.HiviewDFX.HiProfiler.HiDebug",
+                                "SystemCapability.vendor.xxxxx1",
+                                "SystemCapability.device.xxxxx2"};
     int32_t ret = ComparePcidString(pcidString, rpcidString, &result);
     EXPECT_EQ(ret, 3);
     EXPECT_EQ(result.targetApiVersion, 7);
