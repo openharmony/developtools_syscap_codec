@@ -36,7 +36,7 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath);
 int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath);
 /* in: pcidFile, rpcidFile */
 int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile);
-int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
+int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uint32_t osArraySize,
                                  char **priSyscap, uint32_t *priSyscapLen);
 
 #ifdef __cplusplus

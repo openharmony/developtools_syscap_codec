@@ -378,7 +378,7 @@ FREE_SYSCAP_OUT:
     return ret;
 }
 
-static int32_t CheckRpcidFormat(const char *inputFile, char **Buffer, uint32_t *Len)
+static int32_t CheckRpcidFormat(const char *inputFile, char **buffer, uint32_t *Len)
 {
     uint32_t bufferLen;
     uint16_t sysCaptype, sysCapLength;
@@ -409,7 +409,7 @@ static int32_t CheckRpcidFormat(const char *inputFile, char **Buffer, uint32_t *
         return -1;
     }
 
-    *Buffer = contextBuffer;
+    *buffer = contextBuffer;
     *Len = bufferLen;
     return 0;
 }
@@ -498,8 +498,8 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
         goto FREE_MALLOC_PRISYSCAP;
     }
 
-    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + SINGLE_SYSCAP_LEN * indexPri;
+    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER +
+                            SINGLE_SYSCAP_LEN * indexPri;
     outBuffer = (char *)malloc(outBufferLen);
     if (outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
@@ -545,12 +545,12 @@ FREE_CONTEXT_OUT:
     return outBuffer;
 }
 
-int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *result)
+int32_t ComparePcidString(const char *pcidString, const char *rpcidString, CompareError *result)
 {
     int32_t ret;
-    int32_t versionFlag = 0;
-    int32_t ossyscapFlag = 0;
-    int32_t prisyscapFlag = 0;
+    uint16_t versionFlag = 0;
+    uint16_t ossyscapFlag = 0;
+    uint16_t prisyscapFlag = 0;
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
     bool priSysFound;
@@ -631,10 +631,10 @@ int32_t ComparePcidString(char *pcidString, char *rpcidString, CompareError *res
         priSysFound = false;
     }
 
-    if (versionFlag) {
+    if (versionFlag > 0) {
         ret |= 0x1 << 0;
     }
-    if (ossyscapFlag || prisyscapFlag) {
+    if (ossyscapFlag > 0 || prisyscapFlag > 0) {
         ret |= 0x1 << 1;
         result->missSyscapNum = ossyscapFlag + prisyscapFlag;
     }

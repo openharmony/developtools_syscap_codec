@@ -564,11 +564,12 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArraySize,
+int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uint32_t osArraySize,
                                  char **priSyscap, uint32_t *priSyscapLen)
 {
     int32_t ret = 0;
-    uint32_t i, inputLen;
+    uint32_t i;
+    uint32_t inputLen = strlen(inputString);
     uint32_t count = 0;
     char *temp = NULL;
     char *tok = NULL;
@@ -578,11 +579,26 @@ int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArra
         return -1;
     }
 
-    inputLen = strlen(input);
+    // copy to temp string input
+    char *input = (char *)malloc(strlen(inputString) + 1);
+    if (input == NULL) {
+        PRINT_ERR("malloc failed.\n");
+        return -1;
+    }
+    ret = strcpy_s(input, inputLen + 1, inputString);
+    if (ret != EOK) {
+        PRINT_ERR("strcpy_s failed.\n");
+        free(input);
+        return -1;
+    }
+    input[inputLen] = '\0';
+
+    // get os syscap data
     for (i = 0; i < PCID_OUT_BUFFER; i++) {
         ret = sscanf_s(input, "%u,%s", &osArray[i], input, inputLen);
         if (ret == -1) {
             PRINT_ERR("sscanf_s failed.\n");
+            free(input);
             return -1;
         }
     }
@@ -603,6 +619,7 @@ int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArra
     char *priSysCapOut = (char *)malloc(SINGLE_SYSCAP_LEN * count);
     if (priSysCapOut == NULL) {
         PRINT_ERR("sscanf_s failed.\n");
+        free(input);
         return -1;
     }
     (void)memset_s(priSysCapOut, SINGLE_SYSCAP_LEN * count, 0, SINGLE_SYSCAP_LEN * count);
@@ -614,6 +631,7 @@ int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArra
                         temp, SINGLE_SYSCAP_LEN - 1);
         if (ret != EOK) {
             PRINT_ERR("strncpy_s failed.\n");
+            free(input);
             free(private);
             return -1;
         }
@@ -625,6 +643,7 @@ int32_t SeparateSyscapFromString(char *input, uint32_t *osArray, uint32_t osArra
     *priSyscapLen = count;
 
 SKIP_PRI_SYSCAP:
+    free(input);
     return 0;
 }
 
@@ -667,7 +686,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
     uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
     if (pcidVersion < rpcidVersion) {
-        PRINT_ERR("Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
+        printf("ERROR: Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
         versionFlag = 1;
     }
     // compare os syscap
