@@ -43,10 +43,10 @@
 #define OUTPUT_FILE 9
 #define HELP 10
 
-void PrintHelp(void);
-void PrintVersion(void);
-void OutputVersion(char *arg, int opt);
-void OutputHelp(void);
+static void PrintHelp(void);
+static void PrintVersion(void);
+static void OutputVersion(const char *arg, int opt);
+static void OutputHelp(void);
 
 int main(int argc, char **argv)
 {
@@ -153,13 +153,13 @@ int main(int argc, char **argv)
 
 void PrintVersion(void)
 {
-    char output_version[OUTPUT_VERSION_LEN] = {0};
-    int ret = sprintf_s(output_version, OUTPUT_VERSION_LEN, "syscap_tool v%s", SYSCAP_VERSION);
+    char outputVersion[OUTPUT_VERSION_LEN] = {0};
+    int ret = sprintf_s(outputVersion, OUTPUT_VERSION_LEN, "syscap_tool v%s", SYSCAP_VERSION);
     if (ret == -1) {
         PRINT_ERR("sprintf_s failed.\n");
         exit(-1);
     }
-    printf("%s\n", output_version);
+    printf("%s\n", outputVersion);
 }
 
 void PrintHelp(void)
@@ -176,7 +176,7 @@ void PrintHelp(void)
     printf("-v, --version\t: print syscap_tool version information.\n");
 }
 
-void OutputVersion(char *arg, int opt)
+void OutputVersion(const char *arg, int opt)
 {
     if (arg != NULL && opt > 1) {
         printf("syscap_tool: extra operand \"%s\"\n", arg);

@@ -49,7 +49,7 @@ static void FreeContextBuffer(char *contextBuffer)
     (void)free(contextBuffer);
 }
 
-static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *contextBufLen)
+static int32_t GetFileContext(char *inputFile, char **contextBufPtr, size_t *contextBufLen)
 {
     int32_t ret;
     FILE *fp = NULL;
@@ -106,7 +106,7 @@ static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *c
 }
 
 static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename, \
-                                          char *convertedBuffer, uint32_t contextBufLen)
+                                          char *convertedBuffer, size_t contextBufLen)
 {
     int32_t ret;
     FILE *fp = NULL;
@@ -169,7 +169,8 @@ static cJSON *CreateWholeSyscapJsonObj(void)
 int32_t CreatePCID(char *inputFile, char *outDirPath)
 {
     int32_t ret, sectorOfBits, posOfBits;
-    uint32_t i, contextBufLen, privateCapSize, osCapSize;
+    uint32_t i, privateCapSize, osCapSize;
+    size_t contextBufLen;
     errno_t nRet = 0;
     char *contextBuffer = NULL;
     char *systemType = NULL;
@@ -343,7 +344,8 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     char *contextBuffer = NULL;
     uint8_t osSyscap[OS_SYSCAP_BYTES] = {0};
     uint16_t indexOfSyscap[OS_SYSCAP_BYTES * UINT8_BIT] = {0};
-    uint32_t i, j, contextBufLen, countOfSyscap = 0;
+    uint32_t i, j, countOfSyscap = 0;
+    size_t contextBufLen;
 
     ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
     if (ret != 0) {
@@ -519,6 +521,7 @@ FREE_CONTEXT_OUT:
 static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSyscapNum,
                                  uint32_t *header, uint32_t headerLen)
 {
+    int32_t ret;
     uint32_t tempNum;
     uint32_t i = 0;
     size_t inputLen = strlen(input);
@@ -533,11 +536,15 @@ static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSys
         return -1;
     }
 
-    while (sscanf_s(input, "%u,%s", &tempNum, input, inputLen)) {
+    while ((ret = sscanf_s(input, "%u,%s", &tempNum, input, inputLen)) > 0) {
         osSyscap[i++] = tempNum;
         if (i >= OS_SYSCAP_NUM) {
             break;
         }
+    }
+    if (ret == -1) {
+        PRINT_ERR("sscanf_s failed, i = %u.\n", i);
+        return -1;
     }
 
     if (strlen(input) <= 1) {
@@ -669,15 +676,16 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     int32_t ret = -1;
     uint32_t osSyscapUintArray[OS_SYSCAP_NUM] = {0};
     uint32_t pcidHeader[PCID_HEADER];
-    uint32_t fileContextLen;
+    size_t fileContextLen;
     char *fileContext = NULL;
     char *priSyscapStr = NULL;
 
-    if (GetFileContext(input, &fileContext, &fileContextLen)) {
+    if (GetFileContext(input, &fileContext, &fileContextLen) != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", input);
         goto PARSE_FAILED;
     }
-    if (ParseStringSyscap(fileContext, osSyscapUintArray, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER)) {
+    if (ParseStringSyscap(fileContext, osSyscapUintArray,
+                          OS_SYSCAP_NUM, pcidHeader, PCID_HEADER) != 0) {
         PRINT_ERR("Parse string syscap failed.\n");
         goto PARSE_FAILED;
     }
@@ -705,7 +713,8 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     // save as json file
     char *jsonBuffer = cJSON_Print(rootObj);
     const char outputFileName[] = "PCID.json";
-    if (ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer))) {
+    if (ConvertedContextSaveAsFile(outDirPath, outputFileName,
+                                   jsonBuffer, strlen(jsonBuffer)) != 0) {
         PRINT_ERR("Save as json file failed.\n");
         goto SAVE_FAILED;
     }
@@ -723,7 +732,8 @@ PARSE_FAILED:
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
-    uint32_t bufferLen, privateSyscapLen, i, j, outputLen;
+    size_t bufferLen, privateSyscapLen;
+    uint32_t i, j, outputLen;
     uint32_t *mainSyscap = NULL;
     uint16_t priSyscapCount = 0;
     char *contextBuffer = NULL;
@@ -739,7 +749,7 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     }
 
     if (bufferLen > 1128) { // 1128, max size of pcid.sc
-        PRINT_ERR("Input pcid file too large, pcid file size: %u\n", bufferLen);
+        PRINT_ERR("Input pcid file too large, pcid file size: %zu\n", bufferLen);
         goto FREE_CONTEXT;
     }
 
