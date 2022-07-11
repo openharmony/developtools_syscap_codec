@@ -569,7 +569,7 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
 {
     int32_t ret = 0;
     uint32_t i;
-    uint32_t inputLen = strlen(inputString);
+    size_t inputLen = strlen(inputString);
     uint32_t count = 0;
     char *temp = NULL;
     char *tok = NULL;
