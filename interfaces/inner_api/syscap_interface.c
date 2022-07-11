@@ -556,6 +556,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     bool priSysFound;
     uint32_t pcidPriSyscapLen, rpcidPriSyscapLen;
     uint32_t i, j, temp1, temp2;
+    uint32_t retFlag = 0;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
 
@@ -632,13 +633,13 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     }
 
     if (versionFlag > 0) {
-        ret |= 0x1 << 0;
+        retFlag |= 0x1 << 0;
     }
     if (ossyscapFlag > 0 || prisyscapFlag > 0) {
-        ret |= 0x1 << 1;
+        retFlag |= 0x1 << 1;
         result->missSyscapNum = ossyscapFlag + prisyscapFlag;
     }
-    return ret;
+    return retFlag;
 }
 
 int32_t FreeCompareError(CompareError *result)
