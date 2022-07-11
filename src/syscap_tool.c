@@ -120,7 +120,7 @@ static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *b
 }
 
 static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename,
-                                          char *convertedBuffer, uint32_t bufferLen)
+                                          char *convertedBuffer, size_t bufferLen)
 {
     int32_t ret;
     FILE *fp = NULL;
@@ -445,7 +445,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     cJSON *sysCapArray = NULL;
 
     // check rpcid.sc
-    if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen)) {
+    if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen) != 0) {
         PRINT_ERR("Check rpcid.sc format failed. Input file: %s\n", inputFile);
         goto FREE_CONTEXT_OUT;
     }
@@ -506,7 +506,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     outUint[0] = *(uint32_t *)contextBuffer;
     outUint[1] = *(uint32_t *)(contextBuffer + sizeof(uint32_t));
     uint8_t *osOutUint = (uint8_t *)(outUint + 2);
-    if (SetOsSysCapBitMap(osOutUint, 120, osSysCapIndex, indexOs)) {  // 120, len of osOutUint
+    if (SetOsSysCapBitMap(osOutUint, 120, osSysCapIndex, indexOs) != 0) {  // 120, len of osOutUint
         PRINT_ERR("Set os syscap bit map failed.\n");
         goto FREE_MALLOC_PRISYSCAP;
     }
