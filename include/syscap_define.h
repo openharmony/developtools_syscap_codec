@@ -21,7 +21,7 @@
 #define SINGLE_SYSCAP_LEN (256 + 17)
 
 typedef struct SystemCapabilityWithNum {
-    char syscapStr[SINGLE_SYSCAP_LEN];
+    char str[SINGLE_SYSCAP_LEN];
     uint16_t num;
 } SyscapWithNum;
 
@@ -181,7 +181,7 @@ typedef enum SystemCapabilityNum {
 } SyscapNum;
 
 /* sort by enum */
-const static SyscapWithNum arraySyscap[] = {
+const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
     {"SystemCapability.Ace.UiAppearance", ACE_UIAPPEARANCE},
