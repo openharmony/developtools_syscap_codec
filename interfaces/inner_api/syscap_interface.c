@@ -219,9 +219,9 @@ bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SY
     *output = strSyscap;
 
     for (i = 0; i < countOfSyscap; i++) {
-        for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
-            if (arraySyscap[j].num == indexOfSyscap[i]) {
-                nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, arraySyscap[j].syscapStr);
+        for (j = 0; j < sizeof(g_arraySyscap) / sizeof(SyscapWithNum); j++) {
+            if (g_arraySyscap[j].num == indexOfSyscap[i]) {
+                nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, g_arraySyscap[j].str);
                 if (nRet != EOK) {
                     printf("strcpy_s failed. error = %d\n", nRet);
                     *outputCnt = 0;
@@ -322,10 +322,10 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, uint16_t *index, uin
 
 static cJSON *CreateWholeSyscapJsonObj(void)
 {
-    size_t numOfSyscapAll = sizeof(arraySyscap) / sizeof(SyscapWithNum);
+    size_t numOfSyscapAll = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
     cJSON *root =  cJSON_CreateObject();
     for (size_t i = 0; i < numOfSyscapAll; i++) {
-        cJSON_AddItemToObject(root, arraySyscap[i].syscapStr, cJSON_CreateNumber(arraySyscap[i].num));
+        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
     }
     return root;
 }
@@ -591,7 +591,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
                     return -1;
                 }
                 ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
-                               arraySyscap[(i - 2) * INT_BIT + k].syscapStr); // 2, header of pcid & rpcid
+                               g_arraySyscap[(i - 2) * INT_BIT + k].str); // 2, header of pcid & rpcid
                 if (ret != EOK) {
                     PRINT_ERR("strcpy_s failed.\n");
                     FreeCompareError(result);
