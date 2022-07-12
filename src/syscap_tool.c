@@ -174,10 +174,10 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
 
 static cJSON *CreateWholeSyscapJsonObj(void)
 {
-    size_t numOfSyscapAll = sizeof(arraySyscap) / sizeof(SyscapWithNum);
+    size_t numOfSyscapAll = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
     cJSON *root =  cJSON_CreateObject();
     for (size_t i = 0; i < numOfSyscapAll; i++) {
-        cJSON_AddItemToObject(root, arraySyscap[i].syscapStr, cJSON_CreateNumber(arraySyscap[i].num));
+        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
     }
     return root;
 }
@@ -699,7 +699,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
         for (uint8_t k = 0; k < INT_BIT; k++) {
             if (temp2 & (0x1 << k)) {
                 // 2, header of pcid & rpcid
-                printf("Missing: %s\n", arraySyscap[(i - 2) * INT_BIT + k].syscapStr);
+                printf("Missing: %s\n", g_arraySyscap[(i - 2) * INT_BIT + k].str);
                 ossyscapFlag += 1;
             }
         }
