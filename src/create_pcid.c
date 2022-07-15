@@ -158,10 +158,10 @@ static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename
 
 static cJSON *CreateWholeSyscapJsonObj(void)
 {
-    size_t numOfSyscapAll = sizeof(arraySyscap) / sizeof(SyscapWithNum);
+    size_t numOfSyscapAll = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
     cJSON *root =  cJSON_CreateObject();
     for (size_t i = 0; i < numOfSyscapAll; i++) {
-        cJSON_AddItemToObject(root, arraySyscap[i].syscapStr, cJSON_CreateNumber(arraySyscap[i].num));
+        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
     }
     return root;
 }
@@ -393,9 +393,9 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         }
     }
     for (i = 0; i < countOfSyscap; i++) {
-        for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
-            if (arraySyscap[j].num == indexOfSyscap[i]) {
-                if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(arraySyscap[j].syscapStr))) {
+        for (j = 0; j < sizeof(g_arraySyscap) / sizeof(SyscapWithNum); j++) {
+            if (g_arraySyscap[j].num == indexOfSyscap[i]) {
+                if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(g_arraySyscap[j].str))) {
                     printf("cJSON_AddItemToArray or cJSON_CreateString failed\n");
                     ret = -1;
                     goto FREE_VECTOR_OUT;
@@ -614,11 +614,11 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
     }
 
     for (i = 0; i < osSyscapCount; i++) {
-        for (j = 0; j < sizeof(arraySyscap) / sizeof(SyscapWithNum); j++) {
-            if (index[i] != arraySyscap[j].num) {
+        for (j = 0; j < sizeof(g_arraySyscap) / sizeof(SyscapWithNum); j++) {
+            if (index[i] != g_arraySyscap[j].num) {
                 continue;
             }
-            if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(arraySyscap[j].syscapStr))) {
+            if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(g_arraySyscap[j].str))) {
                 PRINT_ERR("Add os syscap string to json failed.\n");
                 free(sysCapArray);
                 return -1;
@@ -732,8 +732,8 @@ PARSE_FAILED:
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
-    size_t bufferLen, privateSyscapLen;
-    uint32_t i, j, outputLen;
+    size_t bufferLen, privateSyscapLen, outputLen;
+    uint32_t i, j;
     uint32_t *mainSyscap = NULL;
     uint16_t priSyscapCount = 0;
     char *contextBuffer = NULL;
