@@ -18,6 +18,9 @@
 
 #include "stdint.h"
 
+#define TYPE_FILE (0U)
+#define TYPE_STRING (1U)
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
@@ -35,7 +38,7 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath);
 /* in: inputFile, out: outputPath/rpcid.json */
 int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath);
 /* in: pcidFile, rpcidFile */
-int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile);
+int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t type);
 int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uint32_t osArraySize,
                                  char **priSyscap, uint32_t *priSyscapLen);
 

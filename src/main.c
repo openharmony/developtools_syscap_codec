@@ -29,7 +29,7 @@
         printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
-#define SYSCAP_VERSION "1.0.1"
+#define SYSCAP_VERSION "1.1.1"
 #define OUTPUT_VERSION_LEN 200
 #define ENCODE 0
 #define DECODE 1
@@ -130,7 +130,9 @@ int main(int argc, char **argv)
         case 0x115: // 0x115, -Pesi inputfile
             ret = EncodePcidscToString(inputfile, outputpath); break;
         case 0x60:  // 0x60,  -C PCID.txt RPCID.txt
-            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile); break;
+            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile, TYPE_FILE); break;
+        case 0x64:  // 0x64,  -sC "pcidstring" "rpcidstring"
+            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile, TYPE_STRING); break;
         case 0x111: // 0x111, -Pei inputfile
             ret = CreatePCID(inputfile, outputpath); break;
         case 0x112: // 0x112, -Pdi inputfile
@@ -168,7 +170,8 @@ void PrintHelp(void)
     printf("-h, --help\t: how to use\n");
     printf("-R, --RPCID\t: encode or decode RPCID\n");
     printf("-P, --PCID\t: encode or decode PCID\n");
-    printf("-C, --compare\t: compare pcid with rpcid string format.\n");
+    printf("-C, --compare\t: compare pcid with rpcid string format.\n\t"
+           "-s, --string : input string.\n");
     printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
     printf("-d, --decode\t: decode to json format.\n\t-s, --string : decode string format.\n");
     printf("-i filepath, --input filepath\t: input file\n");
