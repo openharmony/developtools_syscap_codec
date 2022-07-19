@@ -647,7 +647,7 @@ SKIP_PRI_SYSCAP:
     return 0;
 }
 
-int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
+int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t type)
 {
     int32_t ret;
     int32_t versionFlag = 0;
@@ -663,14 +663,21 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile)
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
 
-    if (GetFileContext(pcidFile, &pcidContent, &pcidContentLen)) {
-        PRINT_ERR("Get pcid file context failed, input file : %s\n", pcidFile);
-        return -1;
-    }
-
-    if (GetFileContext(rpcidFile, &rpcidContent, &rpcidContentLen)) {
-        PRINT_ERR("Get rpcid file context failed, input file : %s\n", rpcidFile);
-        free(pcidContent);
+    if (type == TYPE_FILE) {
+        if (GetFileContext(pcidFile, &pcidContent, &pcidContentLen)) {
+            PRINT_ERR("Get pcid file context failed, input file : %s\n", pcidFile);
+            return -1;
+        }
+        if (GetFileContext(rpcidFile, &rpcidContent, &rpcidContentLen)) {
+            PRINT_ERR("Get rpcid file context failed, input file : %s\n", rpcidFile);
+            free(pcidContent);
+            return -1;
+        }
+    } else if (type == TYPE_STRING) {
+        pcidContent = pcidFile;
+        rpcidContent = rpcidFile;
+    } else {
+        PRINT_ERR("Input file type error, type=%d\n", type);
         return -1;
     }
 
