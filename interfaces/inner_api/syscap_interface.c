@@ -639,7 +639,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
         retFlag |= 0x1 << 1;
         result->missSyscapNum = ossyscapFlag + prisyscapFlag;
     }
-    return retFlag;
+    return (int32_t)retFlag;
 }
 
 int32_t FreeCompareError(CompareError *result)
