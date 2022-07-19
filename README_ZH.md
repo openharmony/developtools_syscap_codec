@@ -1,5 +1,4 @@
 # 系统能力编解码工具
-
 系统能力(SystemCapability, 本文中使用SysCap缩写)编解码工具应用场景如下：
 
 应用开发时，IDE会根据应用配置的SysCap和API版本生成描述RPCID(Required Product Compatibility ID)的json文件，并调用编解码工具syscap_tool将该json文件编码成RPCID。另一方面，IDE拿到开发者导入PCID(Product Compatibility ID)，使用该工具解码出设备的SysCap集合。该工具仅供IDE使用，对用户不可见。
@@ -19,7 +18,6 @@
 6. PCID与RPCID比较：查询PCID是否满足RPCID的要求，并输出不满足的地方。
 
 ## 代码目录
-
 ```
 /developtools
 ├── syscap_codec                 # syscap codec代码目录
@@ -48,11 +46,9 @@
 ```
 
 ## API
-
 PC端工具，不对外提供API。
 
-## PC端编译说明
-
+## PC端编译说明  
 syscap_tool PC端可执行文件编译步骤：
 1. 编译命令：参考[编译构建](https://gitee.com/openharmony/build/blob/master/README_zh.md)文档，执行其指定的sdk编译命令来编译整个sdk，syscap_tool会被编译打包到里面。
 2. 编译：在目标开发机上运行上面调整好的sdk编译命令，正常编译syscap_tool会输出到sdk平台相关目录下。
@@ -61,9 +57,9 @@ syscap_tool PC端可执行文件编译步骤：
 
 ## PC端获取说明
 1. 下载sdk获取(建议)  
-通过访问本社区门禁[每日构建](http://ci.openharmony.cn/dailys/dailybuilds)网站，下载最新的ohos-sdk压缩包，并从相应平台的toolchains压缩包中提取syscap_tool。  
+    通过访问本社区门禁[每日构建](http://ci.openharmony.cn/dailys/dailybuilds)网站，下载最新的ohos-sdk压缩包，并从相应平台的toolchains压缩包中提取syscap_tool。  
 2. 支持运行环境  
-Windows x86_64/Linux x86_64/Darwin x86_64 
+    Windows x86_64/Linux x86_64/Darwin x86_64
 
 ## 命令帮助  
 本工具一般被IDE、应用市场和包管理器集成，手工调试时可参考以下说明。
