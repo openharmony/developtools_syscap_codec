@@ -30,6 +30,7 @@ typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
     ACE_ACEENGINELITE,
+    ACE_UIAPPEARANCE,
     ARKUI_UIAPPEARANCE,
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
@@ -184,6 +185,7 @@ typedef enum SystemCapabilityNum {
 const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
+    {"SystemCapability.Ace.UiAppearance", ACE_UIAPPEARANCE},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Ace.AceEngineLite", ACE_ACEENGINELITE},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
