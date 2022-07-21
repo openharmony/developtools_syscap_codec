@@ -25,13 +25,12 @@ typedef struct SystemCapabilityWithNum {
     uint16_t num;
 } SyscapWithNum;
 
-/* add last */
+/* New syscap index must be added last */
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
     ACE_ACEENGINELITE,
     ACE_UIAPPEARANCE,
-    ARKUI_UIAPPEARANCE,
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
     BARRIERFREE_ACCESSIBILITY_CORE,
@@ -178,6 +177,8 @@ typedef enum SystemCapabilityNum {
     USERIAM_USERAUTH_FINGERPRINTAUTH,
     USERIAM_USERAUTH_PINAUTH,
     USERIAM_USERIDM,
+    ARKUI_UIAPPEARANCE,
+    // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
