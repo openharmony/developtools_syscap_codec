@@ -29,7 +29,7 @@
         printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
-#define SYSCAP_VERSION "1.1.1"
+#define SYSCAP_VERSION "1.1.2"
 #define OUTPUT_VERSION_LEN 200
 #define ENCODE 0
 #define DECODE 1
