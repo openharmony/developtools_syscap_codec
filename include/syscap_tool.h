@@ -16,7 +16,7 @@
 #ifndef _SYSCAP_TOOL_H
 #define _SYSCAP_TOOL_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 #define TYPE_FILE (0U)
 #define TYPE_STRING (1U)

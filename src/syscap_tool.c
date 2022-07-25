@@ -14,15 +14,11 @@
  */
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <unistd.h>
 #include <string.h>
 #include <limits.h>
-#include <libgen.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include "securec.h"
 #include "endian_internal.h"
