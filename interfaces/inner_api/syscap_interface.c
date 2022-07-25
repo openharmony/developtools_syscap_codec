@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <securec.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
