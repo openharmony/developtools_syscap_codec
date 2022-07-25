@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-#include <cstddef>
+#include <gtest/gtest.h>
+#include <cstdlib>
 #include "syscap_interface.h"
 #include "syscap_codec_test.h"
 
@@ -45,7 +46,7 @@ HWTEST_F(SyscapCodecTest, EncodeOsSyscap, TestSize.Level1)
  */
 HWTEST_F(SyscapCodecTest, EncodePrivateSyscap, TestSize.Level1)
 {
-    char *charPriInput = NULL;
+    char *charPriInput = nullptr;
     int priOutLen;
     EXPECT_TRUE(EncodePrivateSyscap(&charPriInput, &priOutLen));
     free(charPriInput);
@@ -59,7 +60,7 @@ HWTEST_F(SyscapCodecTest, EncodePrivateSyscap, TestSize.Level1)
 HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
 {
     int osSyscap[32] = {1, 3, 3};
-    char (*osOutput)[SINGLE_SYSCAP_LEN] = NULL;
+    char (*osOutput)[SINGLE_SYSCAP_LEN] = nullptr;
     int decodeOsCnt;
     char expectOsOutput001[] = "SystemCapability.Account.AppAccount";
     char expectOsOutput002[] = "SystemCapability.Account.OsAccount";
@@ -78,7 +79,7 @@ HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
  */
 HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 {
-    char (*priOutput)[SINGLE_SYSCAP_LEN] = NULL;
+    char (*priOutput)[SINGLE_SYSCAP_LEN] = nullptr;
     char priSyscap[] = "Device.syscap1GEDR,Device.syscap2WREGW,Vendor.syscap3RGD,Vendor.syscap4RWEG,Vendor.syscap5REWGWE,";
     int decodePriCnt;
     char expectPriOutput001[] = "SystemCapability.Device.syscap1GEDR";
@@ -104,15 +105,15 @@ HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
  */
 HWTEST_F(SyscapCodecTest, DecodePrivateSyscap1, TestSize.Level1)
 {
-    char *charPriInput = NULL;
-    char (*priOutput)[SINGLE_SYSCAP_LEN] = NULL;
+    char *charPriInput = nullptr;
+    char (*priOutput)[SINGLE_SYSCAP_LEN] = nullptr;
     int priOutLen;
     int decodePriCnt;
 
     EXPECT_TRUE(EncodePrivateSyscap(&charPriInput, &priOutLen));
     if (priOutLen == 0) {
         EXPECT_TRUE(DecodePrivateSyscap(charPriInput, &priOutput, &decodePriCnt));
-        EXPECT_EQ((void *)priOutput, (void *)NULL);
+        EXPECT_EQ((void *)priOutput, (void *)nullptr);
         EXPECT_EQ(decodePriCnt, 0);
         free(priOutput);
     }
@@ -148,7 +149,7 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
     EXPECT_EQ(result.targetApiVersion, 0);
     EXPECT_EQ(result.missSyscapNum, 0);
     for (int i = 0; i < MAX_MISS_SYSCAP; i++) {
-        EXPECT_EQ((void *)result.syscap[i], (void *)NULL);
+        EXPECT_EQ((void *)result.syscap[i], (void *)nullptr);
     }
 }
 } // namespace Syscap

@@ -16,8 +16,6 @@
 #ifndef _SYSCAP_CODEC_TEST_H
 #define _SYSCAP_CODEC_TEST_H
 
-#include <gtest/gtest.h>
-
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {

@@ -13,11 +13,10 @@
  * limitations under the License.
  */
 
-#include <cstring>
-#include <unistd.h>
-#include <securec.h>
 #include <cstdint>
-#include "hilog/log.h"
+#include <cstring>
+#include <cstdlib>
+#include <securec.h>
 #include "napi/native_api.h"
 #include "napi/native_node_api.h"
 #include "syscap_interface.h"
