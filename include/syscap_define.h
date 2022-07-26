@@ -333,7 +333,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM},
-    {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
+    {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER}
 };
 
 #endif  // _SYSCAP_DEFINE_H
