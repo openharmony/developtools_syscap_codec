@@ -60,7 +60,6 @@ static char* getSystemCapability()
 {
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
-    int i = 0;
     char osOutput[SINGLE_SYSCAP_LEN] = {};
     errno_t err = EOK;
     uint32_t *osCapU32 = nullptr;
@@ -82,7 +81,7 @@ static char* getSystemCapability()
     }
 
     osCapU32 = reinterpret_cast<uint32_t *>(osOutput);
-    for (i = 0; i < PCID_MAIN_U32; i++) { // 2, header of pcid.sc
+    for (size_t i = 0; i < PCID_MAIN_U32; i++) { // 2, header of pcid.sc
         retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
         if (retError == -1) {
             PRINT_ERR("get uint32_t syscap string failed.");
@@ -98,10 +97,10 @@ static char* getSystemCapability()
 
     // calculate all string length
     sumLen = 0;
-    for (i = 0; i < PCID_MAIN_U32; i++) {
+    for (size_t i = 0; i < PCID_MAIN_U32; i++) {
         sumLen += strlen(osCapArray[i]);
     }
-    for (i = 0; i < priCapArrayCnt; i++) {
+    for (int i = 0; i < priCapArrayCnt; i++) {
         sumLen += strlen(*(priCapArray + i));
     }
     sumLen += (PCID_MAIN_U32 + priCapArrayCnt + 1);  // split with ','
@@ -121,7 +120,7 @@ static char* getSystemCapability()
     }
     temp = *osCapArray;
 
-    for (i = 1; i < PCID_MAIN_U32; i++) {
+    for (size_t i = 1; i < PCID_MAIN_U32; i++) {
         retError = sprintf_s(allSyscapBUffer, sumLen, "%s,%s", temp, osCapArray[i]);
         if (retError == -1) {
             PRINT_ERR("splicing os syscap string failed.");
@@ -131,7 +130,7 @@ static char* getSystemCapability()
         }
         temp = allSyscapBUffer;
     }
-    for (i = 0; i < priCapArrayCnt; i++) {
+    for (int i = 0; i < priCapArrayCnt; i++) {
         retError = sprintf_s(allSyscapBUffer, sumLen, "%s,%s", temp, *(priCapArray + i));
         if (retError == -1) {
             PRINT_ERR("splicing pri syscap string failed.");

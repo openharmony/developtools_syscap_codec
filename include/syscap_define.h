@@ -25,7 +25,7 @@ typedef struct SystemCapabilityWithNum {
     uint16_t num;
 } SyscapWithNum;
 
-/* add last */
+/* New syscap index must be added last */
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
