@@ -179,6 +179,7 @@ typedef enum SystemCapabilityNum {
     USERIAM_USERIDM,
     ARKUI_UIAPPEARANCE,
     SECURITY_CERTIFICATE_MANAGER,
+    GRAPHIC_GRAPHIC2D_VULKAN,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -234,6 +235,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.Graphic2D.GLES3", GRAPHIC_GRAPHIC2D_GLES3},
     {"SystemCapability.Graphic.Graphic2D.NativeDrawing", GRAPHIC_GRAPHIC2D_NATIVEDRAWING},
     {"SystemCapability.Graphic.Graphic2D.NativeWindow", GRAPHIC_GRAPHIC2D_NATIVEWINDOW},
+    {"SystemCapability.Graphic.Graphic2D.Vulkan", GRAPHIC_GRAPHIC2D_VULKAN},
     {"SystemCapability.Graphic.Graphic2D.WebGL", GRAPHIC_GRAPHIC2D_WEBGL},
     {"SystemCapability.Graphic.Graphic2D.WebGL2", GRAPHIC_GRAPHIC2D_WEBGL2},
     {"SystemCapability.Graphic.Surface", GRAPHIC_SURFACE},
