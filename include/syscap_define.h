@@ -97,7 +97,6 @@ typedef enum SystemCapabilityNum {
     KERNEL_LINUX,
     KERNEL_LITEOS_A,
     KERNEL_LITEOS_M,
-    LOCATION_LOCATION,
     MISCSERVICES_DOWNLOAD,
     MISCSERVICES_INPUTMETHOD,
     MISCSERVICES_PASTEBOARD,
@@ -180,6 +179,11 @@ typedef enum SystemCapabilityNum {
     ARKUI_UIAPPEARANCE,
     SECURITY_CERTIFICATE_MANAGER,
     GRAPHIC_GRAPHIC2D_VULKAN,
+    LOCATION_LOCATION_CORE,
+    LOCATION_LOCATION_GNSS,
+    LOCATION_LOCATION_GEOFENCE,
+    LOCATION_LOCATION_GEOCODER,
+    LOCATION_LOCATION_LITE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -258,7 +262,11 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Kernel.Linux", KERNEL_LINUX},
     {"SystemCapability.Kernel.liteos-a", KERNEL_LITEOS_A},
     {"SystemCapability.Kernel.liteos-m", KERNEL_LITEOS_M},
-    {"SystemCapability.Location.Location", LOCATION_LOCATION},
+    {"SystemCapability.Location.Location.Core", LOCATION_LOCATION_CORE},
+    {"SystemCapability.Location.Location.Gnss", LOCATION_LOCATION_GNSS},
+    {"SystemCapability.Location.Location.Geofence", LOCATION_LOCATION_GEOFENCE},
+    {"SystemCapability.Location.Location.Geocoder", LOCATION_LOCATION_GEOCODER},
+    {"SystemCapability.Location.Location.Lite", LOCATION_LOCATION_LITE},
     {"SystemCapability.MiscServices.Download", MISCSERVICES_DOWNLOAD},
     {"SystemCapability.MiscServices.InputMethod", MISCSERVICES_INPUTMETHOD},
     {"SystemCapability.MiscServices.Pasteboard", MISCSERVICES_PASTEBOARD},
