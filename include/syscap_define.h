@@ -25,7 +25,10 @@ typedef struct SystemCapabilityWithNum {
     uint16_t num;
 } SyscapWithNum;
 
-/* New syscap index must be added last */
+/*
+ * New syscap index must be added last and
+ * don't delete anyone, just comment after it.
+ */
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
@@ -97,6 +100,7 @@ typedef enum SystemCapabilityNum {
     KERNEL_LINUX,
     KERNEL_LITEOS_A,
     KERNEL_LITEOS_M,
+    LOCATION_LOCATION, // abandoned
     MISCSERVICES_DOWNLOAD,
     MISCSERVICES_INPUTMETHOD,
     MISCSERVICES_PASTEBOARD,
