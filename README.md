@@ -27,7 +27,7 @@ Main function：
 │   │   ├── main.c               # command line implement
 │   │   └── syscap_tool.c        # codec implement
 │   └── test 
-│   |    └── syscap_tool_test.c  # syscap_tool test codec implement
+│   |   └── syscap_tool_test.c   # syscap_tool test codec implement
 |   |—— tools
 |   │   │
 |   │   └── syscap_check.py      # syscap一致性检查脚本
