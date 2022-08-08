@@ -43,6 +43,9 @@
 │   │   │   │   └── syscap_codec_test.h
 │   │   │   └── syscap_codec_test.cpp
 │   │   └── syscap_tool_test.c   # syscap_tool功能测试代码实现
+|   |—— tools
+|   │   │
+|   │   └── syscap_check.py      # syscap一致性检查脚本
 ```
 
 ## API
@@ -112,6 +115,43 @@ syscap_tool -sC "pcidstring" "rpcidstring"
 syscap_tool -Pdsi pcid.txt -o path/
 ```
 **说明：**  -o 选项指定输出目录，缺省为当前目录。  
+
+### syscap一致性看护脚本的说明与使用
+
+本工具主要提供如下功能：
+
+1. 收集所有部件（或指定部件）的syscap字段并与developtools/sysap_codec/include/syscap_define.h中的arraySyscap比较，输出检查结果，若不一致，输出不一致的原因
+2. 收集所有部件的syscap字段并与interface/sdk-js/api目录下的*.d.ts中的“@syscap”属性集合比较，输出检查结果，若不一致，输出不一致的原因
+3. 收集所有interface/sdk-js/api目录下的*.d.ts中的syscap属性与developtools/syscap_codec/include/syscap_define.h中的arraySyscap比较，若不一致，输出不一致的原因
+
+requirements：
+
+```txt
+prettytable==3.3.0
+```
+
+使用方法：
+
+```shell
+# 查看帮助
+python3 syscap-check.py --help
+
+# 上述三种不同数据的比较主要通过--check_target参数控制，该参数有三个值可选：component_codec、component_sdk、sdk_codec
+
+# 检查所有部件的syscap字段与syscap_define.h中的arraySyscap一致性情况
+python3 syscap_check.py --project_path path_of_openarmony --check_target component_codec
+
+# 检查指定的部件的bundle.json中的syscap字段与syscap_define.h中的arraySyscap一致性情况，注意，只要当--check_target为component_codec时，--bundles才生效
+python3 syscap_check.py --project_path path_of_openarmony --check_target component_codec --bundles path_of_component1/bundle.json path_of_component2/bundle.json
+
+# 检查所有部件的syscap字段与*.d.ts中的“@syscap”属性集合的一致性情况
+python3 syscap_check.py --project_path path_of_openarmony --check_target component_sdk
+
+# 检查*.d.ts中的“@syscap"属性集合与syscap_define.h中的arraSyscap的一致性情况
+python3 syscap_check.py --project_path path_of_openarmony --check_target sdk_codec
+```
+
+
 
 ## Release Note
 v1.1.0 2022-6-17 添加转字符串格式以及比较功能。  
