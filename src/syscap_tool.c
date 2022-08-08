@@ -673,7 +673,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         pcidContent = pcidFile;
         rpcidContent = rpcidFile;
     } else {
-        PRINT_ERR("Input file type error, type=%d\n", type);
+        PRINT_ERR("Input file type error, type=%u\n", type);
         return -1;
     }
 
