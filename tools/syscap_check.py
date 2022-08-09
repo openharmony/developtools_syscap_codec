@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright (c) 2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +24,16 @@ table.hrules = ALL
 
 
 def get_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=True)
     parser.add_argument(
-        "--project_path", type=str, required=True, help="root path of project"
+        "-p",
+        "--project_path",
+        default=r"./",
+        type=str,
+        help="root path of project. default: ./",
     )
     parser.add_argument(
+        "-t",
         "--check_target",
         type=str,
         choices=["component_codec", "component_sdk", "sdk_codec"],
@@ -35,10 +41,11 @@ def get_args():
         help="the target to be compared",
     )
     parser.add_argument(
+        "-b",
         "--bundles",
         nargs="*",
         type=str,
-        help="this option will take effect only when the check_target is component_codec. allow multiple file. default: all",
+        help="this option will take effect only when the check_target is component_codec. allow multiple json file. default: all bundle.json file",
     )
     args = parser.parse_args()
     return args
@@ -55,6 +62,12 @@ def read_value_from_json(filepath, key_hierarchy, result_dict):
     :param filepath: fullpath of file
     :return: result_dict, {filepath:value_list}
     """
+    if os.path.exists(filepath) is False:
+        print('error: file "{}" not exists.'.format(filepath))
+        return result_dict
+    if os.path.isfile(filepath) is False:
+        print('error: "{}" is not a file.')
+        return result_dict
     with open(filepath, "r") as f:
         data = json.load(f)
         for key in key_hierarchy:
@@ -98,10 +111,16 @@ def collect_syscap_from_component(project_path, bundles=None):
                 "find {} -name bundle.json".format(os.path.join(project_path, ss))
             )
             for line in output:
-                read_value_from_json(line.strip(), key_heirarchy, result_dict)
+                try:
+                    read_value_from_json(line.strip(), key_heirarchy, result_dict)
+                except Exception as e:
+                    print(e.with_traceback())
     else:
         for b in bundles:
-            result_dict = read_value_from_json(b, key_heirarchy, result_dict)
+            try:
+                result_dict = read_value_from_json(b, key_heirarchy, result_dict)
+            except Exception as e:
+                print(e.with_traceback())
     result_set = set()
     for v in result_dict.values():
         result_set.update(v)
@@ -169,7 +188,7 @@ def check_component_and_codec(project_path, bundles=None):
     if 0 != len(component_diff_array):
         table.field_names = ["Syscap Only in Component", "Files"]
         for syscap, files in value_files_dict.items():
-            table.add_row([syscap, list_to_multiline(list_to_multiline(files))])
+            table.add_row([syscap, list_to_multiline(sorted(files))])
     elif 0 == len(component_diff_array):
         table.field_names = ["All Syscap in Component have been Covered by Codec"]
     print("\n")
@@ -177,7 +196,7 @@ def check_component_and_codec(project_path, bundles=None):
     table.clear()
     if 0 != len(array_diff_component):
         table.field_names = ["SysCap Only in Codec"]
-        table.add_row([list_to_multiline(list(array_diff_component))])
+        table.add_row([list_to_multiline(sorted(list(array_diff_component)))])
     elif 0 == len(array_diff_component):
         table.field_names = ["All SysCap in Codec have been Covered by Component"]
     print("\n")
@@ -204,7 +223,7 @@ def check_component_and_sdk(project_path):
     if 0 != len(component_diff_ts):
         table.field_names = ["SysCap Only in Component", "Files"]
         for syscap, files in value_component_dict.items():
-            table.add_row([syscap, list_to_multiline(list(files))])
+            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
     elif 0 == len(component_diff_ts):
         table.field_names = ["SysCap in Component have been Covered by SDK"]
     print("\n")
@@ -213,7 +232,7 @@ def check_component_and_sdk(project_path):
     if 0 != len(ts_diff_component):
         table.field_names = ["SysCap Only in SDK", "Files"]
         for syscap, files in value_ts_dict.items():
-            table.add_row([syscap, list_to_multiline(list(files))])
+            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
     elif 0 == len(ts_diff_component):
         table.field_names = ["All SysCap in SDK have been Covered by Component"]
     print("\n")
@@ -239,7 +258,7 @@ def check_sdk_and_codec(project_path):
     if 0 != len(ts_diff_array):
         table.field_names = ["SysCap Only in SDK", "Files"]
         for syscap, files in value_ts_dict.items():
-            table.add_row([syscap, list_to_multiline(list(files))])
+            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
     elif 0 == len(ts_diff_array):
         table.field_names = ["SysCap in SDK have been Covered by Codec"]
     print("\n")
@@ -247,7 +266,7 @@ def check_sdk_and_codec(project_path):
     table.clear()
     if 0 != len(array_diff_ts):
         table.field_names = ["SysCap Only in Codec"]
-        table.add_row([list_to_multiline(list(array_diff_ts))])
+        table.add_row([list_to_multiline(sorted(list(array_diff_ts)))])
     elif 0 == len(array_diff_ts):
         table.field_names = ["SysCap in Codec have been Covered by SDK"]
     print("\n")

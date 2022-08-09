@@ -82,13 +82,19 @@ SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instru
 -o outpath, --input outpath : output path
 ```
 
-### Description and usage of Syscap Consistency Check Tool
+## Syscap consistency check tool
+
+### Functions and dependencies
 
 The tool provides the following functions:
 
-1. Collect syscap fields of all components (or specified components), compare them with arraySyscap in developtools/syscap_codec/include/syscap_define.h, and output the check results. If they are inconsistent, output the cause of the discrepancy
-2. Collect the syscap fields of all components and compare them with the @syscap property set in *.d.ts in the interface/sdk-js/api directory. If the check results are inconsistent, output the cause of the inconsistency
-3. Compare syscap attributes in all *.d.ts in interface/ sdk-js/api directory with arraySyscap in developtools/syscap_codec/include/syscap_define.h. If they are inconsistent, output the cause of the the inconsistency
+1. Collect syscap fields of all components (or specified components), compare them with arraySyscap in developtools/ syscap_codec/include/syscap_define.h, and output the check results. If they are inconsistent, output the cause of the discrepancy.
+2. Collect the syscap fields of all components and compare them with the @syscap property set in *.d.ts in the Interface/sdk-js/api directory. If the check results are inconsistent, output the cause of the inconsistency.
+3. Compare syscap attributes in *.d.ts in all interface/ sdK-JS/API directories with arraySyscap in developtools/syscap_codec/include/syscap_define.h. If they are inconsistent,  output the cause of the inconsistency.
+
+### How to use it
+
+This tool is written in Python language and needs to be executed using the Python interpreter.
 
 requirements：
 
@@ -99,22 +105,17 @@ prettytable==3.3.0
 usage：
 
 ```shell
-# see the help
-python3 syscap-check.py --help
-
-# The comparison of these three different types of data is mainly controlled by the check_target parameter, which has three values to choose from：component_codec、component_sdk、sdk_codec
-
 # check syscap field in all components for consistency with arraySyscap in syscap_define.h
-python3 syscap_check.py --project_path path_of_openarmony --check_target component_codec
+python3 syscap_check.py -p path_of_openarmony -t component_codec
 
 # check that the SYSCAP field in bundle.json of the specified part is consistent with arraySyscap in syscap_define.h. Note： --bundles is valid only if --check_target is component_codec
-python3 syscap_check.py --project_path path_of_openarmony --check_target component_codec --bundles path_of_component1/bundle.json path_of_component2/bundle.json
+python3 syscap_check.py -p path_of_openarmony -t component_codec -b path_of_component1/bundle.json path_of_component2/bundle.json
 
 # check the consistency of the syscap field of all components with the "@syscap" property set in *.d.ts
-python3 syscap_check.py --project_path path_of_openarmony --check_target component_sdk
+python3 syscap_check.py -p path_of_openarmony -t component_sdk
 
 # check the "@syscap" attribute set in *.d.ts for consistency with arraSyscap in syscap_define.h
-python3 syscap_check.py --project_path path_of_openarmony --check_target sdk_codec
+python3 syscap_check.py -p path_of_openarmony -t sdk_codec
 ```
 
 ### Release Note
