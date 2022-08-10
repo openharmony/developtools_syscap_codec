@@ -193,6 +193,7 @@ typedef enum SystemCapabilityNum {
     LOCATION_LOCATION_GEOFENCE,
     LOCATION_LOCATION_GEOCODER,
     LOCATION_LOCATION_LITE,
+    DEVELOPTOOLS_SYSCAP,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -359,6 +360,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
+    {"SystemCapability.Developtools.Syscap", DEVELOPTOOLS_SYSCAP},
 };
 
 #endif  // _SYSCAP_DEFINE_H
