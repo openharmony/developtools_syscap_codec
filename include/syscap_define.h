@@ -136,11 +136,6 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_VIDEORECORDER,
     MULTIMEDIA_AV_SESSION,
     MULTIMEDIA_AUDIO_CORE,
-    MULTIMEDIA_AUDIO_RENDERER,
-    MULTIMEDIA_AUDIO_CAPTURER,
-    MULTIMEDIA_AUDIO_DEVICE,
-    MULTIMEDIA_AUDIO_VOLUME,
-    MULTIMEDIA_AUDIO_COMMUNICATION,
     MULTIMODALINPUT_INPUT,
     NOTIFICATION_COMMONEVENT,
     NOTIFICATION_EMITTER,
@@ -199,6 +194,11 @@ typedef enum SystemCapabilityNum {
     LOCATION_LOCATION_GEOFENCE,
     LOCATION_LOCATION_GEOCODER,
     LOCATION_LOCATION_LITE,
+    MULTIMEDIA_AUDIO_RENDERER,
+    MULTIMEDIA_AUDIO_CAPTURER,
+    MULTIMEDIA_AUDIO_DEVICE,
+    MULTIMEDIA_AUDIO_VOLUME,
+    MULTIMEDIA_AUDIO_COMMUNICATION,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -314,12 +314,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.VideoPlayer", MULTIMEDIA_MEDIA_VIDEOPLAYER},
     {"SystemCapability.Multimedia.Media.VideoRecorder", MULTIMEDIA_MEDIA_VIDEORECORDER},
     {"SystemCapability.Multimedia.AVSession", MULTIMEDIA_AV_SESSION},
-    {"SystemCapability.Multimedia.Audio.Core", MULTIMEDIA_AUDIO_CORE},
-    {"SystemCapability.Multimedia.Audio.Renderer", MULTIMEDIA_AUDIO_RENDERER},
-    {"SystemCapability.Multimedia.Audio.Capturer", MULTIMEDIA_AUDIO_CAPTURER},
-    {"SystemCapability.Multimedia.Audio.Device", MULTIMEDIA_AUDIO_DEVICE},
-    {"SystemCapability.Multimedia.Audio.Volume", MULTIMEDIA_AUDIO_VOLUME},
-    {"SystemCapability.Multimedia.Audio.Communication", MULTIMEDIA_AUDIO_COMMUNICATION},
     {"SystemCapability.multimodalinput.input", MULTIMODALINPUT_INPUT},
     {"SystemCapability.Notification.CommonEvent", NOTIFICATION_COMMONEVENT},
     {"SystemCapability.Notification.Emitter", NOTIFICATION_EMITTER},
@@ -371,6 +365,12 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
+    {"SystemCapability.Multimedia.Audio.Core", MULTIMEDIA_AUDIO_CORE},
+    {"SystemCapability.Multimedia.Audio.Renderer", MULTIMEDIA_AUDIO_RENDERER},
+    {"SystemCapability.Multimedia.Audio.Capturer", MULTIMEDIA_AUDIO_CAPTURER},
+    {"SystemCapability.Multimedia.Audio.Device", MULTIMEDIA_AUDIO_DEVICE},
+    {"SystemCapability.Multimedia.Audio.Volume", MULTIMEDIA_AUDIO_VOLUME},
+    {"SystemCapability.Multimedia.Audio.Communication", MULTIMEDIA_AUDIO_COMMUNICATION},
 };
 
 #endif  // _SYSCAP_DEFINE_H
