@@ -200,6 +200,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_DEVICE,
     MULTIMEDIA_AUDIO_VOLUME,
     MULTIMEDIA_AUDIO_COMMUNICATION,
+    MULTIMEDIA_CAMERA_CORE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -373,6 +374,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.Device", MULTIMEDIA_AUDIO_DEVICE},
     {"SystemCapability.Multimedia.Audio.Volume", MULTIMEDIA_AUDIO_VOLUME},
     {"SystemCapability.Multimedia.Audio.Communication", MULTIMEDIA_AUDIO_COMMUNICATION},
+    {"SystemCapability.Multimedia.Camera.Core", MULTIMEDIA_CAMERA_CORE},
 };
 
 #endif  // _SYSCAP_DEFINE_H
