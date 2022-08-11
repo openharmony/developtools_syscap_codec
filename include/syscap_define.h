@@ -201,6 +201,8 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_VOLUME,
     MULTIMEDIA_AUDIO_COMMUNICATION,
     MULTIMEDIA_CAMERA_CORE,
+    BARRIERFREE_ACCESSIBILITY_HEARING,
+    BARRIERFREE_ACCESSIBILITY_VISION,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -214,6 +216,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
     {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
+    {"SystemCapability.BarrierFree.Accessibility.Hearing", BARRIERFREE_ACCESSIBILITY_HEARING},
+    {"SystemCapability.BarrierFree.Accessibility.Vision", BARRIERFREE_ACCESSIBILITY_VISION},
     {"SystemCapability.BundleManager.BundleFramework", BUNDLEMANAGER_BUNDLEFRAMEWORK},
     {"SystemCapability.BundleManager.BundleTool", BUNDLEMANAGER_BUNDLETOOL},
     {"SystemCapability.BundleManager.DistributedBundleFramework", BUNDLEMANAGER_DISTRIBUTEDBUNDLEFRAMEWORK},
