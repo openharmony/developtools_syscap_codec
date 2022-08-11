@@ -163,6 +163,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     *outputLen = bufferLen - PCID_MAIN_BYTES - 1;
     if (*outputLen == 0) {
         *output = outputStr;
+        (*outputLen)--;
         return true;
     }
     outputStr = (char *)malloc(*outputLen);
@@ -246,7 +247,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
     if (input == NULL) {
         *output = outputArray;
         *outputCnt = syscapCnt;
-        return false;
+        return true;
     }
 
     while (*inputPos != '\0') {
