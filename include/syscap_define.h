@@ -48,9 +48,9 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETSTACK,
     COMMUNICATION_NFC_CORE,
     COMMUNICATION_SOFTBUS_CORE,
-    COMMUNICATION_WIFI_AP,
+    COMMUNICATION_WIFI_AP, // abandoned
     COMMUNICATION_WIFI_CORE,
-    COMMUNICATION_WIFI_HOTSPOTEXT,
+    COMMUNICATION_WIFI_HOTSPOTEXT, // abandoned
     COMMUNICATION_WIFI_P2P,
     COMMUNICATION_WIFI_STA,
     CUSTOMIZATION_CONFIGPOLICY,
@@ -200,6 +200,8 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_DEVICE,
     MULTIMEDIA_AUDIO_VOLUME,
     MULTIMEDIA_AUDIO_COMMUNICATION,
+    COMMUNICATION_WIFI_AP_CORE,
+    COMMUNICATION_WIFI_AP_EXTENSION,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -225,9 +227,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetStack", COMMUNICATION_NETSTACK},
     {"SystemCapability.Communication.NFC.Core", COMMUNICATION_NFC_CORE},
     {"SystemCapability.Communication.SoftBus.Core", COMMUNICATION_SOFTBUS_CORE},
-    {"SystemCapability.Communication.WiFi.AP", COMMUNICATION_WIFI_AP},
+    {"SystemCapability.Communication.WiFi.AP.Core", COMMUNICATION_WIFI_AP_CORE},
     {"SystemCapability.Communication.WiFi.Core", COMMUNICATION_WIFI_CORE},
-    {"SystemCapability.Communication.WiFi.HotspotExt", COMMUNICATION_WIFI_HOTSPOTEXT},
+    {"SystemCapability.Communication.WiFi.AP.Extension", COMMUNICATION_WIFI_AP_EXTENSION},
     {"SystemCapability.Communication.WiFi.P2P", COMMUNICATION_WIFI_P2P},
     {"SystemCapability.Communication.WiFi.STA", COMMUNICATION_WIFI_STA},
     {"SystemCapability.Customization.ConfigPolicy", CUSTOMIZATION_CONFIGPOLICY},
