@@ -49,6 +49,9 @@ HWTEST_F(SyscapCodecTest, EncodePrivateSyscap, TestSize.Level1)
     char *charPriInput = nullptr;
     int priOutLen;
     EXPECT_TRUE(EncodePrivateSyscap(&charPriInput, &priOutLen));
+    // Currently, private syscap is null.
+    EXPECT_EQ(charPriInput, nullptr);
+    EXPECT_EQ(priOutLen, 0);
     free(charPriInput);
 }
 
@@ -74,7 +77,7 @@ HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
 
 /*
  * @tc.name: DecodePrivateSyscap
- * @tc.desc: Check the PrivateSyscap Decoding.
+ * @tc.desc: Check the null PrivateSyscap Decoding.
  * @tc.type: FUNC
  */
 HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
