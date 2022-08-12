@@ -1,7 +1,7 @@
 {
   "name": "@ohos/syscap_codec",
-  "description": "SystemCapability encode/decode.",
-  "version": "3.1",
+  "description": "System capability encode and decode.",
+  "version": "3.2",
   "license": "Apache License 2.0",
   "pubiishAs": "code-segment",
   "segment": {
@@ -12,7 +12,7 @@
   "component": {
     "name": "syscap_codec",
     "subsystem": "developtools",
-    "syscap": [],
+    "syscap": [ "SystemCapability.Developtools.Syscap" ],
     "feature": [],
     "adapted_system_type": [ "small", "standard" ],
     "deps": {
