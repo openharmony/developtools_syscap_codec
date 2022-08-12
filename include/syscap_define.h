@@ -193,6 +193,7 @@ typedef enum SystemCapabilityNum {
     LOCATION_LOCATION_GEOFENCE,
     LOCATION_LOCATION_GEOCODER,
     LOCATION_LOCATION_LITE,
+    DEVELOPTOOLS_SYSCAP,
     COMMUNICATION_BLUETOOTH_LITE,
     MULTIMEDIA_AUDIO_CORE,
     MULTIMEDIA_AUDIO_RENDERER,
@@ -200,6 +201,9 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_DEVICE,
     MULTIMEDIA_AUDIO_VOLUME,
     MULTIMEDIA_AUDIO_COMMUNICATION,
+    MULTIMEDIA_CAMERA_CORE,
+    BARRIERFREE_ACCESSIBILITY_HEARING,
+    BARRIERFREE_ACCESSIBILITY_VISION,
     COMMUNICATION_WIFI_AP_CORE,
     COMMUNICATION_WIFI_AP_EXTENSION,
     // Add here
@@ -215,6 +219,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
     {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
+    {"SystemCapability.BarrierFree.Accessibility.Hearing", BARRIERFREE_ACCESSIBILITY_HEARING},
+    {"SystemCapability.BarrierFree.Accessibility.Vision", BARRIERFREE_ACCESSIBILITY_VISION},
     {"SystemCapability.BundleManager.BundleFramework", BUNDLEMANAGER_BUNDLEFRAMEWORK},
     {"SystemCapability.BundleManager.BundleTool", BUNDLEMANAGER_BUNDLETOOL},
     {"SystemCapability.BundleManager.DistributedBundleFramework", BUNDLEMANAGER_DISTRIBUTEDBUNDLEFRAMEWORK},
@@ -369,12 +375,14 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
+    {"SystemCapability.Developtools.Syscap", DEVELOPTOOLS_SYSCAP},
     {"SystemCapability.Multimedia.Audio.Core", MULTIMEDIA_AUDIO_CORE},
     {"SystemCapability.Multimedia.Audio.Renderer", MULTIMEDIA_AUDIO_RENDERER},
     {"SystemCapability.Multimedia.Audio.Capturer", MULTIMEDIA_AUDIO_CAPTURER},
     {"SystemCapability.Multimedia.Audio.Device", MULTIMEDIA_AUDIO_DEVICE},
     {"SystemCapability.Multimedia.Audio.Volume", MULTIMEDIA_AUDIO_VOLUME},
     {"SystemCapability.Multimedia.Audio.Communication", MULTIMEDIA_AUDIO_COMMUNICATION},
+    {"SystemCapability.Multimedia.Camera.Core", MULTIMEDIA_CAMERA_CORE},
 };
 
 #endif  // _SYSCAP_DEFINE_H
