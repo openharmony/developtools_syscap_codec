@@ -55,6 +55,12 @@ def list_to_multiline(l):
     return str(l).lstrip("[").rstrip("]").replace(", ", "\n")
 
 
+def add_dict_as_table_row(f_table, d_dict):
+    s_keys = sorted(list(d_dict.keys()))
+    for k in s_keys:
+        f_table.add_row([k, list_to_multiline(sorted(list(d_dict.get(k))))])
+
+
 def read_value_from_json(filepath, key_hierarchy, result_dict):
     """
     :param result_dict: result_dict
@@ -187,8 +193,7 @@ def check_component_and_codec(project_path, bundles=None):
         return
     if 0 != len(component_diff_array):
         table.field_names = ["Syscap Only in Component", "Files"]
-        for syscap, files in value_files_dict.items():
-            table.add_row([syscap, list_to_multiline(sorted(files))])
+        add_dict_as_table_row(table, value_files_dict)
     elif 0 == len(component_diff_array):
         table.field_names = ["All Syscap in Component have been Covered by Codec"]
     print("\n")
@@ -222,8 +227,7 @@ def check_component_and_sdk(project_path):
     table.clear()
     if 0 != len(component_diff_ts):
         table.field_names = ["SysCap Only in Component", "Files"]
-        for syscap, files in value_component_dict.items():
-            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
+        add_dict_as_table_row(table, value_component_dict)
     elif 0 == len(component_diff_ts):
         table.field_names = ["SysCap in Component have been Covered by SDK"]
     print("\n")
@@ -231,8 +235,7 @@ def check_component_and_sdk(project_path):
     table.clear()
     if 0 != len(ts_diff_component):
         table.field_names = ["SysCap Only in SDK", "Files"]
-        for syscap, files in value_ts_dict.items():
-            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
+        add_dict_as_table_row(table, value_ts_dict)
     elif 0 == len(ts_diff_component):
         table.field_names = ["All SysCap in SDK have been Covered by Component"]
     print("\n")
@@ -257,8 +260,7 @@ def check_sdk_and_codec(project_path):
     table.clear()
     if 0 != len(ts_diff_array):
         table.field_names = ["SysCap Only in SDK", "Files"]
-        for syscap, files in value_ts_dict.items():
-            table.add_row([syscap, list_to_multiline(sorted(list(files)))])
+        add_dict_as_table_row(table, value_ts_dict)
     elif 0 == len(ts_diff_array):
         table.field_names = ["SysCap in SDK have been Covered by Codec"]
     print("\n")
