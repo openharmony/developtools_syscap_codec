@@ -32,7 +32,7 @@ typedef struct SystemCapabilityWithNum {
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
-    ACE_ACEENGINELITE,
+    ACE_ACEENGINELITE, // abandoned
     ACE_UIAPPEARANCE, // abandoned
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
@@ -214,6 +214,10 @@ typedef enum SystemCapabilityNum {
     ABILITY_FORM,
     COMMUNICATION_WIFI_AP_CORE,
     COMMUNICATION_WIFI_AP_EXTENSION,
+    ARKUI_ARKUI_LITE,
+    ARKUI_ARKUI_FULL,
+    ARKUI_ARKUI_LIBUV,
+    ARKUI_ARKUI_NAPI,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -225,6 +229,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Ace.AceEngineLite", ACE_ACEENGINELITE},
+    {"SystemCapability.ArkUI.ArkUI.Lite", ARKUI_ARKUI_LITE},
+    {"SystemCapability.ArkUI.ArkUI.Full", ARKUI_ARKUI_FULL},
+    {"SystemCapability.ArkUI.ArkUI.Libuv", ARKUI_ARKUI_LIBUV},
+    {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
     {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
