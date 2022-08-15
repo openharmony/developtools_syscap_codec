@@ -219,6 +219,7 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_LIBUV,
     ARKUI_ARKUI_NAPI,
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
+    UTILS_LANG,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -392,6 +393,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.UserIAM.UserIdm", USERIAM_USERIDM},
+    {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
     {"SystemCapability.Developtools.Syscap", DEVELOPTOOLS_SYSCAP},
     {"SystemCapability.Multimedia.Audio.Core", MULTIMEDIA_AUDIO_CORE},
