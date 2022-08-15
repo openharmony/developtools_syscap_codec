@@ -309,7 +309,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Location.Location.Geocoder", LOCATION_LOCATION_GEOCODER},
     {"SystemCapability.Location.Location.Lite", LOCATION_LOCATION_LITE},
     {"SystemCapability.MiscServices.Download", MISCSERVICES_DOWNLOAD},
-    {"SystemCapability.MiscServices.InputMethod", MISCSERVICES_INPUTMETHOD},
+    {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD},
     {"SystemCapability.MiscServices.Pasteboard", MISCSERVICES_PASTEBOARD},
     {"SystemCapability.MiscServices.ScreenLock", MISCSERVICES_SCREENLOCK},
     {"SystemCapability.MiscServices.Time", MISCSERVICES_TIME},
