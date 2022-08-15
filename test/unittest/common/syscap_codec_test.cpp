@@ -50,7 +50,7 @@ HWTEST_F(SyscapCodecTest, EncodePrivateSyscap, TestSize.Level1)
     int priOutLen;
     EXPECT_TRUE(EncodePrivateSyscap(&charPriInput, &priOutLen));
     // Currently, private syscap is null.
-    EXPECT_EQ(charPriInput, nullptr);
+    EXPECT_EQ(*charPriInput, '\0');
     EXPECT_EQ(priOutLen, 0);
     free(charPriInput);
 }
@@ -137,8 +137,8 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
     const char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
                                "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
                                "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    const char expect[][256] = {"SystemCapability.Graphic.Wms",
-                                "SystemCapability.HiviewDFX.HiLog",
+    const char expect[][256] = {"SystemCapability.Graphic.UI",
+                                "SystemCapability.HiviewDFX.HiDumper",
                                 "SystemCapability.vendor.xxxxx1",
                                 "SystemCapability.device.xxxxx2"};
     int32_t ret = ComparePcidString(pcidString, rpcidString, &result);
