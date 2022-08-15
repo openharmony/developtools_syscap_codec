@@ -102,7 +102,7 @@ typedef enum SystemCapabilityNum {
     KERNEL_LITEOS_M,
     LOCATION_LOCATION, // abandoned
     MISCSERVICES_DOWNLOAD,
-    MISCSERVICES_INPUTMETHOD,
+    MISCSERVICES_INPUTMETHOD, // abandoned
     MISCSERVICES_PASTEBOARD,
     MISCSERVICES_SCREENLOCK,
     MISCSERVICES_TIME,
@@ -218,6 +218,7 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_FULL,
     ARKUI_ARKUI_LIBUV,
     ARKUI_ARKUI_NAPI,
+    MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -309,7 +310,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Location.Location.Geocoder", LOCATION_LOCATION_GEOCODER},
     {"SystemCapability.Location.Location.Lite", LOCATION_LOCATION_LITE},
     {"SystemCapability.MiscServices.Download", MISCSERVICES_DOWNLOAD},
-    {"SystemCapability.MiscServices.InputMethod", MISCSERVICES_INPUTMETHOD},
+    {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.MiscServices.Pasteboard", MISCSERVICES_PASTEBOARD},
     {"SystemCapability.MiscServices.ScreenLock", MISCSERVICES_SCREENLOCK},
     {"SystemCapability.MiscServices.Time", MISCSERVICES_TIME},
