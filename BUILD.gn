@@ -46,12 +46,10 @@ build_ext_component("syscap_define_check") {
     cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_define_check_bin"
   }
 
-  command = "chmod 777 $cmd"
-  command += " && $cmd"
+  command = "chmod 777 $cmd && $cmd"
 }
 
 ohos_executable("syscap_tool_bin") {
-  deps = [ ":syscap_define_check" ]
   output_name = "syscap_tool"
   install_enable = true
   include_dirs = [ "src" ]
@@ -64,7 +62,7 @@ ohos_executable("syscap_tool_bin") {
   sources = [ "./src/main.c" ]
   sources += sources_platform_common
 
-  deps += [ "//third_party/bounds_checking_function:libsec_static" ]
+  deps = [ "//third_party/bounds_checking_function:libsec_static" ]
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
@@ -198,6 +196,7 @@ group("pcid_sc") {
 
 group("syscap_codec") {
   deps = [
+    ":syscap_define_check",
     ":pcid_sc",
     ":syscap_interface_shared",
     ":syscap_tool_shared",
