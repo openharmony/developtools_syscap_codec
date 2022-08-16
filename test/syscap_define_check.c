@@ -10,7 +10,7 @@ int main()
 
     for (size_t i = 0; i < size; i++) {
         if (g_arraySyscap[i].num != i) {
-            printf("[Error]: %s -> num(%u) should be %lu.\n", g_arraySyscap[i].str, g_arraySyscap[i].num, i);
+            printf("[Error][syscap_define.h]: %s -> num(%u) should be %lu.\n", g_arraySyscap[i].str, g_arraySyscap[i].num, i);
             flag++;
         }
     }
