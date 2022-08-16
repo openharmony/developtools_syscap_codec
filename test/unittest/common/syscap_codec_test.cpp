@@ -137,7 +137,7 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
     const char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
                                "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
                                "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    const char expect[][256] = {"SystemCapability.Graphic.UI",
+    const char expect[][256] = {"SystemCapability.Graphic.Graphic2D.Vulkan",
                                 "SystemCapability.HiviewDFX.HiDumper",
                                 "SystemCapability.vendor.xxxxx1",
                                 "SystemCapability.device.xxxxx2"};
