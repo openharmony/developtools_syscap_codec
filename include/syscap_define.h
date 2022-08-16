@@ -32,7 +32,7 @@ typedef struct SystemCapabilityWithNum {
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
-    ACE_ACEENGINELITE,
+    ACE_ACEENGINELITE, // abandoned
     ACE_UIAPPEARANCE, // abandoned
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
@@ -102,7 +102,7 @@ typedef enum SystemCapabilityNum {
     KERNEL_LITEOS_M,
     LOCATION_LOCATION, // abandoned
     MISCSERVICES_DOWNLOAD,
-    MISCSERVICES_INPUTMETHOD,
+    MISCSERVICES_INPUTMETHOD, // abandoned
     MISCSERVICES_PASTEBOARD,
     MISCSERVICES_SCREENLOCK,
     MISCSERVICES_TIME,
@@ -214,6 +214,12 @@ typedef enum SystemCapabilityNum {
     ABILITY_FORM,
     COMMUNICATION_WIFI_AP_CORE,
     COMMUNICATION_WIFI_AP_EXTENSION,
+    ARKUI_ARKUI_LITE,
+    ARKUI_ARKUI_FULL,
+    ARKUI_ARKUI_LIBUV,
+    ARKUI_ARKUI_NAPI,
+    MISCSERVICES_INPUTMETHOD_FRAMEWORK,
+    UTILS_LANG,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -225,6 +231,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Ace.AceEngineLite", ACE_ACEENGINELITE},
+    {"SystemCapability.ArkUI.ArkUI.Lite", ARKUI_ARKUI_LITE},
+    {"SystemCapability.ArkUI.ArkUI.Full", ARKUI_ARKUI_FULL},
+    {"SystemCapability.ArkUI.ArkUI.Libuv", ARKUI_ARKUI_LIBUV},
+    {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
     {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
@@ -301,7 +311,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Location.Location.Geocoder", LOCATION_LOCATION_GEOCODER},
     {"SystemCapability.Location.Location.Lite", LOCATION_LOCATION_LITE},
     {"SystemCapability.MiscServices.Download", MISCSERVICES_DOWNLOAD},
-    {"SystemCapability.MiscServices.InputMethod", MISCSERVICES_INPUTMETHOD},
+    {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.MiscServices.Pasteboard", MISCSERVICES_PASTEBOARD},
     {"SystemCapability.MiscServices.ScreenLock", MISCSERVICES_SCREENLOCK},
     {"SystemCapability.MiscServices.Time", MISCSERVICES_TIME},
@@ -381,6 +391,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
+    {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
     {"SystemCapability.Developtools.Syscap", DEVELOPTOOLS_SYSCAP},
     {"SystemCapability.Multimedia.Audio.Core", MULTIMEDIA_AUDIO_CORE},

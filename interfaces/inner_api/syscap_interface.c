@@ -14,6 +14,7 @@
  */
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -160,20 +161,19 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
         return false;
     }
 
-    *outputLen = bufferLen - PCID_MAIN_BYTES - 1;
-    if (*outputLen == 0) {
-        *output = outputStr;
-        return true;
-    }
-    outputStr = (char *)malloc(*outputLen);
-    if (outputStr == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", *outputLen, errno);
+    int priLen = bufferLen - PCID_MAIN_BYTES - 1;
+    if (priLen <= 0) {
         *outputLen = 0;
         return false;
     }
-    (void)memset_s(outputStr, *outputLen, 0, *outputLen);
+    outputStr = (char *)calloc(priLen, sizeof(char));
+    if (outputStr == NULL) {
+        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", priLen, errno);
+        *outputLen = 0;
+        return false;
+    }
 
-    ret = strncpy_s(outputStr, *outputLen, contextBuffer + PCID_MAIN_BYTES, *outputLen - 1);
+    ret = strncpy_s(outputStr, priLen, contextBuffer + PCID_MAIN_BYTES, priLen - 1);
     if (ret != 0) {
         PRINT_ERR("strcpy_s failed.");
         FreeContextBuffer(contextBuffer);
@@ -183,6 +183,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     }
 
     FreeContextBuffer(contextBuffer);
+    *outputLen = strlen(outputStr);
     *output = outputStr;
     return true;
 }
