@@ -137,8 +137,8 @@ HWTEST_F(SyscapCodecTest, ComparePcidString, TestSize.Level1)
     const char rpcidString[] = "33588992,1766370052,65536,276824064,0,0,0,0,0,0,"\
                                "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"\
                                "SystemCapability.vendor.xxxxx1,SystemCapability.device.xxxxx2";
-    const char expect[][256] = {"SystemCapability.Graphic.UI",
-                                "SystemCapability.HiviewDFX.HiDumper",
+    const char expect[][256] = {"SystemCapability.HiviewDFX.HiLogLite",
+                                "SystemCapability.HiviewDFX.Hiview.FaultLogger",
                                 "SystemCapability.vendor.xxxxx1",
                                 "SystemCapability.device.xxxxx2"};
     int32_t ret = ComparePcidString(pcidString, rpcidString, &result);
