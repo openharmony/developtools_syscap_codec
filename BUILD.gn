@@ -24,7 +24,34 @@ sources_platform_common = [
   "./src/endian_internal.c",
 ]
 
+ohos_executable("syscap_define_check_bin") {
+  include_dirs = [ "include" ]
+  sources = [ "./test/syscap_define_check.c" ]
+
+  if (is_mingw) {
+    defines += [ "_POSIX_" ]
+  }
+
+  subsystem_name = "developtools"
+  part_name = "syscap_codec"
+}
+
+build_ext_component("syscap_define_check") {
+  deps = [ ":syscap_define_check_bin(//build/toolchain/linux:clang_x64)" ]
+  exec_path = rebase_path(root_out_dir)
+
+  if (defined(ohos_lite)) {
+    cmd = "${exec_path}/clang_x64/syscap_define_check_bin"
+  } else {
+    cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_define_check_bin"
+  }
+
+  command = "chmod 777 $cmd"
+  command += " && $cmd"
+}
+
 ohos_executable("syscap_tool_bin") {
+  deps = [ ":syscap_define_check" ]
   output_name = "syscap_tool"
   install_enable = true
   include_dirs = [ "src" ]
@@ -37,7 +64,7 @@ ohos_executable("syscap_tool_bin") {
   sources = [ "./src/main.c" ]
   sources += sources_platform_common
 
-  deps = [ "//third_party/bounds_checking_function:libsec_static" ]
+  deps += [ "//third_party/bounds_checking_function:libsec_static" ]
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
