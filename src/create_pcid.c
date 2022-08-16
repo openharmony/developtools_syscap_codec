@@ -275,8 +275,8 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     for (i = 0; i < privateCapSize; i++) {
         jsonArrayItem = cJSON_GetArrayItem(jsonPriSyscapObj, i);
         priSyscapStr = strchr(jsonArrayItem->valuestring, '.') + 1;
-        nRet = strcat_s(priSyscapHead, PRIVATE_SYSCAP_SIZE - 1, priSyscapStr);
-        nRet += strcat_s(priSyscapHead, PRIVATE_SYSCAP_SIZE - 1, ",");
+        nRet = strcat_s(priSyscapHead, allPriSyscapStrLen + 1, priSyscapStr);
+        nRet += strcat_s(priSyscapHead, allPriSyscapStrLen + 1, ",");
         if (nRet != EOK) {
             PRINT_ERR("strcat_s \"pri\" string is failed\n");
             ret = -1;
