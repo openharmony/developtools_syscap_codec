@@ -29,7 +29,7 @@ ohos_executable("syscap_define_check_bin") {
   sources = [ "./test/syscap_define_check.c" ]
 
   if (is_mingw) {
-    defines += [ "_POSIX_" ]
+    defines = [ "_POSIX_" ]
   }
 
   subsystem_name = "developtools"
