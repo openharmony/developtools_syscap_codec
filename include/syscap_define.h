@@ -32,7 +32,6 @@ typedef struct SystemCapabilityWithNum {
 typedef enum SystemCapabilityNum {
     ACCOUNT_APPACCOUNT,
     ACCOUNT_OSACCOUNT,
-    ACE_ACEENGINELITE,
     AI_AIENGINE,
     APPLICATIONS_CONTACTSDATA,
     BARRIERFREE_ACCESSIBILITY_CORE,
@@ -221,7 +220,6 @@ typedef enum SystemCapabilityNum {
 const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
-    {"SystemCapability.Ace.AceEngineLite", ACE_ACEENGINELITE},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
     {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
