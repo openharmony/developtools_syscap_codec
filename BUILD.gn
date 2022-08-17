@@ -196,8 +196,8 @@ group("pcid_sc") {
 
 group("syscap_codec") {
   deps = [
-    ":syscap_define_check",
     ":pcid_sc",
+    ":syscap_define_check",
     ":syscap_interface_shared",
     ":syscap_tool_shared",
   ]
