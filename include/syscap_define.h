@@ -211,8 +211,8 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_NAPI,
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
-    // Add here
     WEB_WEBVIEW_CORE,
+    // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
