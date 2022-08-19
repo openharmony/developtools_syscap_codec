@@ -30,7 +30,7 @@ typedef struct SystemCapabilityWithNum {
 } SyscapWithNum;
 
 /*
- * New syscap index must be added last and
+ * New SyscapNum must be added last and
  * don't delete anyone, just comment after it.
  */
 typedef enum SystemCapabilityNum {
@@ -220,7 +220,7 @@ typedef enum SystemCapabilityNum {
 } SyscapNum;
 
 
-/* sort by enum */
+/* Sort by SyscapNum */
 const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
