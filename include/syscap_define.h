@@ -213,7 +213,7 @@ typedef enum SystemCapabilityNum {
     UTILS_LANG,
     // Add here
     SYSCAP_NUM_MAX = 960,
-    WEB_WEBVIEW_CORE,
+    WEB_WEBVIEW_CORE
 } SyscapNum;
 
 
