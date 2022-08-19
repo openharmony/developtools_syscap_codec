@@ -45,14 +45,15 @@ def get_args():
         "--bundles",
         nargs="*",
         type=str,
-        help="this option will take effect only when the check_target is component_codec. allow multiple json file. default: all bundle.json file",
+        help="option take effect only when the check_target is component_codec. allow multiple json file. "
+             "default: all bundle.json file",
     )
     args = parser.parse_args()
     return args
 
 
-def list_to_multiline(l):
-    return str(l).lstrip("[").rstrip("]").replace(", ", "\n")
+def list_to_multiline(target_list):
+    return str(target_list).lstrip("[").rstrip("]").replace(", ", "\n")
 
 
 def add_dict_as_table_row(f_table, d_dict):
@@ -62,12 +63,6 @@ def add_dict_as_table_row(f_table, d_dict):
 
 
 def read_value_from_json(filepath, key_hierarchy, result_dict):
-    """
-    :param result_dict: result_dict
-    :param key_hierarchy: key_hierarchy list
-    :param filepath: fullpath of file
-    :return: result_dict, {filepath:value_list}
-    """
     if os.path.exists(filepath) is False:
         print('error: file "{}" not exists.'.format(filepath))
         return result_dict
@@ -86,21 +81,23 @@ def read_value_from_json(filepath, key_hierarchy, result_dict):
                     )
                 )
                 return result_dict
-        data = [x for x in data if len(x) != 0 and x.isspace() == False]
+            finally:
+                f.close()
+        data = [x for x in data if len(x) != 0 and x.isspace() is False]
         if len(data) != 0:
             result_dict[filepath] = data
     return result_dict
 
 
 def collect_syscap_from_codec(filepath):
-    arraySyscap_set = set()
+    array_syscap_set = set()
     pattern = r'{"(.*)"'
     with open(filepath, "r") as f:
         for line in f:
             syscap = re.search(pattern, line.strip())
             if syscap is not None:
-                arraySyscap_set.add(syscap.group(0).lstrip("{").strip('"'))
-    return arraySyscap_set
+                array_syscap_set.add(syscap.group(0).lstrip("{").strip('"'))
+    return array_syscap_set
 
 
 def collect_syscap_from_component(project_path, bundles=None):
@@ -117,16 +114,10 @@ def collect_syscap_from_component(project_path, bundles=None):
                 "find {} -name bundle.json".format(os.path.join(project_path, ss))
             )
             for line in output:
-                try:
-                    read_value_from_json(line.strip(), key_heirarchy, result_dict)
-                except Exception as e:
-                    print(e.with_traceback())
+                read_value_from_json(line.strip(), key_heirarchy, result_dict)
     else:
         for b in bundles:
-            try:
-                result_dict = read_value_from_json(b, key_heirarchy, result_dict)
-            except Exception as e:
-                print(e.with_traceback())
+            result_dict = read_value_from_json(b, key_heirarchy, result_dict)
     result_set = set()
     for v in result_dict.values():
         result_set.update(v)
@@ -147,7 +138,7 @@ def collect_syscap_from_sdk(project_path):
             for line in f:
                 syscap = re.search(pattern, line)
                 if syscap is not None:
-                    ss = syscap.group(0).strip().lstrip("\* @syscap ").strip()
+                    ss = syscap.group(0).strip().lstrip(r"\* @syscap ").strip()
                     sub_set.add(ss)
         syscap_dict[ts] = sub_set
     for v in syscap_dict.values():
@@ -176,16 +167,16 @@ def check_component_and_codec(project_path, bundles=None):
         component_syscap_set, component_syscap_dict = collect_syscap_from_component(
             project_path
         )
-    arraySyscap_set = collect_syscap_from_codec(
+    array_syscap_set = collect_syscap_from_codec(
         os.path.join(
             project_path, "developtools", "syscap_codec", "include", "syscap_define.h"
         )
     )
-    component_diff_array = component_syscap_set.difference(arraySyscap_set)
+    component_diff_array = component_syscap_set.difference(array_syscap_set)
     value_files_dict = find_files_containes_value(
         component_diff_array, component_syscap_dict
     )
-    array_diff_component = arraySyscap_set.difference(component_syscap_set)
+    array_diff_component = array_syscap_set.difference(component_syscap_set)
     if 0 == len(component_diff_array) and 0 == len(array_diff_component):
         table.clear()
         table.field_names = ["Component and Codec are Consistent"]
@@ -244,14 +235,14 @@ def check_component_and_sdk(project_path):
 
 def check_sdk_and_codec(project_path):
     ts_syscap_set, ts_syscap_dict = collect_syscap_from_sdk(project_path)
-    arraySyscap_set = collect_syscap_from_codec(
+    array_syscap_set = collect_syscap_from_codec(
         os.path.join(
             project_path, "developtools", "syscap_codec", "include", "syscap_define.h"
         )
     )
-    ts_diff_array = ts_syscap_set.difference(arraySyscap_set)
+    ts_diff_array = ts_syscap_set.difference(array_syscap_set)
     value_ts_dict = find_files_containes_value(ts_diff_array, ts_syscap_dict)
-    array_diff_ts = arraySyscap_set.difference(ts_syscap_set)
+    array_diff_ts = array_syscap_set.difference(ts_syscap_set)
     if 0 == len(ts_diff_array) and 0 == len(array_diff_ts):
         table.clear()
         table.field_names = ["SDK and Codec are Consistent"]
