@@ -205,7 +205,6 @@ typedef enum SystemCapabilityNum {
     ABILITY_FORM,
     COMMUNICATION_WIFI_AP_CORE,
     COMMUNICATION_WIFI_AP_EXTENSION,
-    WEB_WEBVIEW_CORE,
     ARKUI_ARKUI_LITE,
     ARKUI_ARKUI_FULL,
     ARKUI_ARKUI_LIBUV,
@@ -213,7 +212,8 @@ typedef enum SystemCapabilityNum {
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
     // Add here
-    SYSCAP_NUM_MAX = 960
+    SYSCAP_NUM_MAX = 960,
+    WEB_WEBVIEW_CORE,
 } SyscapNum;
 
 
@@ -365,7 +365,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
-    {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
     {"SystemCapability.Graphic.Graphic2D.Vulkan", GRAPHIC_GRAPHIC2D_VULKAN},
@@ -401,6 +400,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
+    {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
 };
 
 #endif  // _SYSCAP_DEFINE_H
