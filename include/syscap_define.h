@@ -212,6 +212,7 @@ typedef enum SystemCapabilityNum {
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
     WEB_WEBVIEW_CORE,
+    GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -401,6 +402,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
+    {"SystemCapability.Graphic.Graphic2D.ColorManager.Core", GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE},
 };
 
 #endif  // _SYSCAP_DEFINE_H
