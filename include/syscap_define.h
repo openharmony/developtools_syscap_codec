@@ -19,7 +19,11 @@
 #include <stdint.h>
 
 #define SINGLE_SYSCAP_LEN (256 + 17)
-
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 typedef struct SystemCapabilityWithNum {
     char str[SINGLE_SYSCAP_LEN];
     uint16_t num;
@@ -401,4 +405,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Utils.Lang", UTILS_LANG},
 };
 
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 #endif  // _SYSCAP_DEFINE_H
