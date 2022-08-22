@@ -211,6 +211,7 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_NAPI,
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
+    STARTUP_SYSTEMINFO,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -399,6 +400,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
+    {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
 };
 
 #endif  // _SYSCAP_DEFINE_H
