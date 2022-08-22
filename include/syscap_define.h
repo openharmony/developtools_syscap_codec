@@ -128,7 +128,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_VIDEOPLAYER,
     MULTIMEDIA_MEDIA_VIDEORECORDER,
     MULTIMEDIA_AV_SESSION,
-    MULTIMODALINPUT_INPUT,
+    MULTIMODALINPUT_INPUT, // abandoned
     NOTIFICATION_COMMONEVENT,
     NOTIFICATION_EMITTER,
     NOTIFICATION_NOTIFICATION,
@@ -212,6 +212,15 @@ typedef enum SystemCapabilityNum {
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
     STARTUP_SYSTEMINFO,
+    WEB_WEBVIEW_CORE,
+    GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE,
+    WINDOWMANAGER_WINDOWMANAGER_CORE,
+    MULTIMODALINPUT_INPUT_INPUTCONSUMER,
+    MULTIMODALINPUT_INPUT_INPUTDEVICE,
+    MULTIMODALINPUT_INPUT_CORE,
+    MULTIMODALINPUT_INPUT_INPUTSIMULATOR,
+    MULTIMODALINPUT_INPUT_INPUTMONITOR,
+    MULTIMODALINPUT_INPUT_POINTER,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -405,6 +414,15 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
+    {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
+    {"SystemCapability.Graphic.Graphic2D.ColorManager.Core", GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE},
+    {"SystemCapability.WindowManager.WindowManager.Core", WINDOWMANAGER_WINDOWMANAGER_CORE},
+    {"SystemCapability.MultimodalInput.Input.InputConsumer", MULTIMODALINPUT_INPUT_INPUTCONSUMER},
+    {"SystemCapability.MultimodalInput.Input.InputDevice", MULTIMODALINPUT_INPUT_INPUTDEVICE},
+    {"SystemCapability.MultimodalInput.Input.Core", MULTIMODALINPUT_INPUT_CORE},
+    {"SystemCapability.MultimodalInput.Input.InputSimulator", MULTIMODALINPUT_INPUT_INPUTSIMULATOR},
+    {"SystemCapability.MultimodalInput.Input.InputMonitor", MULTIMODALINPUT_INPUT_INPUTMONITOR},
+    {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
 };
 
 #endif  // _SYSCAP_DEFINE_H
