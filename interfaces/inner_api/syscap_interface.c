@@ -183,7 +183,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     }
 
     FreeContextBuffer(contextBuffer);
-    *outputLen = strlen(outputStr);
+    *outputLen = (int)strlen(outputStr);
     *output = outputStr;
     return true;
 }

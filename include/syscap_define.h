@@ -19,14 +19,18 @@
 #include <stdint.h>
 
 #define SINGLE_SYSCAP_LEN (256 + 17)
-
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 typedef struct SystemCapabilityWithNum {
     char str[SINGLE_SYSCAP_LEN];
     uint16_t num;
 } SyscapWithNum;
 
 /*
- * New syscap index must be added last and
+ * New SyscapNum must be added last and
  * don't delete anyone, just comment after it.
  */
 typedef enum SystemCapabilityNum {
@@ -225,7 +229,7 @@ typedef enum SystemCapabilityNum {
 } SyscapNum;
 
 
-/* sort by enum */
+/* Sort by SyscapNum */
 const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.AppAccount", ACCOUNT_APPACCOUNT},
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
@@ -419,4 +423,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
 };
 
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 #endif  // _SYSCAP_DEFINE_H
