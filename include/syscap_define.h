@@ -211,6 +211,7 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_NAPI,
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
+    WEB_WEBVIEW_CORE,
     GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE,
     // Add here
     SYSCAP_NUM_MAX = 960
@@ -400,6 +401,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
+    {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
     {"SystemCapability.Graphic.Graphic2D.ColorManager.Core", GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE},
 };
 
