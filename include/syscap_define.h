@@ -325,6 +325,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.VideoPlayer", MULTIMEDIA_MEDIA_VIDEOPLAYER},
     {"SystemCapability.Multimedia.Media.VideoRecorder", MULTIMEDIA_MEDIA_VIDEORECORDER},
     {"SystemCapability.Multimedia.AVSession", MULTIMEDIA_AV_SESSION},
+    {"SystemCapability.multimodalinput.input", MULTIMODALINPUT_INPUT},
     {"SystemCapability.Notification.CommonEvent", NOTIFICATION_COMMONEVENT},
     {"SystemCapability.Notification.Emitter", NOTIFICATION_EMITTER},
     {"SystemCapability.Notification.Notification", NOTIFICATION_NOTIFICATION},
