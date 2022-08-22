@@ -213,6 +213,7 @@ typedef enum SystemCapabilityNum {
     UTILS_LANG,
     WEB_WEBVIEW_CORE,
     GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE,
+    WINDOWMANAGER_WINDOWMANAGER_CORE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -403,6 +404,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
     {"SystemCapability.Graphic.Graphic2D.ColorManager.Core", GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE},
+    {"SystemCapability.WindowManager.WindowManager.Core", WINDOWMANAGER_WINDOWMANAGER_CORE},
 };
 
 #endif  // _SYSCAP_DEFINE_H
