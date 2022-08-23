@@ -162,7 +162,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     }
 
     uint32_t priLen = bufferLen - PCID_MAIN_BYTES - 1;
-    if (priLen <= 0) {
+    if ((int)priLen <= 0) {
         *outputLen = 0;
         return false;
     }
