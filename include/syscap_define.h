@@ -211,7 +211,6 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_NAPI,
     MISCSERVICES_INPUTMETHOD_FRAMEWORK,
     UTILS_LANG,
-    STARTUP_SYSTEMINFO,
     WEB_WEBVIEW_CORE,
     GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE,
     WINDOWMANAGER_WINDOWMANAGER_CORE,
@@ -221,6 +220,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALINPUT_INPUT_INPUTSIMULATOR,
     MULTIMODALINPUT_INPUT_INPUTMONITOR,
     MULTIMODALINPUT_INPUT_POINTER,
+    STARTUP_SYSTEMINFO,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -413,7 +413,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
-    {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
     {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
     {"SystemCapability.Graphic.Graphic2D.ColorManager.Core", GRAPHIC_GRAPHIC2D_COLOR_MANAGER_CORE},
     {"SystemCapability.WindowManager.WindowManager.Core", WINDOWMANAGER_WINDOWMANAGER_CORE},
@@ -423,6 +422,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.InputSimulator", MULTIMODALINPUT_INPUT_INPUTSIMULATOR},
     {"SystemCapability.MultimodalInput.Input.InputMonitor", MULTIMODALINPUT_INPUT_INPUTMONITOR},
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
+    {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
 };
 
 #endif  // _SYSCAP_DEFINE_H
