@@ -224,6 +224,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALINPUT_INPUT_INPUTSIMULATOR,
     MULTIMODALINPUT_INPUT_INPUTMONITOR,
     MULTIMODALINPUT_INPUT_POINTER,
+    COMMUNICATION_IPC_CORE,
     STARTUP_SYSTEMINFO,
     // Add here
     SYSCAP_NUM_MAX = 960
@@ -426,6 +427,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.InputSimulator", MULTIMODALINPUT_INPUT_INPUTSIMULATOR},
     {"SystemCapability.MultimodalInput.Input.InputMonitor", MULTIMODALINPUT_INPUT_INPUTMONITOR},
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
+    {"SystemCapability.Communication.IPC.Core", COMMUNICATION_IPC_CORE},
     {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
 };
 
