@@ -237,7 +237,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Account.OsAccount", ACCOUNT_OSACCOUNT},
     {"SystemCapability.Ai.AiEngine", AI_AIENGINE},
     {"SystemCapability.Applications.ContactsData", APPLICATIONS_CONTACTSDATA},
-    {"SystemCapability.Barrierfree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
+    {"SystemCapability.BarrierFree.Accessibility.Core", BARRIERFREE_ACCESSIBILITY_CORE},
     {"SystemCapability.BundleManager.BundleFramework", BUNDLEMANAGER_BUNDLEFRAMEWORK},
     {"SystemCapability.BundleManager.BundleTool", BUNDLEMANAGER_BUNDLETOOL},
     {"SystemCapability.BundleManager.DistributedBundleFramework", BUNDLEMANAGER_DISTRIBUTEDBUNDLEFRAMEWORK},
