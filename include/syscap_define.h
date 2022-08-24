@@ -225,6 +225,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALINPUT_INPUT_INPUTMONITOR,
     MULTIMODALINPUT_INPUT_POINTER,
     COMMUNICATION_IPC_CORE,
+    STARTUP_SYSTEMINFO,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -253,12 +254,14 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.WiFi.STA", COMMUNICATION_WIFI_STA},
     {"SystemCapability.Customization.ConfigPolicy", CUSTOMIZATION_CONFIGPOLICY},
     {"SystemCapability.Customization.EnterpriseDeviceManager", CUSTOMIZATION_ENTERPRISEDEVICEMANAGER},
-    {"SystemCapability.DistributedDataManager.DataObject.DistributedObject", DISTRIBUTEDDATAMANAGER_DATAOBJECT_DISTRIBUTEDOBJECT},
+    {"SystemCapability.DistributedDataManager.DataObject.DistributedObject",
+        DISTRIBUTEDDATAMANAGER_DATAOBJECT_DISTRIBUTEDOBJECT},
     {"SystemCapability.DistributedDataManager.DataShare.Consumer", DISTRIBUTEDDATAMANAGER_DATASHARE_CONSUMER},
     {"SystemCapability.DistributedDataManager.DataShare.Core", DISTRIBUTEDDATAMANAGER_DATASHARE_CORE},
     {"SystemCapability.DistributedDataManager.DataShare.Provider", DISTRIBUTEDDATAMANAGER_DATASHARE_PROVIDER},
     {"SystemCapability.DistributedDataManager.KVStore.Core", DISTRIBUTEDDATAMANAGER_KVSTORE_CORE},
-    {"SystemCapability.DistributedDataManager.KVStore.DistributedKVStore", DISTRIBUTEDDATAMANAGER_KVSTORE_DISTRIBUTEDKVSTORE},
+    {"SystemCapability.DistributedDataManager.KVStore.DistributedKVStore",
+        DISTRIBUTEDDATAMANAGER_KVSTORE_DISTRIBUTEDKVSTORE},
     {"SystemCapability.DistributedDataManager.KVStore.Lite", DISTRIBUTEDDATAMANAGER_KVSTORE_LITE},
     {"SystemCapability.DistributedDataManager.Preferences.Core", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE},
     {"SystemCapability.DistributedDataManager.RelationalStore.Core", DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE},
@@ -344,8 +347,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.PowerManager.PowerManager.Extension", POWERMANAGER_POWERMANAGER_EXTENSION},
     {"SystemCapability.PowerManager.PowerManager.Lite", POWERMANAGER_POWERMANAGER_LITE},
     {"SystemCapability.PowerManager.ThermalManager", POWERMANAGER_THERMALMANAGER},
-    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.ContinuousTask", RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK},
-    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.TransientTask", RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK},
+    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.ContinuousTask",
+        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK},
+    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.TransientTask",
+        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK},
     {"SystemCapability.ResourceSchedule.UsageStatistics.App", RESOURCESCHEDULE_USAGESTATISTICS_APP},
     {"SystemCapability.ResourceSchedule.UsageStatistics.AppGroup", RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP},
     {"SystemCapability.ResourceSchedule.WorkScheduler", RESOURCESCHEDULE_WORKSCHEDULER},
@@ -423,6 +428,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.InputMonitor", MULTIMODALINPUT_INPUT_INPUTMONITOR},
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
     {"SystemCapability.Communication.IPC.Core", COMMUNICATION_IPC_CORE},
+    {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
 };
 
 #ifdef __cplusplus
