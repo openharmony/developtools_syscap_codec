@@ -236,6 +236,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_USERFILESERVICE,
     MULTIMEDIA_MEDIALIBRARY_CORE,
     MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE,
+    APPLICATIONS_CONTACTS,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -450,6 +451,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.UserFileService", FILEMANAGEMENT_USERFILESERVICE},
     {"SystemCapability.Multimedia.MediaLibrary.Core", MULTIMEDIA_MEDIALIBRARY_CORE},
     {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
+    {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
 };
 
 #ifdef __cplusplus
