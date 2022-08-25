@@ -227,6 +227,14 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_IPC_CORE,
     STARTUP_SYSTEMINFO,
     AI_MINDSPORE,
+    FILEMANAGEMENT_STORAGESERVICE_SPATIALSTATISTICS,
+    FILEMANAGEMENT_STORAGESERVICE_VOLUME,
+    FILEMANAGEMENT_STORAGESERVICE_ENCRYPTION,
+    FILEMANAGEMENT_FILE_FILEIO,
+    FILEMANAGEMENT_FILE_ENVIRONMENT,
+    FILEMANAGEMENT_FILE_DISTRIBUTEDFILE,
+    FILEMANAGEMENT_APPFILESERVICE,
+    FILEMANAGEMENT_USERFILESERVICE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -430,7 +438,16 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
     {"SystemCapability.Communication.IPC.Core", COMMUNICATION_IPC_CORE},
     {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
-    {"SystemCapability.Ai.MindSpore", AI_MINDSPORE}
+    {"SystemCapability.Ai.MindSpore", AI_MINDSPORE},
+    {"SystemCapability.FileManagement.StorageService.SpatialStatistics",
+        FILEMANAGEMENT_STORAGESERVICE_SPATIALSTATISTICS},
+    {"SystemCapability.FileManagement.StorageService.Volume", FILEMANAGEMENT_STORAGESERVICE_VOLUME},
+    {"SystemCapability.FileManagement.StorageService.Encryption", FILEMANAGEMENT_STORAGESERVICE_ENCRYPTION},
+    {"SystemCapability.FileManagement.File.FileIO", FILEMANAGEMENT_FILE_FILEIO},
+    {"SystemCapability.FileManagement.File.Environment", FILEMANAGEMENT_FILE_ENVIRONMENT},
+    {"SystemCapability.FileManagement.File.DistributedFile", FILEMANAGEMENT_FILE_DISTRIBUTEDFILE},
+    {"SystemCapability.FileManagement.AppFileService", FILEMANAGEMENT_APPFILESERVICE},
+    {"SystemCapability.FileManagement.UserFileService", FILEMANAGEMENT_USERFILESERVICE},
 };
 
 #ifdef __cplusplus
