@@ -112,7 +112,6 @@ typedef enum SystemCapabilityNum {
     MSDP_MOVEMENT,
     MSDP_SPATIALAWARENESS,
     MSDP_TIMELINE,
-    MULTIMEDIA_MEDIALIBRARY,
     MULTIMEDIA_MEDIA_AUDIOPLAYER,
     MULTIMEDIA_MEDIA_AUDIORECORDER,
     MULTIMEDIA_MEDIA_AUDIODECODER,
@@ -235,6 +234,8 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_FILE_DISTRIBUTEDFILE,
     FILEMANAGEMENT_APPFILESERVICE,
     FILEMANAGEMENT_USERFILESERVICE,
+    MULTIMEDIA_MEDIALIBRARY_CORE,
+    MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -322,7 +323,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Msdp.Movement", MSDP_MOVEMENT},
     {"SystemCapability.Msdp.SpatialAwareness", MSDP_SPATIALAWARENESS},
     {"SystemCapability.Msdp.Timeline", MSDP_TIMELINE},
-    {"SystemCapability.Multimedia.MediaLibrary", MULTIMEDIA_MEDIALIBRARY},
     {"SystemCapability.Multimedia.Media.AudioPlayer", MULTIMEDIA_MEDIA_AUDIOPLAYER},
     {"SystemCapability.Multimedia.Media.AudioRecorder", MULTIMEDIA_MEDIA_AUDIORECORDER},
     {"SystemCapability.Multimedia.Media.AudioDecoder", MULTIMEDIA_MEDIA_AUDIODECODER},
@@ -448,6 +448,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.File.DistributedFile", FILEMANAGEMENT_FILE_DISTRIBUTEDFILE},
     {"SystemCapability.FileManagement.AppFileService", FILEMANAGEMENT_APPFILESERVICE},
     {"SystemCapability.FileManagement.UserFileService", FILEMANAGEMENT_USERFILESERVICE},
+    {"SystemCapability.Multimedia.MediaLibrary.Core", MULTIMEDIA_MEDIALIBRARY_CORE},
+    {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
 };
 
 #ifdef __cplusplus
