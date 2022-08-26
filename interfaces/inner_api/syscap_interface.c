@@ -168,7 +168,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     }
     outputStr = (char *)calloc(priLen, sizeof(char));
     if (outputStr == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", priLen, errno);
+        PRINT_ERR("malloc buffer failed, size = %u, errno = %d\n", priLen, errno);
         *outputLen = 0;
         return false;
     }
