@@ -238,6 +238,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE,
     APPLICATIONS_CONTACTS,
     SECURITY_CIPHER,
+    APPLICATIONS_SETTINGS_CORE,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -454,6 +455,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
+    {"SystemCapability.Applications.settings.Core", APPLICATIONS_SETTINGS_CORE},
 };
 
 #ifdef __cplusplus
