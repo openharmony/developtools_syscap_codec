@@ -83,7 +83,7 @@ def read_value_from_json(filepath, key_hierarchy, result_dict):
                 return result_dict
             finally:
                 f.close()
-        data = [x for x in data if len(x) != 0 and x.isspace() is False]
+        data = [x.split("=")[0].strip() for x in data if len(x) != 0 and x.isspace() is False]
         if len(data) != 0:
             result_dict[filepath] = data
     return result_dict
