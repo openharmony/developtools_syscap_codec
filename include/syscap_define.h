@@ -147,7 +147,6 @@ typedef enum SystemCapabilityNum {
     POWERMANAGER_THERMALMANAGER,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK,
-    RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY,
     RESOURCESCHEDULE_USAGESTATISTICS_APP,
     RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP,
     RESOURCESCHEDULE_WORKSCHEDULER,
@@ -240,6 +239,7 @@ typedef enum SystemCapabilityNum {
     APPLICATIONS_CONTACTS,
     SECURITY_CIPHER,
     APPLICATIONS_SETTINGS_CORE,
+    RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -364,8 +364,6 @@ const static SyscapWithNum g_arraySyscap[] = {
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.TransientTask",
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK},
-    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
-        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY},
     {"SystemCapability.ResourceSchedule.UsageStatistics.App", RESOURCESCHEDULE_USAGESTATISTICS_APP},
     {"SystemCapability.ResourceSchedule.UsageStatistics.AppGroup", RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP},
     {"SystemCapability.ResourceSchedule.WorkScheduler", RESOURCESCHEDULE_WORKSCHEDULER},
@@ -459,6 +457,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
     {"SystemCapability.Applications.settings.Core", APPLICATIONS_SETTINGS_CORE},
+    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
+        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY},
 };
 
 #ifdef __cplusplus
