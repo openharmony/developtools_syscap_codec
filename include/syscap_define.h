@@ -245,6 +245,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_SECURITYGUARD,
     SECURITY_CRYPTOFRAMEWORK,
     // Add here
+    MULTIMODALINPUT_INPUT_COOPERATOR,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -467,6 +468,7 @@ const static SyscapWithNum g_arraySyscap[] = {
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY},
     {"SystemCapability.Security.SecurityGuard", SECURITY_SECURITYGUARD},
     {"SystemCapability.Security.CryptoFramework", SECURITY_CRYPTOFRAMEWORK},
+    {"SystemCapability.MultimodalInput.Input.Cooperator", MULTIMODALINPUT_INPUT_COOPERATOR},
 };
 
 #ifdef __cplusplus
