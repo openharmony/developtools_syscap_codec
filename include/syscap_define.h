@@ -243,6 +243,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_USERFILEMANAGER_DISTRIBUTEDCORE,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY,
     SECURITY_SECURITYGUARD,
+    SECURITY_CRYPTOFRAMEWORK,
     // Add here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -465,6 +466,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY},
     {"SystemCapability.Security.SecurityGuard", SECURITY_SECURITYGUARD},
+    {"SystemCapability.Security.CryptoFramework", SECURITY_CRYPTOFRAMEWORK},
 };
 
 #ifdef __cplusplus
