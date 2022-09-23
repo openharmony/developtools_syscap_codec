@@ -246,7 +246,6 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK,
     // Add here
     MULTIMODALINPUT_INPUT_COOPERATOR,
-    ABILITY_ABILITYRUNTIME_QUICKFIX,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
