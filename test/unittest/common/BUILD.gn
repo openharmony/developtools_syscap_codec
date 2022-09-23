@@ -44,7 +44,7 @@ if (defined(ohos_lite)) {
 
     deps = [
       "//base//hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
-      "//test/testfwk/developer_test/third_party/lib/cpp:gtest_main",
+      "//test/developertest/third_party/lib/cpp:gtest_main",
       "//third_party/bounds_checking_function:libsec_static",
     ]
 
