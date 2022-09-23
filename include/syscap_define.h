@@ -469,7 +469,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.SecurityGuard", SECURITY_SECURITYGUARD},
     {"SystemCapability.Security.CryptoFramework", SECURITY_CRYPTOFRAMEWORK},
     {"SystemCapability.MultimodalInput.Input.Cooperator", MULTIMODALINPUT_INPUT_COOPERATOR},
-    {"SystemCapability.Ability.AbilityRuntime.QuickFix", ABILITY_ABILITYRUNTIME_QUICKFIX},
 };
 
 #ifdef __cplusplus
