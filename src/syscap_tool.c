@@ -27,14 +27,6 @@
 #include "create_pcid.h"
 #include "syscap_tool.h"
 
-typedef struct ProductCompatibilityIDHead {
-    uint16_t apiVersion : 15;
-    uint16_t apiVersionType : 1;
-    uint16_t systemType : 3;
-    uint16_t reserved : 13;
-    uint32_t manufacturerID;
-} PCIDHead;
-
 typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersion : 15;
     uint16_t apiVersionType : 1;
