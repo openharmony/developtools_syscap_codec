@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Copyright (c) 2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,6 @@ import json
 import re
 import argparse
 from prettytable import PrettyTable, ALL
-import sys
-
-debug = True if sys.gettrace() else False
 
 
 def get_args():
@@ -81,19 +78,15 @@ def read_value_from_json(filepath: str,
     if not os.path.isfile(filepath):
         print('error: "{}" is not a file.')
         return
-    f = open(filepath, 'r')
-    data = json.load(f)
-    if debug:
-        print(filepath)
-    for key in key_hierarchy:
-        try:
-            data = data[key]
-        except KeyError:
-            if debug:
-                print('warning: can\'t find the key:"{}" in file "{}"'.format(key, filepath))
-            return
-        finally:
-            f.close()
+    with open(filepath, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        for key in key_hierarchy:
+            try:
+                data = data[key]
+            except KeyError:
+                return
+            finally:
+                pass
     data = [post_handler(x) for x in data if len(x) != 0 and not x.isspace()]
     if len(data) != 0:
         result_dict[filepath] = data
@@ -114,7 +107,7 @@ def collect_syscap_from_codec(filepath: str, pattern: str = r'{"(.*)"') -> tuple
         array_syscap_set.update(re.findall(ptrn, content))
     array_syscap_dict[filepath] = list()
     for v in array_syscap_set:
-        array_syscap_dict[filepath].append(v)
+        array_syscap_dict.get(filepath).append(v)
     return array_syscap_set, array_syscap_dict
 
 
@@ -311,16 +304,6 @@ def main():
                                       bundle_key_heirarchy=bundle_syscap_heirarchy, bundles=bundles)
 
 
-def test():
-    h_path = "./bundle.json"
-    key_heirarchy = ("component", "syscap")
-    result_dict = dict()
-    read_value_from_json(h_path, key_heirarchy, result_dict, bundle_syscap_post_handler)
-    print(result_dict)
-    print(len(result_dict))
-
-
 if __name__ == "__main__":
     main()
-    # test()
 
