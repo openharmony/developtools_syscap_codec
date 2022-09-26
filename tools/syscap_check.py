@@ -78,15 +78,15 @@ def read_value_from_json(filepath: str,
     if not os.path.isfile(filepath):
         print('error: "{}" is not a file.')
         return
-    f = open(filepath, 'r')
-    data = json.load(f)
-    for key in key_hierarchy:
-        try:
-            data = data[key]
-        except KeyError:
-            return
-        finally:
-            f.close()
+    with open(filepath, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        for key in key_hierarchy:
+            try:
+                data = data[key]
+            except KeyError:
+                return
+            finally:
+                pass
     data = [post_handler(x) for x in data if len(x) != 0 and not x.isspace()]
     if len(data) != 0:
         result_dict[filepath] = data
