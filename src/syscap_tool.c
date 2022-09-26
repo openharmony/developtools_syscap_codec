@@ -584,7 +584,7 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
     // get os syscap data
     for (i = 0; i < PCID_OUT_BUFFER; i++) {
         ret = sscanf_s(input, "%u,%s", &osArray[i], input, inputLen);
-        if (ret == -1) {
+        if (ret != 2) { // 2, sscanf_s return value
             PRINT_ERR("sscanf_s failed.\n");
             free(input);
             return -1;
