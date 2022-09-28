@@ -247,6 +247,7 @@ typedef enum SystemCapabilityNum {
     // Add here
     MULTIMODALINPUT_INPUT_COOPERATOR,
     ABILITY_ABILITYRUNTIME_QUICKFIX,
+    SECURITY_DLPCREDENTIALSERVICE,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -471,6 +472,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework", SECURITY_CRYPTOFRAMEWORK},
     {"SystemCapability.MultimodalInput.Input.Cooperator", MULTIMODALINPUT_INPUT_COOPERATOR},
     {"SystemCapability.Ability.AbilityRuntime.QuickFix", ABILITY_ABILITYRUNTIME_QUICKFIX},
+    {"SystemCapability.Security.DlpCredentialService", SECURITY_DLPCREDENTIALSERVICE},
 };
 
 #ifdef __cplusplus
