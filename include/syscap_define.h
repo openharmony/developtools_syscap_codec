@@ -248,6 +248,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALINPUT_INPUT_COOPERATOR,
     ABILITY_ABILITYRUNTIME_QUICKFIX,
     SECURITY_DLPCREDENTIALSERVICE,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -473,6 +474,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.Cooperator", MULTIMODALINPUT_INPUT_COOPERATOR},
     {"SystemCapability.Ability.AbilityRuntime.QuickFix", ABILITY_ABILITYRUNTIME_QUICKFIX},
     {"SystemCapability.Security.DlpCredentialService", SECURITY_DLPCREDENTIALSERVICE},
+    {"SystemCapability.BundleManager.BundleFramework.AppControl", BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL},
 };
 
 #ifdef __cplusplus
