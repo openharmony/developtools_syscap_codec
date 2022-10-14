@@ -249,6 +249,11 @@ typedef enum SystemCapabilityNum {
     ABILITY_ABILITYRUNTIME_QUICKFIX,
     SECURITY_DLPCREDENTIALSERVICE,
     BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_CORE,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_FREEINSTALL,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_LAUNCHER,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_DEFAULTAPPMANAGER,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -475,6 +480,12 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AbilityRuntime.QuickFix", ABILITY_ABILITYRUNTIME_QUICKFIX},
     {"SystemCapability.Security.DlpCredentialService", SECURITY_DLPCREDENTIALSERVICE},
     {"SystemCapability.BundleManager.BundleFramework.AppControl", BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL},
+    {"SystemCapability.BundleManager.BundleFramework.Core", BUNDLEMANAGER_BUNDLEFRAMEWORK_CORE},
+    {"SystemCapability.BundleManager.BundleFramework.FreeInstall", BUNDLEMANAGER_BUNDLEFRAMEWORK_FREEINSTALL},
+    {"SystemCapability.BundleManager.BundleFramework.Launcher", BUNDLEMANAGER_BUNDLEFRAMEWORK_LAUNCHER},
+    {"SystemCapability.BundleManager.BundleFramework.DefaultAppManager",
+        BUNDLEMANAGER_BUNDLEFRAMEWORK_DEFAULTAPPMANAGER},
+    {"SystemCapability.BundleManager.BundleFramework.Resource", BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE}
 };
 
 #ifdef __cplusplus
