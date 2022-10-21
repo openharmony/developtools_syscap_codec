@@ -256,6 +256,7 @@ typedef enum SystemCapabilityNum {
     BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE,
     MULTIMEDIA_AVSESSION_CORE,
     MULTIMEDIA_AVSESSION_MANAGER,
+    MULTIMEDIA_AUDIO_TONE,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -489,7 +490,8 @@ const static SyscapWithNum g_arraySyscap[] = {
         BUNDLEMANAGER_BUNDLEFRAMEWORK_DEFAULTAPPMANAGER},
     {"SystemCapability.BundleManager.BundleFramework.Resource", BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE},
     {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
-    {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER}
+    {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
+    {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE}
 };
 
 #ifdef __cplusplus
