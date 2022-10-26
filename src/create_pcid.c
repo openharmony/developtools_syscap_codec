@@ -420,7 +420,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     }
 
     char *ptrPrivateSyscap = (char *)(pcidMain + 1);
-    uint16_t privateSyscapLen = contextBufLen - sizeof(PCIDMain) - 1;
+    size_t privateSyscapLen = contextBufLen - sizeof(PCIDMain) - 1;
     char priSyscapStr[SINGLE_SYSCAP_LEN] = {0};
     char *tempPriSyscapStr = priSyscapStr;
     char fullPriSyscapStr[SINGLE_SYSCAP_LEN] = {0};
