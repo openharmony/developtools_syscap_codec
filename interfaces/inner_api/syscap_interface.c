@@ -298,7 +298,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
     return true;
 }
 
-static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, uint16_t *index, uint16_t indexLen)
+static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *index, uint16_t indexLen)
 {
     uint16_t sector, pos;
 
