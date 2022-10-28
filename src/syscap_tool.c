@@ -395,7 +395,7 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, uint16_t *index, uint16_t indexLen)
+static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *index, uint16_t indexLen)
 {
     uint16_t sector, pos;
 
