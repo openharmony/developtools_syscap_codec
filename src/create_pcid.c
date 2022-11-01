@@ -424,7 +424,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     char priSyscapStr[SINGLE_SYSCAP_LEN] = {0};
     char *tempPriSyscapStr = priSyscapStr;
     char fullPriSyscapStr[SINGLE_SYSCAP_LEN] = {0};
-    if (privateSyscapLen < 0) {
+    if ((long)privateSyscapLen < 0) {
         PRINT_ERR("parse private syscap failed.");
         ret = -1;
         goto FREE_VECTOR_OUT;
