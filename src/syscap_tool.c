@@ -170,7 +170,7 @@ static cJSON *CreateWholeSyscapJsonObj(void)
     return root;
 }
 
-int32_t RPCIDEncode(char *inputFile, char *outDirPath)
+int32_t RPCIDEncode(char *inputFile, char *outputPath)
 {
     int32_t ret;
     char *contextBuffer = NULL;
@@ -240,7 +240,7 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
     *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LEN));
     fillTmpPtr += sizeof(uint16_t);
     for (uint32_t i = 0; i < sysCapSize; i++) {
-        arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, i);
+        arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, (int)i);
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
             PRINT_ERR("context of \"syscap\" array is invalid\n");
@@ -263,9 +263,9 @@ int32_t RPCIDEncode(char *inputFile, char *outDirPath)
         fillTmpPtr += SINGLE_FEAT_LEN;
     }
 
-    ret = ConvertedContextSaveAsFile(outDirPath, "RPCID.sc", convertedBuffer, convertedBufLen);
+    ret = ConvertedContextSaveAsFile(outputPath, "RPCID.sc", convertedBuffer, convertedBufLen);
     if (ret != 0) {
-        PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:rpcid.sc\n", outDirPath);
+        PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.sc\n", outputPath);
         goto FREE_CONVERT_OUT;
     }
 
@@ -360,7 +360,7 @@ static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
     return 0;
 }
 
-int32_t RPCIDDecode(char *inputFile, char *outDirPath)
+int32_t RPCIDDecode(char *inputFile, char *outputPath)
 {
     int32_t ret = 0;
     char *contextBuffer = NULL;
@@ -375,16 +375,16 @@ int32_t RPCIDDecode(char *inputFile, char *outDirPath)
 
     // parse rpcid to json
     cJSON *rpcidRoot = cJSON_CreateObject();
-    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot)) {
+    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot) != 0) {
         PRINT_ERR("Prase rpcid to json failed. Input failed: %s\n", inputFile);
         goto FREE_RPCID_ROOT;
     }
 
     // save to json file
     convertedBuffer = cJSON_Print(rpcidRoot);
-    ret = ConvertedContextSaveAsFile(outDirPath, "RPCID.json", convertedBuffer, strlen(convertedBuffer));
+    ret = ConvertedContextSaveAsFile(outputPath, "RPCID.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
-        PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:rpcid.json\n", outDirPath);
+        PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.json\n", outputPath);
         goto FREE_RPCID_ROOT;
     }
 
@@ -440,7 +440,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 
     // parse rpcid to json
     rpcidRoot = cJSON_CreateObject();
-    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot)) {
+    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot) != 0) {
         PRINT_ERR("Prase rpcid to json failed. Input file: %s\n", inputFile);
         goto FREE_RPCID_ROOT;
     }
@@ -466,17 +466,17 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     (void)memset_s(osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
                    0, sizeof(uint16_t) * sysCapArraySize);
     // malloc for save private syscap string
-    priSyscapArray = (char *)malloc(sysCapArraySize * SINGLE_SYSCAP_LEN);
+    priSyscapArray = (char *)malloc((uint32_t)sysCapArraySize * SINGLE_SYSCAP_LEN);
     if (priSyscapArray == NULL) {
         PRINT_ERR("malloc(%d) failed.\n", sysCapArraySize * SINGLE_SYSCAP_LEN);
         goto FREE_MALLOC_OSSYSCAP;
     }
-    (void)memset_s(priSyscapArray, sysCapArraySize * SINGLE_SYSCAP_LEN,
-                   0, sysCapArraySize * SINGLE_SYSCAP_LEN);
+    (void)memset_s(priSyscapArray, (size_t)(sysCapArraySize * SINGLE_SYSCAP_LEN),
+                   0, (size_t)(sysCapArraySize * SINGLE_SYSCAP_LEN));
     priSyscap = priSyscapArray;
     // part os syscap and ptivate syscap
     for (i = 0; i < (uint32_t)sysCapArraySize; i++) {
-        cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
+        cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, (int)i);
         cJsonTemp = cJSON_GetObjectItem(sysCapDefine, cJsonItem->valuestring);
         if (cJsonTemp != NULL) {
             osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
