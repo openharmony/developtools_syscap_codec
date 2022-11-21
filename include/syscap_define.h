@@ -258,6 +258,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AVSESSION_MANAGER,
     MULTIMEDIA_AUDIO_TONE,
     MULTIMEDIA_AUDIO_INTERRUPT,
+    CLOUD_AAID,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -493,7 +494,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
     {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
-    {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT}
+    {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
+    {"SystemCapability.Cloud.AAID", CLOUD_AAID}
 };
 
 #ifdef __cplusplus
