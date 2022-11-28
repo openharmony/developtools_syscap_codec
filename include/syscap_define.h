@@ -339,7 +339,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MiscServices.Time", MISCSERVICES_TIME},
     {"SystemCapability.MiscServices.Upload", MISCSERVICES_UPLOAD},
     {"SystemCapability.MiscServices.Wallpaper", MISCSERVICES_WALLPAPER},
-    {"SystemCapability.Msdp.DeviceStatus", MSDP_DEVICESTATUS},
+    {"SystemCapability.Msdp.DeviceStatus.Stationary", MSDP_DEVICESTATUS},
     {"SystemCapability.Msdp.Geofence", MSDP_GEOFENCE},
     {"SystemCapability.Msdp.Motion", MSDP_MOTION},
     {"SystemCapability.Msdp.Movement", MSDP_MOVEMENT},
