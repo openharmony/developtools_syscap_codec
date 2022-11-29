@@ -259,8 +259,8 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_INTERRUPT,
     CLOUD_AAID,
     MSDP_DEVICESTATUS_STATIONARY,
+    PRINT_PRINT,
     SYSCAP_NUM_MAX = 960,
-    PRINT_PRINT
 } SyscapNum;
 
 
