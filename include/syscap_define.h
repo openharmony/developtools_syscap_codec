@@ -260,7 +260,7 @@ typedef enum SystemCapabilityNum {
     CLOUD_AAID,
     MSDP_DEVICESTATUS_STATIONARY,
     PRINT_PRINT,
-    SYSCAP_NUM_MAX = 960,
+    SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
 
