@@ -106,7 +106,6 @@ typedef enum SystemCapabilityNum {
     MISCSERVICES_TIME,
     MISCSERVICES_UPLOAD,
     MISCSERVICES_WALLPAPER,
-    MSDP_DEVICESTATUS,
     MSDP_GEOFENCE,
     MSDP_MOTION,
     MSDP_MOVEMENT,
@@ -259,6 +258,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_TONE,
     MULTIMEDIA_AUDIO_INTERRUPT,
     CLOUD_AAID,
+    MSDP_DEVICESTATUS_STATIONARY,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -339,7 +339,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MiscServices.Time", MISCSERVICES_TIME},
     {"SystemCapability.MiscServices.Upload", MISCSERVICES_UPLOAD},
     {"SystemCapability.MiscServices.Wallpaper", MISCSERVICES_WALLPAPER},
-    {"SystemCapability.Msdp.DeviceStatus", MSDP_DEVICESTATUS},
     {"SystemCapability.Msdp.Geofence", MSDP_GEOFENCE},
     {"SystemCapability.Msdp.Motion", MSDP_MOTION},
     {"SystemCapability.Msdp.Movement", MSDP_MOVEMENT},
@@ -495,7 +494,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
-    {"SystemCapability.Cloud.AAID", CLOUD_AAID}
+    {"SystemCapability.Cloud.AAID", CLOUD_AAID},
+    {"SystemCapability.Msdp.DeviceStatus.Stationary", MSDP_DEVICESTATUS_STATIONARY},
 };
 
 #ifdef __cplusplus
