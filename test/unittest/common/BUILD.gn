@@ -11,51 +11,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/lite/config/component/lite_component.gni")
 if (defined(ohos_lite)) {
-  import("//build/lite/config/component/lite_component.gni")
   import("//build/lite/config/test.gni")
-  test_output_root = "$root_out_dir/test/unittest/syscap_codec"
 
-  executable("test_syscap_napi_unittest") {
-    output_extension = "bin"
-    output_dir = test_output_root
+  if (ohos_kernel_type != "liteos_m") {
+    test_output_root = "$root_out_dir/test/unittest/syscap_codec"
 
-    include_dirs = [
-      "//commonlibrary/c_utils/base/include",
-      "//third_party/node/src",
-      "//third_party/googletest/include",
-      "//developtools/syscap_codec/src/",
-      "//developtools/syscap_codec/include/",
-      "//developtools/syscap_codec/interfaces/inner_api/",
-      "//developtools/syscap_codec/test/unittest/common/include/",
-    ]
+    executable("test_syscap_napi_unittest") {
+      output_extension = "bin"
+      output_dir = test_output_root
 
-    cflags = [ "-g3" ]
+      include_dirs = [
+        "//commonlibrary/c_utils/base/include",
+        "//third_party/node/src",
+        "//third_party/googletest/include",
+        "//developtools/syscap_codec/src/",
+        "//developtools/syscap_codec/include/",
+        "//developtools/syscap_codec/interfaces/inner_api/",
+        "//developtools/syscap_codec/test/unittest/common/include/",
+      ]
 
-    sources = [
-      "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
-      "//developtools/syscap_codec/src/create_pcid.c",
-      "//developtools/syscap_codec/src/endian_internal.c",
-      "//developtools/syscap_codec/src/syscap_tool.c",
-      "syscap_codec_test.cpp",
-    ]
+      cflags = [ "-g3" ]
 
-    defines = [ "NAPI_TEST" ]
+      sources = [
+        "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
+        "//developtools/syscap_codec/src/create_pcid.c",
+        "//developtools/syscap_codec/src/endian_internal.c",
+        "//developtools/syscap_codec/src/syscap_tool.c",
+        "syscap_codec_test.cpp",
+      ]
 
-    deps = [
-      "//base//hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
-      "//test/developertest/third_party/lib/cpp:gtest_main",
-      "//third_party/bounds_checking_function:libsec_static",
-    ]
+      defines = [ "NAPI_TEST" ]
 
-    deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
+      deps = [
+        "//base//hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
+        "//test/testfwk/developer_test/third_party/lib/cpp:gtest_main",
+        "//third_party/bounds_checking_function:libsec_static",
+      ]
+
+      deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
+    }
   }
 
   group("unittest") {
-    deps = [ ":test_syscap_napi_unittest" ]
+    if (ohos_kernel_type != "liteos_m") {
+      deps = [ ":test_syscap_napi_unittest" ]
+    }
   }
 } else {
-  import("//build/lite/config/component/lite_component.gni")
   import("//build/ohos.gni")
   import("//build/test.gni")
 

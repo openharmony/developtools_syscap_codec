@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Copyright (c) 2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,6 @@ import json
 import re
 import argparse
 from prettytable import PrettyTable, ALL
-
-table = PrettyTable()
-table.hrules = ALL
 
 
 def get_args():
@@ -52,101 +49,145 @@ def get_args():
     return args
 
 
-def list_to_multiline(target_list):
+def list_to_multiline(target_list: list):
     return str(target_list).lstrip("[").rstrip("]").replace(", ", "\n")
 
 
-def add_dict_as_table_row(f_table, d_dict):
-    s_keys = sorted(list(d_dict.keys()))
-    for k in s_keys:
-        f_table.add_row([k, list_to_multiline(sorted(list(d_dict.get(k))))])
+def convert_set_to_sorted_list(target_set) -> list:
+    return sorted(list(target_set))
 
 
-def read_value_from_json(filepath, key_hierarchy, result_dict):
+def add_dict_as_table_row(f_table: PrettyTable, d_dict: dict, out_converter=list_to_multiline) -> None:
+    s_keys = convert_set_to_sorted_list(d_dict.keys())
+    for i, k in enumerate(s_keys):
+        f_table.add_row([i + 1, k, out_converter(convert_set_to_sorted_list(d_dict.get(k)))])
+
+
+def bundle_syscap_post_handler(syscap: str) -> str:
+    return syscap.split('=')[0].strip()
+
+
+def read_value_from_json(filepath: str,
+                         key_hierarchy: tuple,
+                         result_dict: dict,
+                         post_handler=None
+                         ) -> None:
     if os.path.exists(filepath) is False:
-        print('error: file "{}" not exists.'.format(filepath))
-        return result_dict
-    if os.path.isfile(filepath) is False:
+        print('error: file "{}" not exist.'.format(filepath))
+        return
+    if not os.path.isfile(filepath):
         print('error: "{}" is not a file.')
-        return result_dict
-    with open(filepath, "r") as f:
+        return
+    with open(filepath, 'r', encoding='utf-8') as f:
         data = json.load(f)
         for key in key_hierarchy:
             try:
                 data = data[key]
             except KeyError:
-                print(
-                    'warning: can\'t find the key:"{}" in file "{}"'.format(
-                        key, filepath
-                    )
-                )
-                return result_dict
+                return
             finally:
-                f.close()
-        data = [x.split("=")[0].strip() for x in data if len(x) != 0 and x.isspace() is False]
-        if len(data) != 0:
-            result_dict[filepath] = data
-    return result_dict
+                pass
+    data = [post_handler(x) for x in data if len(x) != 0 and not x.isspace()]
+    if len(data) != 0:
+        result_dict[filepath] = data
 
 
-def collect_syscap_from_codec(filepath):
+def collect_syscap_from_codec(filepath: str, pattern: str = r'{"(.*)"') -> tuple:
+    """
+    从syscap_define.h收集syscap
+    :param filepath: 文件的路径
+    :param pattern: 匹配syscap的规则
+    :return: syscap_define.h中声明的syscap集合
+    """
     array_syscap_set = set()
-    pattern = r'{"(.*)"'
+    array_syscap_dict = dict()
+    ptrn = re.compile(pattern)
     with open(filepath, "r") as f:
-        for line in f:
-            syscap = re.search(pattern, line.strip())
-            if syscap is not None:
-                array_syscap_set.add(syscap.group(0).lstrip("{").strip('"'))
-    return array_syscap_set
+        content = f.read()
+        array_syscap_set.update(re.findall(ptrn, content))
+    array_syscap_dict[filepath] = list()
+    for v in array_syscap_set:
+        array_syscap_dict.get(filepath).append(v)
+    return array_syscap_set, array_syscap_dict
 
 
-def collect_syscap_from_component(project_path, bundles=None):
+def collect_syscap_from_component(project_path: str,
+                                  black_dirs: tuple,
+                                  key_heirarchy: tuple,
+                                  bundles: list = None,
+                                  ) -> tuple:
+    """
+    从部件的bundle.json中收集syscap
+    :param project_path: 项目根路径
+    :param black_dirs: 根路径下的一级目录的黑名单，不扫描这些bundle.json下面的内容
+    :param key_heirarchy: bundle.json中syscap所在的key的元组
+    :param bundles: 指定的bundle.json
+    :return: syscap_set，文件名和其syscap list组成的dict
+    """
     result_dict = dict()
-    key_heirarchy = ["component", "syscap"]
     if bundles is None:
-        subsystem_list = [
-            x
+        search_dir_list = [
+            os.path.join(project_path, x)
             for x in os.listdir(project_path)
-            if os.path.isdir(os.path.join(project_path, x)) and x != "out"
+            if os.path.isdir(os.path.join(project_path, x)) and x not in black_dirs
         ]
-        for ss in subsystem_list:
-            output = os.popen(
-                "find {} -name bundle.json".format(os.path.join(project_path, ss))
-            )
+        for folder in search_dir_list:
+            output = os.popen("find {} -name bundle.json".format(folder))
             for line in output:
-                read_value_from_json(line.strip(), key_heirarchy, result_dict)
+                line = line.strip()
+                read_value_from_json(line, key_heirarchy, result_dict, post_handler=bundle_syscap_post_handler)
     else:
-        for b in bundles:
-            result_dict = read_value_from_json(b, key_heirarchy, result_dict)
+        for bundle in bundles:
+            read_value_from_json(bundle, key_heirarchy, result_dict, post_handler=bundle_syscap_post_handler)
     result_set = set()
     for v in result_dict.values():
         result_set.update(v)
     return result_set, result_dict
 
 
-def collect_syscap_from_sdk(project_path):
-    full_path = os.path.join(project_path, "interface", "sdk-js", "api")
-    ts_list = [
-        os.path.join(full_path, x) for x in os.listdir(full_path) if x.endswith(".d.ts")
-    ]
+def sdk_syscap_post_handler(syscap: str) -> str:
+    return syscap.strip().lstrip("*").lstrip().lstrip("*@syscap").strip()
+
+
+def collect_syscap_from_sdk(ts_path: str,
+                            pattern: str = r"\* *@syscap +((?i)SystemCapability\..*)",
+                            post_handler=None
+                            ) -> tuple:
+    """
+    从sdk下的*.d.ts中收集syscap
+    :param ts_path: ts文件的所在路径
+    :param pattern: 匹配syscap的pattern
+    :param post_handler: 对匹配到的syscap进行后置处理
+    :return: syscap_set，和由文件名、syscap list组成的dict
+    """
+    ts_list = list()
+    for item in os.listdir(ts_path):
+        file_path = os.path.join(ts_path, item)
+        if file_path.endswith(".d.ts") and os.path.isfile(file_path):
+            ts_list.append(file_path)
     syscap_dict = dict()
-    pattern = r"\* *@syscap +(.*)"
-    syscap_set = set()
+    ptrn = re.compile(pattern)
     for ts in ts_list:
-        with open(ts, "r") as f:
-            sub_set = set()
-            for line in f:
-                syscap = re.search(pattern, line)
-                if syscap is not None:
-                    ss = syscap.group(0).strip().lstrip(r"\* @syscap ").strip()
-                    sub_set.add(ss)
-        syscap_dict[ts] = sub_set
+        with open(ts, 'r') as f:
+            content = f.read()
+            sub_syscap_list = re.findall(ptrn, content)
+            sub_syscap_set = set()
+            for syscap in sub_syscap_list:
+                sub_syscap_set.add(post_handler(syscap))
+            syscap_dict[ts] = sub_syscap_set
+    syscap_set = set()
     for v in syscap_dict.values():
         syscap_set.update(v)
     return syscap_set, syscap_dict
 
 
-def find_files_containes_value(value_set, file_values_dict):
+def find_files_containes_value(value_set: set, file_values_dict: dict) -> dict:
+    """
+    查看包含指定值的文件
+    :param value_set: 指定值
+    :param file_values_dict: 文件和值组成的dict
+    :return: 值和文件组成的dict
+    """
     value_files_dict = dict()
     for v in value_set:
         filename_set = set()
@@ -158,112 +199,85 @@ def find_files_containes_value(value_set, file_values_dict):
     return value_files_dict
 
 
-def check_component_and_codec(project_path, bundles=None):
-    if bundles is not None and len(bundles) > 0:
-        component_syscap_set, component_syscap_dict = collect_syscap_from_component(
-            project_path, bundles
-        )
-    else:
-        component_syscap_set, component_syscap_dict = collect_syscap_from_component(
-            project_path
-        )
-    array_syscap_set = collect_syscap_from_codec(
-        os.path.join(
-            project_path, "developtools", "syscap_codec", "include", "syscap_define.h"
-        )
+def mutual_diff(a_set: set, b_set: set) -> tuple:
+    return a_set.difference(b_set), b_set.difference(a_set)
+
+
+def print_inconsistent(diff_set: set, a_name: str, b_name: str, table: PrettyTable,
+                       value_file_dict: dict) -> None:
+    table.clear()
+    if len(diff_set) != 0:
+        table.field_names = ["index", "SysCap only in {}".format(a_name), "Files"]
+        add_dict_as_table_row(table, value_file_dict)
+    elif len(diff_set) == 0:
+        table.field_names = ["All SysCap in {} have been Covered by {}".format(a_name, b_name)]
+    print(table)
+    print()
+
+
+def print_consistent(a_diff_b_set: set, b_diff_a_set: set, table: PrettyTable, a_name: str, b_name: str) -> bool:
+    if len(a_diff_b_set) == 0 and len(b_diff_a_set) == 0:
+        table.field_names = ["{} and {} are Consistent".format(a_name, b_name)]
+        print(table)
+        print()
+        return True
+    return False
+
+
+def print_check_result(a_diff_b_set: set,
+                       b_diff_a_set: set,
+                       a_name: str,
+                       b_name: str,
+                       a_value_file_dict: dict,
+                       b_value_file_dict: dict,
+                       ) -> None:
+    f_table = PrettyTable()
+    f_table.hrules = ALL
+    consistent_flag = print_consistent(a_diff_b_set, b_diff_a_set, f_table, a_name, b_name)
+    if not consistent_flag:
+        print_inconsistent(a_diff_b_set, a_name, b_name, f_table, a_value_file_dict)
+        print_inconsistent(b_diff_a_set, b_name, a_name, f_table, b_value_file_dict)
+
+
+def check_component_and_codec(project_path, syscap_define_path: str, component_black_dirs: tuple,
+                              bundle_key_heirarchy: tuple, bundles=None):
+    component_syscap_set, component_syscap_dict = collect_syscap_from_component(
+        project_path, black_dirs=component_black_dirs, key_heirarchy=bundle_key_heirarchy, bundles=bundles
     )
-    component_diff_array = component_syscap_set.difference(array_syscap_set)
-    value_files_dict = find_files_containes_value(
+    array_syscap_set, array_syscap_dict = collect_syscap_from_codec(syscap_define_path)
+    component_diff_array, array_diff_component = mutual_diff(component_syscap_set, array_syscap_set)
+    value_component_dict = find_files_containes_value(
         component_diff_array, component_syscap_dict
     )
-    array_diff_component = array_syscap_set.difference(component_syscap_set)
-    if 0 == len(component_diff_array) and 0 == len(array_diff_component):
-        table.clear()
-        table.field_names = ["Component and Codec are Consistent"]
-        print(table)
-        return
-    if 0 != len(component_diff_array):
-        table.field_names = ["Syscap Only in Component", "Files"]
-        add_dict_as_table_row(table, value_files_dict)
-    elif 0 == len(component_diff_array):
-        table.field_names = ["All Syscap in Component have been Covered by Codec"]
-    print("\n")
-    print(table)
-    table.clear()
-    if 0 != len(array_diff_component):
-        table.field_names = ["SysCap Only in Codec"]
-        table.add_row([list_to_multiline(sorted(list(array_diff_component)))])
-    elif 0 == len(array_diff_component):
-        table.field_names = ["All SysCap in Codec have been Covered by Component"]
-    print("\n")
-    print(table)
+    value_h_dict = find_files_containes_value(array_diff_component, array_syscap_dict)
+    print_check_result(component_diff_array, array_diff_component, a_name="Component", b_name="Codec",
+                       a_value_file_dict=value_component_dict, b_value_file_dict=value_h_dict)
 
 
-def check_component_and_sdk(project_path):
+def check_component_and_sdk(project_path, component_black_dirs: tuple, component_key_heirarchy: tuple, sdk_path: str):
     component_syscap_set, component_syscap_dict = collect_syscap_from_component(
-        project_path
+        project_path, black_dirs=component_black_dirs, key_heirarchy=component_key_heirarchy
     )
-    ts_syscap_set, ts_syscap_dict = collect_syscap_from_sdk(project_path)
-    ts_diff_component = ts_syscap_set.difference(component_syscap_set)
+    ts_syscap_set, ts_syscap_dict = collect_syscap_from_sdk(ts_path=sdk_path,
+                                                            post_handler=sdk_syscap_post_handler)
+    component_diff_ts, ts_diff_component = mutual_diff(component_syscap_set, ts_syscap_set)
     value_ts_dict = find_files_containes_value(ts_diff_component, ts_syscap_dict)
-    component_diff_ts = component_syscap_set.difference(ts_syscap_set)
     value_component_dict = find_files_containes_value(
         component_diff_ts, component_syscap_dict
     )
-    if 0 == len(ts_diff_component) and 0 == len(component_diff_ts):
-        table.clear()
-        table.field_names = ["SDK and Component are Consistent"]
-        print(table)
-        return
-    table.clear()
-    if 0 != len(component_diff_ts):
-        table.field_names = ["SysCap Only in Component", "Files"]
-        add_dict_as_table_row(table, value_component_dict)
-    elif 0 == len(component_diff_ts):
-        table.field_names = ["SysCap in Component have been Covered by SDK"]
-    print("\n")
-    print(table)
-    table.clear()
-    if 0 != len(ts_diff_component):
-        table.field_names = ["SysCap Only in SDK", "Files"]
-        add_dict_as_table_row(table, value_ts_dict)
-    elif 0 == len(ts_diff_component):
-        table.field_names = ["All SysCap in SDK have been Covered by Component"]
-    print("\n")
-    print(table)
+    print_check_result(component_diff_ts, ts_diff_component, a_name="Component", b_name="SDK",
+                       a_value_file_dict=value_component_dict, b_value_file_dict=value_ts_dict)
 
 
-def check_sdk_and_codec(project_path):
-    ts_syscap_set, ts_syscap_dict = collect_syscap_from_sdk(project_path)
-    array_syscap_set = collect_syscap_from_codec(
-        os.path.join(
-            project_path, "developtools", "syscap_codec", "include", "syscap_define.h"
-        )
-    )
-    ts_diff_array = ts_syscap_set.difference(array_syscap_set)
+def check_sdk_and_codec(syscap_define_path: str, sdk_path: str) -> None:
+    ts_syscap_set, ts_syscap_dict = collect_syscap_from_sdk(ts_path=sdk_path,
+                                                            post_handler=sdk_syscap_post_handler)
+    array_syscap_set, array_syscap_dict = collect_syscap_from_codec(syscap_define_path)
+    ts_diff_array, array_diff_ts = mutual_diff(ts_syscap_set, array_syscap_set)
     value_ts_dict = find_files_containes_value(ts_diff_array, ts_syscap_dict)
-    array_diff_ts = array_syscap_set.difference(ts_syscap_set)
-    if 0 == len(ts_diff_array) and 0 == len(array_diff_ts):
-        table.clear()
-        table.field_names = ["SDK and Codec are Consistent"]
-        print(table)
-        return
-    table.clear()
-    if 0 != len(ts_diff_array):
-        table.field_names = ["SysCap Only in SDK", "Files"]
-        add_dict_as_table_row(table, value_ts_dict)
-    elif 0 == len(ts_diff_array):
-        table.field_names = ["SysCap in SDK have been Covered by Codec"]
-    print("\n")
-    print(table)
-    table.clear()
-    if 0 != len(array_diff_ts):
-        table.field_names = ["SysCap Only in Codec"]
-        table.add_row([list_to_multiline(sorted(list(array_diff_ts)))])
-    elif 0 == len(array_diff_ts):
-        table.field_names = ["SysCap in Codec have been Covered by SDK"]
-    print("\n")
-    print(table)
+    value_h_dict = find_files_containes_value(array_diff_ts, array_syscap_dict)
+    print_check_result(ts_diff_array, array_diff_ts, a_name="SDK", b_name="Codec", a_value_file_dict=value_ts_dict,
+                       b_value_file_dict=value_h_dict)
 
 
 def main():
@@ -271,19 +285,25 @@ def main():
     project_path = args.project_path
     check_target = args.check_target
     bundles = args.bundles
-    if "component_codec" == check_target:
-        if bundles is None:
-            check_component_and_codec(project_path)
-        else:
-            if 0 == len(bundles):
-                print(r"error: '--bundles' parameter is specified, but has no value")
-            else:
-                check_component_and_codec(project_path, bundles)
-    elif "component_sdk" == check_target:
-        check_component_and_sdk(project_path)
+    syscap_define_path = os.path.join(project_path, "developtools", "syscap_codec", "include", "syscap_define.h")
+    ts_path = os.path.join(project_path, "interface", "sdk-js", "api")
+    component_black_dirs = ("out",)
+    bundle_syscap_heirarchy = ("component", "syscap")
+    if (bundles is not None or (bundles is not None and len(bundles) != 0)) and check_target != "component_codec":
+        print("error: --bundles could only be used with -t component_codec")
+        return
+    if "component_sdk" == check_target:
+        check_component_and_sdk(project_path, component_black_dirs, bundle_syscap_heirarchy, sdk_path=ts_path)
     elif "sdk_codec" == check_target:
-        check_sdk_and_codec(project_path)
+        check_sdk_and_codec(syscap_define_path=syscap_define_path, sdk_path=ts_path)
+    elif "component_codec" == check_target:
+        if bundles is not None and len(bundles) == 0:
+            print(r"error: '--bundles' parameter is specified, but has no value")
+        else:
+            check_component_and_codec(project_path, syscap_define_path, component_black_dirs=component_black_dirs,
+                                      bundle_key_heirarchy=bundle_syscap_heirarchy, bundles=bundles)
 
 
 if __name__ == "__main__":
     main()
+
