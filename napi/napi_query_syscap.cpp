@@ -42,7 +42,7 @@ constexpr size_t KEY_BUFFER_SIZE = 32;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data)
 
 // Async Function Set
-struct systemCapabilityAsyncContext {
+struct SystemCapabilityAsyncContext {
     napi_env env = nullptr;
     napi_async_work work = nullptr;
     char key[KEY_BUFFER_SIZE] = { 0 };
@@ -64,7 +64,7 @@ static char* getSystemCapability()
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
     char *temp = nullptr;
-    char *allSyscapBUffer = nullptr;
+    char *allSyscapBuffer = nullptr;
     char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN] = {};
     char (*priCapArray)[SINGLE_SYSCAP_LEN] = nullptr;
 
@@ -105,39 +105,39 @@ static char* getSystemCapability()
     sumLen += (PCID_MAIN_U32 + priCapArrayCnt + 1);  // split with ','
 
     // splicing string
-    allSyscapBUffer = (char *)malloc(sumLen);
-    if (allSyscapBUffer == nullptr) {
+    allSyscapBuffer = (char *)malloc(sumLen);
+    if (allSyscapBuffer == nullptr) {
         PRINT_ERR("malloc failed!");
         goto FREE_PRICAP_ARRAY;
     }
-    err = memset_s(allSyscapBUffer, sumLen, 0, sumLen);
+    err = memset_s(allSyscapBuffer, sumLen, 0, sumLen);
     if (err != EOK) {
         PRINT_ERR("memset failed!");
-        free(allSyscapBUffer);
-        allSyscapBUffer = nullptr;
+        free(allSyscapBuffer);
+        allSyscapBuffer = nullptr;
         goto FREE_PRICAP_ARRAY;
     }
     temp = *osCapArray;
 
     for (size_t i = 1; i < PCID_MAIN_U32; i++) {
-        retError = sprintf_s(allSyscapBUffer, sumLen, "%s,%s", temp, osCapArray[i]);
+        retError = sprintf_s(allSyscapBuffer, sumLen, "%s,%s", temp, osCapArray[i]);
         if (retError == -1) {
             PRINT_ERR("splicing os syscap string failed.");
-            free(allSyscapBUffer);
-            allSyscapBUffer = nullptr;
+            free(allSyscapBuffer);
+            allSyscapBuffer = nullptr;
             goto FREE_PRICAP_ARRAY;
         }
-        temp = allSyscapBUffer;
+        temp = allSyscapBuffer;
     }
     for (int i = 0; i < priCapArrayCnt; i++) {
-        retError = sprintf_s(allSyscapBUffer, sumLen, "%s,%s", temp, *(priCapArray + i));
+        retError = sprintf_s(allSyscapBuffer, sumLen, "%s,%s", temp, *(priCapArray + i));
         if (retError == -1) {
             PRINT_ERR("splicing pri syscap string failed.");
-            free(allSyscapBUffer);
-            allSyscapBUffer = nullptr;
+            free(allSyscapBuffer);
+            allSyscapBuffer = nullptr;
             goto FREE_PRICAP_ARRAY;
         }
-        temp = allSyscapBUffer;
+        temp = allSyscapBuffer;
     }
 
 FREE_PRICAP_ARRAY:
@@ -145,7 +145,7 @@ FREE_PRICAP_ARRAY:
 FREE_PRIOUTPUT:
     free(priOutput);
 
-    return allSyscapBUffer;
+    return allSyscapBuffer;
 }
 
 napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
@@ -154,7 +154,7 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     NAPI_ASSERT(env, argc <= 1, "too many parameters");
     napi_value result = nullptr;
 
-    systemCapabilityAsyncContext* asyncContext = new systemCapabilityAsyncContext();
+    SystemCapabilityAsyncContext* asyncContext = new SystemCapabilityAsyncContext();
 
     asyncContext->env = env;
 
@@ -178,7 +178,7 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     napi_create_async_work(
         env, nullptr, resource,
         [](napi_env env, void* data) {
-            systemCapabilityAsyncContext *asyncContext = (systemCapabilityAsyncContext *)data;
+            SystemCapabilityAsyncContext *asyncContext = (SystemCapabilityAsyncContext *)data;
             char *syscapStr = getSystemCapability();
             if (syscapStr != nullptr) {
                 asyncContext->value = syscapStr;
@@ -188,8 +188,8 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
             }
         },
         [](napi_env env, napi_status status, void* data) {
-            systemCapabilityAsyncContext *asyncContext = (systemCapabilityAsyncContext *)data;
-            napi_value result[2] = {0};
+            SystemCapabilityAsyncContext *asyncContext = (SystemCapabilityAsyncContext *)data;
+            napi_value result[2] = {nullptr, nullptr};
             if (!asyncContext->status) {
                 napi_get_undefined(env, &result[0]);
                 napi_create_string_utf8(env, asyncContext->value, strlen(asyncContext->value), &result[1]); // ?
@@ -235,14 +235,14 @@ EXTERN_C_END
 /*
  * Module define
  */
-static napi_module systemCapabilityModule = {
+static napi_module g_systemCapabilityModule = {
     .nm_version = 1,
     .nm_flags = 0,
     .nm_filename = nullptr,
     .nm_register_func = QuerryExport,
     .nm_modname = "systemCapability",
-    .nm_priv = ((void*)0),
-    .reserved = {0},
+    .nm_priv = nullptr,
+    .reserved = {nullptr},
 };
 
 /*
@@ -250,6 +250,6 @@ static napi_module systemCapabilityModule = {
  */
 extern "C" __attribute__((constructor)) void systemCapabilityRegisterModule(void)
 {
-    napi_module_register(&systemCapabilityModule);
+    napi_module_register(&g_systemCapabilityModule);
 }
 }

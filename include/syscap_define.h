@@ -248,6 +248,19 @@ typedef enum SystemCapabilityNum {
     // Add here
     MULTIMODALINPUT_INPUT_COOPERATOR,
     ABILITY_ABILITYRUNTIME_QUICKFIX,
+    SECURITY_DLPCREDENTIALSERVICE,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_CORE,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_FREEINSTALL,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_LAUNCHER,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_DEFAULTAPP,
+    BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE,
+    MULTIMEDIA_AVSESSION_CORE,
+    MULTIMEDIA_AVSESSION_MANAGER,
+    MULTIMEDIA_AUDIO_TONE,
+    MULTIMEDIA_AUDIO_INTERRUPT,
+    CLOUD_AAID,
+    MSDP_DEVICESTATUS_STATIONARY,
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -473,6 +486,20 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework", SECURITY_CRYPTOFRAMEWORK},
     {"SystemCapability.MultimodalInput.Input.Cooperator", MULTIMODALINPUT_INPUT_COOPERATOR},
     {"SystemCapability.Ability.AbilityRuntime.QuickFix", ABILITY_ABILITYRUNTIME_QUICKFIX},
+    {"SystemCapability.Security.DlpCredentialService", SECURITY_DLPCREDENTIALSERVICE},
+    {"SystemCapability.BundleManager.BundleFramework.AppControl", BUNDLEMANAGER_BUNDLEFRAMEWORK_APPCONTROL},
+    {"SystemCapability.BundleManager.BundleFramework.Core", BUNDLEMANAGER_BUNDLEFRAMEWORK_CORE},
+    {"SystemCapability.BundleManager.BundleFramework.FreeInstall", BUNDLEMANAGER_BUNDLEFRAMEWORK_FREEINSTALL},
+    {"SystemCapability.BundleManager.BundleFramework.Launcher", BUNDLEMANAGER_BUNDLEFRAMEWORK_LAUNCHER},
+    {"SystemCapability.BundleManager.BundleFramework.DefaultApp",
+        BUNDLEMANAGER_BUNDLEFRAMEWORK_DEFAULTAPP},
+    {"SystemCapability.BundleManager.BundleFramework.Resource", BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE},
+    {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
+    {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
+    {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
+    {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
+    {"SystemCapability.Cloud.AAID", CLOUD_AAID},
+    {"SystemCapability.Msdp.DeviceStatus.Stationary", MSDP_DEVICESTATUS_STATIONARY},
 };
 
 #ifdef __cplusplus
