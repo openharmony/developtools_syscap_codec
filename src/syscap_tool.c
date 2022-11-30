@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -425,7 +426,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     int32_t sysCapArraySize;
-    uint32_t bufferLen, i;
+    uint32_t bufferLen;
     uint16_t indexPri = 0;
     uint16_t *osSysCapIndex;
     char *contextBuffer = NULL;
@@ -518,7 +519,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
         PRINT_ERR("sprintf_s failed.\n");
         goto FREE_OUTBUFFER;
     }
-    for (i = 1; i < RPCID_OUT_BUFFER; i++) {
+    for (int i = 1; i < RPCID_OUT_BUFFER; i++) {
         ret = sprintf_s(outBuffer, outBufferLen, "%s,%u", outBuffer, outUint[i]);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
@@ -526,7 +527,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
         }
     }
 
-    for (i = 0; i < indexPri; i++) {
+    for (uint16_t i = 0; i < indexPri; i++) {
         ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer,
                         priSyscapArray + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
