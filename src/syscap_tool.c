@@ -708,7 +708,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
             continue;
         }
         for (uint8_t k = 0; k < INT_BIT; k++) {
-            if (!(temp2 & (0x1 << k))) {
+            if (!(temp2 & (1U << k))) {
                 continue;
             }
             // 2, header of pcid & rpcid
