@@ -18,21 +18,40 @@
 #include <stdlib.h>
 #include "syscap_define.h"
 
-int main(void)
+int CheckSortBySyscapNum()
 {
-    size_t size = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
-    size_t flag = 0;
+    int size = (int)sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
+    int flag = 0;
 
-    for (size_t i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         if (g_arraySyscap[i].num != i) {
-            printf("[Error][syscap_define.h]: %s -> num(%u) should be %zu.\n",
+            printf("[ERROR][syscap_define.h]: %s -> num(%u) should be %d.\n",
                 g_arraySyscap[i].str, g_arraySyscap[i].num, i);
             flag++;
         }
     }
-    if (flag == 0) {
-        return 0;
-    } else {
+    return flag;
+}
+
+int CheckSyscapNumOrder()
+{
+    if (COMMUNICATION_NETMANAGER_VPN != 227) { // 227, special number
+        printf("[ERROR][syscap_define.h]: "
+            "enum value 'COMMUNICATION_NETMANAGER_VPN' should be 227. "
+            "Please don't change original SyscapNum's enum value order, "
+            "and add the new enum value at the end.\n");
+        return 1;
+    }
+    return 0;
+}
+
+int main(void)
+{
+    if (CheckSyscapNumOrder() != 0) {
         return -1;
     }
+    if (CheckSortBySyscapNum() != 0) {
+        return -1;
+    }
+    return 0;
 }
