@@ -46,10 +46,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_BLUETOOTH_CORE,
     COMMUNICATION_CONNECTEDTAG,
     COMMUNICATION_NETMANAGER_CORE,
-    COMMUNICATION_NETMANAGER_ETHERNET,
-    COMMUNICATION_NETMANAGER_NETSHARING,
-    COMMUNICATION_NETMANAGER_MDNS,
-    COMMUNICATION_NETMANAGER_VPN,
+    COMMUNICATION_NETMANAGER_EXTENSION, // abandoned
     COMMUNICATION_NETSTACK,
     COMMUNICATION_NFC_CORE,
     COMMUNICATION_SOFTBUS_CORE,
@@ -246,7 +243,6 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY,
     SECURITY_SECURITYGUARD,
     SECURITY_CRYPTOFRAMEWORK,
-    // Add here
     MULTIMODALINPUT_INPUT_COOPERATOR,
     ABILITY_ABILITYRUNTIME_QUICKFIX,
     SECURITY_DLPCREDENTIALSERVICE,
@@ -262,6 +258,11 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_INTERRUPT,
     CLOUD_AAID,
     MSDP_DEVICESTATUS_STATIONARY,
+    COMMUNICATION_NETMANAGER_ETHERNET,
+    COMMUNICATION_NETMANAGER_NETSHARING,
+    COMMUNICATION_NETMANAGER_MDNS,
+    COMMUNICATION_NETMANAGER_VPN,
+    // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -280,10 +281,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.Bluetooth.Core", COMMUNICATION_BLUETOOTH_CORE},
     {"SystemCapability.Communication.ConnectedTag", COMMUNICATION_CONNECTEDTAG},
     {"SystemCapability.Communication.NetManager.Core", COMMUNICATION_NETMANAGER_CORE},
-    {"SystemCapability.Communication.NetManager.Ethernet", COMMUNICATION_NETMANAGER_ETHERNET},
-    {"SystemCapability.Communication.NetManager.NetSharing", COMMUNICATION_NETMANAGER_NETSHARING},
-    {"SystemCapability.Communication.NetManager.MDNS", COMMUNICATION_NETMANAGER_MDNS},
-    {"SystemCapability.Communication.NetManager.Vpn", COMMUNICATION_NETMANAGER_VPN},
+    {"SystemCapability.Communication.NetManager.Extension", COMMUNICATION_NETMANAGER_EXTENSION},
     {"SystemCapability.Communication.NetStack", COMMUNICATION_NETSTACK},
     {"SystemCapability.Communication.NFC.Core", COMMUNICATION_NFC_CORE},
     {"SystemCapability.Communication.SoftBus.Core", COMMUNICATION_SOFTBUS_CORE},
@@ -502,6 +500,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
     {"SystemCapability.Msdp.DeviceStatus.Stationary", MSDP_DEVICESTATUS_STATIONARY},
+    {"SystemCapability.Communication.NetManager.Ethernet", COMMUNICATION_NETMANAGER_ETHERNET},
+    {"SystemCapability.Communication.NetManager.NetSharing", COMMUNICATION_NETMANAGER_NETSHARING},
+    {"SystemCapability.Communication.NetManager.MDNS", COMMUNICATION_NETMANAGER_MDNS},
+    {"SystemCapability.Communication.NetManager.Vpn", COMMUNICATION_NETMANAGER_VPN},
 };
 
 #ifdef __cplusplus
