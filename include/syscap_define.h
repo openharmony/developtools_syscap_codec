@@ -262,6 +262,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_NETSHARING,
     COMMUNICATION_NETMANAGER_MDNS,
     COMMUNICATION_NETMANAGER_VPN,
+    SECURITY_CERT,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -504,6 +505,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.NetSharing", COMMUNICATION_NETMANAGER_NETSHARING},
     {"SystemCapability.Communication.NetManager.MDNS", COMMUNICATION_NETMANAGER_MDNS},
     {"SystemCapability.Communication.NetManager.Vpn", COMMUNICATION_NETMANAGER_VPN},
+    {"SystemCapability.Security.Cert", SECURITY_CERT},
 };
 
 #ifdef __cplusplus
