@@ -264,6 +264,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_VPN,
     COMMUNICATION_NFC_TAG,
     COMMUNICATION_NFC_CARDEMULATION,
+    SECURITY_CERT,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -508,6 +509,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.Vpn", COMMUNICATION_NETMANAGER_VPN},
     {"SystemCapability.Communication.NFC.Tag", COMMUNICATION_NFC_TAG},
     {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
+    {"SystemCapability.Security.Cert", SECURITY_CERT},
 };
 
 #ifdef __cplusplus
