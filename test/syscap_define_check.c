@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include "syscap_define.h"
 
-int CheckSortBySyscapNum()
+int CheckSortBySyscapNum(void)
 {
     int size = (int)sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
     int flag = 0;
@@ -33,7 +33,7 @@ int CheckSortBySyscapNum()
     return flag;
 }
 
-int CheckSyscapNumOrder()
+int CheckSyscapNumOrder(void)
 {
     if (COMMUNICATION_NETMANAGER_VPN != 227) { // 227, special number
         printf("[ERROR][syscap_define.h]: "
