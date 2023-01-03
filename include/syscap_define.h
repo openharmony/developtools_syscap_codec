@@ -46,7 +46,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_BLUETOOTH_CORE,
     COMMUNICATION_CONNECTEDTAG,
     COMMUNICATION_NETMANAGER_CORE,
-    COMMUNICATION_NETMANAGER_EXTENSION,
+    COMMUNICATION_NETMANAGER_EXTENSION, // abandoned
     COMMUNICATION_NETSTACK,
     COMMUNICATION_NFC_CORE,
     COMMUNICATION_SOFTBUS_CORE,
@@ -243,7 +243,6 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_EFFICIENCYRESOURCESAPPLY,
     SECURITY_SECURITYGUARD,
     SECURITY_CRYPTOFRAMEWORK,
-    // Add here
     MULTIMODALINPUT_INPUT_COOPERATOR,
     ABILITY_ABILITYRUNTIME_QUICKFIX,
     SECURITY_DLPCREDENTIALSERVICE,
@@ -259,7 +258,15 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_INTERRUPT,
     CLOUD_AAID,
     MSDP_DEVICESTATUS_STATIONARY,
-    PRINT_PRINT,
+    COMMUNICATION_NETMANAGER_ETHERNET,
+    COMMUNICATION_NETMANAGER_NETSHARING,
+    COMMUNICATION_NETMANAGER_MDNS,
+    COMMUNICATION_NETMANAGER_VPN,
+    COMMUNICATION_NFC_TAG,
+    COMMUNICATION_NFC_CARDEMULATION,
+    SECURITY_CERT,
+    PRINT_PRINT_FRAMEWORK,
+    // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
 
@@ -497,7 +504,14 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
     {"SystemCapability.Msdp.DeviceStatus.Stationary", MSDP_DEVICESTATUS_STATIONARY},
-    {"SystemCapability.Print.Print", PRINT_PRINT}
+    {"SystemCapability.Communication.NetManager.Ethernet", COMMUNICATION_NETMANAGER_ETHERNET},
+    {"SystemCapability.Communication.NetManager.NetSharing", COMMUNICATION_NETMANAGER_NETSHARING},
+    {"SystemCapability.Communication.NetManager.MDNS", COMMUNICATION_NETMANAGER_MDNS},
+    {"SystemCapability.Communication.NetManager.Vpn", COMMUNICATION_NETMANAGER_VPN},
+    {"SystemCapability.Communication.NFC.Tag", COMMUNICATION_NFC_TAG},
+    {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
+    {"SystemCapability.Security.Cert", SECURITY_CERT},
+    {"SystemCapability.Print.PrintFramework", PRINT_PRINT_FRAMEWORK}
 };
 
 #ifdef __cplusplus

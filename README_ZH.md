@@ -170,6 +170,11 @@ python3 syscap_check.py -p path_of_openarmony -t component_sdk
 python3 syscap_check.py -p path_of_openarmony -t sdk_codec
 ```
 
+## syscap_define.h 文件规则
+- 每一个 SyscapNum 枚举值都唯一对应于一个 syscap 字符串。
+- 如果弃用某个 syscap，在对应的枚举值后面注释 "// abandoned" 即可，请勿删除和修改。对应的 syscap 字符串也不需要修改。
+- 添加 syscap，请在 SyscapNum 和 g_arraySyscap 末尾添加相应数据。
+- 数组 g_arraySyscap 按照 SyscapNum 枚举值从小到大排序。
 
 
 ## Release Note
