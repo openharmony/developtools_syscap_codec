@@ -583,7 +583,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
             continue;
         }
         for (uint8_t k = 0; k < INT_BIT; k++) {
-            if (temp2 & (0x1 << k)) {
+            if (temp2 & (1U << k)) {
                 char *temp = (char *)malloc(sizeof(char) * SINGLE_SYSCAP_LEN);
                 if (temp == NULL) {
                     PRINT_ERR("malloc failed.\n");
@@ -632,10 +632,10 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     }
 
     if (versionFlag > 0) {
-        retFlag |= 0x1 << 0;
+        retFlag |= 1U << 0;
     }
     if (ossyscapFlag > 0 || prisyscapFlag > 0) {
-        retFlag |= 0x1 << 1;
+        retFlag |= 1U << 1;
         result->missSyscapNum = ossyscapFlag + prisyscapFlag;
     }
     return (int32_t)retFlag;
