@@ -87,6 +87,15 @@ if (defined(ohos_lite)) {
     }
   } else {
     shared_library("syscap_interface_shared") {
+      _version_script = rebase_path("libsyscap_interface_shared.versionscript")
+      if (!defined(ldflags)) {
+        ldflags = []
+      }
+      ldflags += [
+        "-rdynamic",
+        "-Wl,--version-script=${_version_script}",
+      ]
+
       include_dirs = [
         "include",
         "src",
@@ -106,6 +115,7 @@ if (defined(ohos_lite)) {
   }
 } else {
   ohos_shared_library("syscap_interface_shared") {
+    version_script = "libsyscap_interface_shared.versionscript"
     include_dirs = [
       "include",
       "src",
