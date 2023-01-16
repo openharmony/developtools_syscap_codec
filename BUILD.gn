@@ -123,25 +123,40 @@ config("syscap_interface_public_config") {
 }
 
 if (defined(ohos_lite)) {
-  shared_library("syscap_interface_shared") {
-    include_dirs = [
-      "include",
-      "src",
-    ]
-    public_configs = [ ":syscap_interface_public_config" ]
-    sources = [
-      "./interfaces/inner_api/syscap_interface.c",
-      "./src/endian_internal.c",
-      "./src/syscap_tool.c",
-    ]
+  if (ohos_kernel_type == "liteos_m") {
+    group("syscap_interface_shared") {
+    }
+  } else {
+    shared_library("syscap_interface_shared") {
+      _version_script = rebase_path("libsyscap_interface_shared.versionscript")
+      if (!defined(ldflags)) {
+        ldflags = []
+      }
+      ldflags += [
+        "-rdynamic",
+        "-Wl,--version-script=${_version_script}",
+      ]
 
-    deps = [
-      "//build/lite/config/component/cJSON:cjson_static",
-      "//third_party/bounds_checking_function:libsec_static",
-    ]
+      include_dirs = [
+        "include",
+        "src",
+      ]
+      public_configs = [ ":syscap_interface_public_config" ]
+      sources = [
+        "./interfaces/inner_api/syscap_interface.c",
+        "./src/endian_internal.c",
+        "./src/syscap_tool.c",
+      ]
+
+      deps = [
+        "//build/lite/config/component/cJSON:cjson_static",
+        "//third_party/bounds_checking_function:libsec_static",
+      ]
+    }
   }
 } else {
   ohos_shared_library("syscap_interface_shared") {
+    version_script = "libsyscap_interface_shared.versionscript"
     include_dirs = [
       "include",
       "src",
