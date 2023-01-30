@@ -266,6 +266,8 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NFC_CARDEMULATION,
     SECURITY_CERT,
     CLOUD_OAID,
+    XTS_DEVICEATTEST,
+    XTS_DEVICEATTESTLITE,
     PRINT_PRINT_FRAMEWORK,
     // Add before here
     SYSCAP_NUM_MAX = 960
@@ -513,6 +515,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
     {"SystemCapability.Security.Cert", SECURITY_CERT},
     {"SystemCapability.Cloud.OAID", CLOUD_OAID},
+    {"SystemCapability.XTS.DeviceAttest", XTS_DEVICEATTEST},
+    {"SystemCapability.XTS.DeviceAttestLite", XTS_DEVICEATTESTLITE},
     {"SystemCapability.Print.PrintFramework", PRINT_PRINT_FRAMEWORK}
 };
 
