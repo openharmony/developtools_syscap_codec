@@ -265,6 +265,8 @@ typedef enum SystemCapabilityNum {
     SECURITY_CERT,
     COMMUNICATION_NFC_TAG,
     COMMUNICATION_NFC_CARDEMULATION,
+    XTS_DEVICEATTEST,
+    XTS_DEVICEATTESTLITE,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -510,6 +512,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.Cert", SECURITY_CERT},
     {"SystemCapability.Communication.NFC.Tag", COMMUNICATION_NFC_TAG},
     {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
+    {"SystemCapability.XTS.DeviceAttest", XTS_DEVICEATTEST},
+    {"SystemCapability.XTS.DeviceAttestLite", XTS_DEVICEATTESTLITE},
 };
 
 #ifdef __cplusplus
