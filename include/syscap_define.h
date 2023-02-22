@@ -270,6 +270,7 @@ typedef enum SystemCapabilityNum {
     XTS_DEVICEATTESTLITE,
     MULTIMEDIA_MEDIA_AVPLAYER,
     MULTIMEDIA_MEDIA_AVRECORDER,
+    PRINT_PRINT_FRAMEWORK,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -520,6 +521,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.XTS.DeviceAttestLite", XTS_DEVICEATTESTLITE},
     {"SystemCapability.Multimedia.Media.AVPlayer", MULTIMEDIA_MEDIA_AVPLAYER},
     {"SystemCapability.Multimedia.Media.AVRecorder", MULTIMEDIA_MEDIA_AVRECORDER},
+    {"SystemCapability.Print.PrintFramework", PRINT_PRINT_FRAMEWORK}
 };
 
 #ifdef __cplusplus
