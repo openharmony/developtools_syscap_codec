@@ -12,6 +12,8 @@
 # limitations under the License.
 
 import("//build/lite/config/component/lite_component.gni")
+import("../../../config.gni")
+
 if (defined(ohos_lite)) {
   import("//build/lite/config/test.gni")
 
@@ -23,22 +25,21 @@ if (defined(ohos_lite)) {
       output_dir = test_output_root
 
       include_dirs = [
-        "//commonlibrary/c_utils/base/include",
         "//third_party/node/src",
-        "//third_party/googletest/include",
-        "//developtools/syscap_codec/src/",
-        "//developtools/syscap_codec/include/",
-        "//developtools/syscap_codec/interfaces/inner_api/",
-        "//developtools/syscap_codec/test/unittest/common/include/",
+        "../../../src/",
+        "../../../include/",
+        "../../../interfaces/inner_api/",
+        "include/",
       ]
+      include_dirs += [ syscap_codec_config_path ]
 
       cflags = [ "-g3" ]
 
       sources = [
-        "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
-        "//developtools/syscap_codec/src/create_pcid.c",
-        "//developtools/syscap_codec/src/endian_internal.c",
-        "//developtools/syscap_codec/src/syscap_tool.c",
+        "../../../interfaces/inner_api/syscap_interface.c",
+        "../../../src/create_pcid.c",
+        "../../../src/endian_internal.c",
+        "../../../src/syscap_tool.c",
         "syscap_codec_test.cpp",
       ]
 
@@ -46,11 +47,10 @@ if (defined(ohos_lite)) {
 
       deps = [
         "//base//hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
+        "//build/lite/config/component/cJSON:cjson_static",
         "//test/testfwk/developer_test/third_party/lib/cpp:gtest_main",
         "//third_party/bounds_checking_function:libsec_static",
       ]
-
-      deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
     }
   }
 
@@ -69,26 +69,26 @@ if (defined(ohos_lite)) {
     module_out_path = module_output_path
 
     include_dirs = [
-      "//developtools/syscap_codec/src/",
-      "//developtools/syscap_codec/include/",
-      "//developtools/syscap_codec/interfaces/inner_api/",
-      "//developtools/syscap_codec/test/unittest/common/include/",
+      "../../../src",
+      "../../../include",
+      "../../../interfaces/inner_api",
+      "../../../test/unittest/common/include",
     ]
+    include_dirs += [ syscap_codec_config_path ]
 
     sources = [
-      "//developtools/syscap_codec/interfaces/inner_api/syscap_interface.c",
-      "//developtools/syscap_codec/src/create_pcid.c",
-      "//developtools/syscap_codec/src/endian_internal.c",
-      "//developtools/syscap_codec/src/syscap_tool.c",
+      "../../../interfaces/inner_api/syscap_interface.c",
+      "../../../src/create_pcid.c",
+      "../../../src/endian_internal.c",
+      "../../../src/syscap_tool.c",
       "syscap_codec_test.cpp",
     ]
 
     deps = [
       "//third_party/bounds_checking_function:libsec_static",
+      "//third_party/cJSON:cjson_static",
       "//third_party/googletest:gtest_main",
     ]
-
-    deps += [ "//third_party/cJSON:cjson_static" ]
   }
 
   group("unittest") {

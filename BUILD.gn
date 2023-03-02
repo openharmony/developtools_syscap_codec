@@ -13,9 +13,11 @@
 
 import("//build/lite/config/component/lite_component.gni")
 import("//build/ohos.gni")
+import("config.gni")
 
-config("pubilc") {
+config("internal") {
   include_dirs = [ "include" ]
+  include_dirs += [ syscap_codec_config_path ]
 }
 
 sources_platform_common = [
@@ -25,7 +27,7 @@ sources_platform_common = [
 ]
 
 ohos_executable("syscap_define_check_bin") {
-  include_dirs = [ "include" ]
+  configs = [ ":internal" ]
   sources = [ "./test/syscap_define_check.c" ]
 
   if (is_mingw) {
@@ -53,7 +55,7 @@ ohos_executable("syscap_tool_bin") {
   output_name = "syscap_tool"
   install_enable = true
   include_dirs = [ "src" ]
-  public_configs = [ ":pubilc" ]
+  configs = [ ":internal" ]
   defines = []
 
   if (is_mingw) {
@@ -96,10 +98,8 @@ if (defined(ohos_lite)) {
         "-Wl,--version-script=${_version_script}",
       ]
 
-      include_dirs = [
-        "include",
-        "src",
-      ]
+      include_dirs = [ "src" ]
+      configs += [ ":internal" ]
       public_configs = [ ":syscap_interface_public_config" ]
       sources = [
         "./interfaces/inner_api/syscap_interface.c",
@@ -116,10 +116,8 @@ if (defined(ohos_lite)) {
 } else {
   ohos_shared_library("syscap_interface_shared") {
     version_script = "libsyscap_interface_shared.versionscript"
-    include_dirs = [
-      "include",
-      "src",
-    ]
+    include_dirs = [ "src" ]
+    configs = [ ":internal" ]
     public_configs = [ ":syscap_interface_public_config" ]
     sources = [
       "./interfaces/inner_api/syscap_interface.c",
