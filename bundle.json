@@ -13,7 +13,7 @@
     "name": "syscap_codec",
     "subsystem": "developtools",
     "syscap": [ "SystemCapability.Developtools.Syscap" ],
-    "feature": [],
+    "feature": [ "syscap_codec_config_path" ],
     "adapted_system_type": [ "small", "standard" ],
     "deps": {
       "components": [
