@@ -274,6 +274,7 @@ typedef enum SystemCapabilityNum {
     BUNDLEMANAGER_BUNDLEFRAMEWORK_OVERLAY,
     CLOUD_PUSH,
     MULTIMEDIA_SYSTEMSOUND_CORE,
+    COMMUNICATION_SECURE_ELEMENT,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -528,6 +529,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.BundleManager.BundleFramework.Overlay", BUNDLEMANAGER_BUNDLEFRAMEWORK_OVERLAY},
     {"SystemCapability.Cloud.Push", CLOUD_PUSH},
     {"SystemCapability.MultiMedia.SystemSound.Core", MULTIMEDIA_SYSTEMSOUND_CORE},
+    {"SystemCapability.Communication.SecureElement", COMMUNICATION_SECURE_ELEMENT},
 };
 
 #ifdef __cplusplus
