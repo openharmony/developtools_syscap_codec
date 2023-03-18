@@ -275,6 +275,7 @@ typedef enum SystemCapabilityNum {
     CLOUD_PUSH,
     MULTIMEDIA_SYSTEMSOUND_CORE,
     COMMUNICATION_SECURE_ELEMENT,
+    DISTRIBUTEDDATAMANAGER_UDMF_CORE,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -530,6 +531,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Cloud.Push", CLOUD_PUSH},
     {"SystemCapability.MultiMedia.SystemSound.Core", MULTIMEDIA_SYSTEMSOUND_CORE},
     {"SystemCapability.Communication.SecureElement", COMMUNICATION_SECURE_ELEMENT},
+    {"SystemCapability.DistributedDataManager.UDMF.Core", DISTRIBUTEDDATAMANAGER_UDMF_CORE},
 };
 
 #ifdef __cplusplus
