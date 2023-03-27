@@ -529,7 +529,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Print.PrintFramework", PRINT_PRINT_FRAMEWORK},
     {"SystemCapability.BundleManager.BundleFramework.Overlay", BUNDLEMANAGER_BUNDLEFRAMEWORK_OVERLAY},
     {"SystemCapability.Cloud.Push", CLOUD_PUSH},
-    {"SystemCapability.MultiMedia.SystemSound.Core", MULTIMEDIA_SYSTEMSOUND_CORE},
+    {"SystemCapability.Multimedia.SystemSound.Core", MULTIMEDIA_SYSTEMSOUND_CORE},
     {"SystemCapability.Communication.SecureElement", COMMUNICATION_SECURE_ELEMENT},
     {"SystemCapability.DistributedDataManager.UDMF.Core", DISTRIBUTEDDATAMANAGER_UDMF_CORE},
 };
