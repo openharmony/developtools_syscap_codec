@@ -277,6 +277,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_SECURE_ELEMENT,
     DISTRIBUTEDDATAMANAGER_UDMF_CORE,
     FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER,
+    MULTIMODALINPUT_INPUT_SHORTKEY,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -535,6 +536,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.UDMF.Core", DISTRIBUTEDDATAMANAGER_UDMF_CORE},
     {"SystemCapability.FileManagement.DistributedFileService.CloudSyncManager",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER},
+    {"SystemCapability.MultimodalInput.Input.Shortkey", MULTIMODALINPUT_INPUT_SHORTKEY},
 };
 
 #ifdef __cplusplus
