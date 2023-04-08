@@ -536,7 +536,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.UDMF.Core", DISTRIBUTEDDATAMANAGER_UDMF_CORE},
     {"SystemCapability.FileManagement.DistributedFileService.CloudSyncManager",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER},
-    {"SystemCapability.MultimodalInput.Input.Shortkey", MULTIMODALINPUT_INPUT_SHORTKEY},
+    {"SystemCapability.MultimodalInput.Input.ShortKey", MULTIMODALINPUT_INPUT_SHORTKEY},
 };
 
 #ifdef __cplusplus
