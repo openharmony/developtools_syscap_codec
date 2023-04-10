@@ -63,7 +63,6 @@ ohos_executable("syscap_tool_bin") {
   }
   if (defined(ohos_lite) && ohos_kernel_type == "liteos_m") {
     cflags = [ "-DPATH_MAX=1024" ]
-    cflags += [ "-Wno-int-conversion" ]
   }
   sources = [ "./src/main.c" ]
   sources += sources_platform_common
