@@ -26,31 +26,6 @@ sources_platform_common = [
   "./src/endian_internal.c",
 ]
 
-ohos_executable("syscap_define_check_bin") {
-  configs = [ ":internal" ]
-  sources = [ "./test/syscap_define_check.c" ]
-
-  if (is_mingw) {
-    defines = [ "_POSIX_" ]
-  }
-
-  subsystem_name = "developtools"
-  part_name = "syscap_codec"
-}
-
-build_ext_component("syscap_define_check") {
-  deps = [ ":syscap_define_check_bin(//build/toolchain/linux:clang_x64)" ]
-  exec_path = rebase_path(root_out_dir)
-
-  if (defined(ohos_lite)) {
-    cmd = "${exec_path}/clang_x64/syscap_define_check_bin"
-  } else {
-    cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_define_check_bin"
-  }
-
-  command = "chmod 777 $cmd && $cmd"
-}
-
 ohos_executable("syscap_tool_bin") {
   output_name = "syscap_tool"
   install_enable = true
@@ -170,7 +145,6 @@ group("pcid_sc") {
 group("syscap_codec") {
   deps = [
     ":pcid_sc",
-    ":syscap_define_check",
     ":syscap_interface_shared",
   ]
   if (support_jsapi && is_standard_system) {
