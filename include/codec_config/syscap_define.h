@@ -279,6 +279,10 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER,
     MULTIMODALINPUT_INPUT_SHORTKEY,
     MSDP_DEVICESTATUS_COOPERATE,
+    ARKUI_UI_LITE,
+    GRAPHIC_SURFACE_LITE,
+    GRAPHIC_GRAPHIC_UTILS_LITE,
+    WINDOW_WINDOW_MANAGER_LITE,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -539,6 +543,10 @@ const static SyscapWithNum g_arraySyscap[] = {
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER},
     {"SystemCapability.MultimodalInput.Input.ShortKey", MULTIMODALINPUT_INPUT_SHORTKEY},
     {"SystemCapability.Msdp.DeviceStatus.Cooperate", MSDP_DEVICESTATUS_COOPERATE},
+    {"SystemCapability.Arkui.UILite", ARKUI_UI_LITE},
+    {"SystemCapability.Graphic.SurfaceLite", GRAPHIC_SURFACE_LITE},
+    {"SystemCapability.Graphic.GraphicUtilsLite", GRAPHIC_GRAPHIC_UTILS_LITE},
+    {"SystemCapability.Window.WindowManagerLite", WINDOW_WINDOW_MANAGER_LITE},
 };
 
 #ifdef __cplusplus
