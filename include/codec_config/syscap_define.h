@@ -283,6 +283,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_SURFACE_LITE,
     GRAPHIC_GRAPHIC_UTILS_LITE,
     WINDOW_WINDOW_MANAGER_LITE,
+    DRIVER_DEVICEMANAGER_EXTENSION,
     // Add before here
     SYSCAP_NUM_MAX = 960
 } SyscapNum;
@@ -547,6 +548,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.SurfaceLite", GRAPHIC_SURFACE_LITE},
     {"SystemCapability.Graphic.GraphicUtilsLite", GRAPHIC_GRAPHIC_UTILS_LITE},
     {"SystemCapability.Window.WindowManagerLite", WINDOW_WINDOW_MANAGER_LITE},
+    {"SystemCapability.Driver.DeviceManager.Extension", DRIVER_DEVICEMANAGER_EXTENSION},
 };
 
 #ifdef __cplusplus
