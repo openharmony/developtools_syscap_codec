@@ -330,7 +330,7 @@ FREE_SYSCAP_OUT:
     return ret;
 }
 
-static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
+static int32_t CheckRpcidFormat(char *inputFile, char **buffer, uint32_t *Len)
 {
     uint32_t bufferLen;
     uint16_t sysCaptype, sysCapLength;
@@ -361,7 +361,7 @@ static int32_t CheckRpcidFormat(char *inputFile, char **Buffer, uint32_t *Len)
         return -1;
     }
 
-    *Buffer = contextBuffer;
+    *buffer = contextBuffer;
     *Len = bufferLen;
     return 0;
 }

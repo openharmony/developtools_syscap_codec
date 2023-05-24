@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _SYSCAP_DEFINE_H
-#define _SYSCAP_DEFINE_H
+#ifndef SYSCAP_DEFINE_H
+#define SYSCAP_DEFINE_H
 
 #include <stdint.h>
 
@@ -556,4 +556,4 @@ const static SyscapWithNum g_arraySyscap[] = {
 }
 #endif /* __cplusplus */
 #endif /* __cplusplus */
-#endif  // _SYSCAP_DEFINE_H
+#endif  // SYSCAP_DEFINE_H
