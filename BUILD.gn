@@ -135,6 +135,7 @@ build_ext_component("generate_pcid") {
 ohos_prebuilt_etc("PCID.sc") {
   deps = [ ":generate_pcid" ]
   source = "$root_out_dir/PCID.sc"
+  subsystem_name = "developtools"
   part_name = "syscap_codec"
 }
 

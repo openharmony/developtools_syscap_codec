@@ -55,7 +55,7 @@ struct SystemCapabilityAsyncContext {
     int status = 0;
 };
 
-static char* getSystemCapability()
+static char* GetSystemCapability()
 {
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt, sumLen;
@@ -179,7 +179,7 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
         env, nullptr, resource,
         [](napi_env env, void* data) {
             SystemCapabilityAsyncContext *asyncContext = (SystemCapabilityAsyncContext *)data;
-            char *syscapStr = getSystemCapability();
+            char *syscapStr = GetSystemCapability();
             if (syscapStr != nullptr) {
                 asyncContext->value = syscapStr;
                 asyncContext->status = 0;
@@ -248,7 +248,7 @@ static napi_module g_systemCapabilityModule = {
 /*
  * Module register function
  */
-extern "C" __attribute__((constructor)) void systemCapabilityRegisterModule(void)
+extern "C" __attribute__((constructor)) void SystemCapabilityRegisterModule(void)
 {
     napi_module_register(&g_systemCapabilityModule);
 }

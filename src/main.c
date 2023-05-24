@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     char *outputpath = getcwd(curpath, sizeof(curpath));
 
     while (1) {
-        static struct option long_options[] = {
+        static struct option longOptions[] = {
             {"help",           no_argument,       0,  'h' },
             {"version",        no_argument,       0,  'v' },
             {"RPCID",          no_argument,       0,  'R' },
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
             {0,                0,                 0,  0   }
         };
 
-        int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", long_options, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", longOptions, &optIndex);
         if (flag == -1) {
             break;
         }

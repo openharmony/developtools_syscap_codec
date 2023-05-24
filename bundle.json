@@ -15,6 +15,8 @@
     "syscap": [ "SystemCapability.Developtools.Syscap" ],
     "feature": [ "syscap_codec_config_path" ],
     "adapted_system_type": [ "small", "standard" ],
+    "rom": "0",
+    "ram": "0",
     "deps": {
       "components": [
         "napi",
