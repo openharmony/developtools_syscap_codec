@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _SYSCAP_CODEC_TEST_H
-#define _SYSCAP_CODEC_TEST_H
+#ifndef SYSCAP_CODEC_TEST_H
+#define SYSCAP_CODEC_TEST_H
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -38,4 +38,4 @@ public:
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-#endif /* _SYSCAP_CODEC_TEST_H */
+#endif /* SYSCAP_CODEC_TEST_H */

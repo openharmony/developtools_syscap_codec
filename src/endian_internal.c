@@ -13,15 +13,16 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
 #include "endian_internal.h"
 
 #define B_L_SWAP16(A)  ((((uint16_t)(A) & 0xff00) >> 8) | (((uint16_t)(A) & 0x00ff) << 8))
 #define B_L_SWAP32(A)  ((((uint32_t)(A) & 0xff000000) >> 24) | (((uint32_t)(A) & 0x00ff0000) >> 8) | \
     (((uint32_t)(A) & 0x0000ff00) << 8) | (((uint32_t)(A) & 0x000000ff) << 24))
 
-int32_t CheckEndian(void);
+static bool CheckEndian(void);
 
-int32_t CheckEndian(void)
+static bool CheckEndian(void)
 {
     union {
         int32_t i;
@@ -29,7 +30,7 @@ int32_t CheckEndian(void)
     } c;
     c.i = 0x12345678;
 
-    return (0x12 == c.s[0]);
+    return (c.s[0] == 0x12);
 }
 
 uint32_t HtonlInter(uint32_t h)

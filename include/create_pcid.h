@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _CREATE_PCID_H
-#define _CREATE_PCID_H
+#ifndef CREATE_PCID_H
+#define CREATE_PCID_H
 
 #include <stdint.h>
 
@@ -29,7 +29,7 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
-typedef struct pcidHeader {
+typedef struct PcidHeader {
     uint16_t apiVersion : 15;
     uint16_t apiVersionType : 1;
     uint16_t systemType : 3;
