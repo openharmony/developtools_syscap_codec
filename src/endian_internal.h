@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _ENDIAN_INTERNAL_H
-#define _ENDIAN_INTERNAL_H
+#ifndef ENDIAN_INTERNAL_H
+#define ENDIAN_INTERNAL_H
 
 #include <stdint.h>
 
@@ -35,4 +35,4 @@ extern uint16_t NtohsInter(uint16_t n);
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-#endif /* _ENDIAN_INTERNAL_H */
+#endif /* ENDIAN_INTERNAL_H */
