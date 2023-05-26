@@ -284,7 +284,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC_UTILS_LITE,
     WINDOW_WINDOW_MANAGER_LITE,
     // Add before here
-    SYSCAP_NUM_MAX = 960
+    SYSCAP_NUM_MAX = 500
 } SyscapNum;
 
 

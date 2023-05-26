@@ -46,6 +46,13 @@ ohos_shared_library("systemcapability") {
     "//third_party/bounds_checking_function:libsec_static",
   ]
 
+  if (syscap_codec_config_extern_path != "") {
+    deps += [ "..:gen_syscap_define_custom" ]
+    inputs = [ "${root_build_dir}/syscap_define_custom.h" ]
+    include_dirs += [ "${root_build_dir}" ]
+    cflags = [ "-DSYSCAP_DEFINE_EXTERN_ENABLE" ]
+  }
+
   external_deps = [ "napi:ace_napi" ]
 
   if (defined(ohos_lite)) {
