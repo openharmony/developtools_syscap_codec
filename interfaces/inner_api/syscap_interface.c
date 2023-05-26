@@ -22,10 +22,15 @@
 #include <securec.h>
 #include <limits.h>
 #include "cJSON.h"
-#include "syscap_define.h"
 #include "syscap_tool.h"
 #include "endian_internal.h"
 #include "syscap_interface.h"
+
+#ifdef SYSCAP_DEFINE_EXTERN_ENABLE
+#include "syscap_define_custom.h"
+#else
+#include "syscap_define.h"
+#endif
 
 #define OS_SYSCAP_BYTES 120
 #define SYSCAP_PREFIX_LEN 17

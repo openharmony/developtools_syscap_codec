@@ -24,9 +24,14 @@
 #include "securec.h"
 #include "endian_internal.h"
 #include "cJSON.h"
-#include "syscap_define.h"
 #include "create_pcid.h"
 #include "syscap_tool.h"
+
+#ifdef SYSCAP_DEFINE_EXTERN_ENABLE
+#include "syscap_define_custom.h"
+#else
+#include "syscap_define.h"
+#endif
 
 typedef struct RequiredProductCompatibilityIDHead {
     uint16_t apiVersion : 15;
