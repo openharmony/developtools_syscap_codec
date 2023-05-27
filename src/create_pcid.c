@@ -23,8 +23,13 @@
 #include "securec.h"
 #include "cJSON.h"
 #include "endian_internal.h"
-#include "syscap_define.h"
 #include "create_pcid.h"
+
+#ifdef SYSCAP_DEFINE_EXTERN_ENABLE
+#include "syscap_define_custom.h"
+#else
+#include "syscap_define.h"
+#endif
 
 #define SYSCAP_PREFIX_LEN 17
 #define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)

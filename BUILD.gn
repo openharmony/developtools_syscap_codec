@@ -18,6 +18,10 @@ import("config.gni")
 config("internal") {
   include_dirs = [ "include" ]
   include_dirs += [ syscap_codec_config_path ]
+  if (syscap_codec_config_extern_path != "") {
+    include_dirs += [ "${root_build_dir}" ]
+    cflags = [ "-DSYSCAP_DEFINE_EXTERN_ENABLE" ]
+  }
 }
 
 sources_platform_common = [
@@ -27,6 +31,11 @@ sources_platform_common = [
 ]
 
 ohos_executable("syscap_tool_bin") {
+  deps = []
+  if (syscap_codec_config_extern_path != "") {
+    deps += [ ":gen_syscap_define_custom" ]
+    inputs = [ "${root_build_dir}/syscap_define_custom.h" ]
+  }
   output_name = "syscap_tool"
   install_enable = true
   include_dirs = [ "src" ]
@@ -43,7 +52,7 @@ ohos_executable("syscap_tool_bin") {
   sources = [ "./src/main.c" ]
   sources += sources_platform_common
 
-  deps = [ "//third_party/bounds_checking_function:libsec_static" ]
+  deps += [ "//third_party/bounds_checking_function:libsec_static" ]
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
@@ -65,6 +74,11 @@ if (defined(ohos_lite)) {
     }
   } else {
     shared_library("syscap_interface_shared") {
+      deps = []
+      if (syscap_codec_config_extern_path != "") {
+        deps += [ ":gen_syscap_define_custom" ]
+        inputs = [ "${root_build_dir}/syscap_define_custom.h" ]
+      }
       _version_script = rebase_path("libsyscap_interface_shared.versionscript")
       if (!defined(ldflags)) {
         ldflags = []
@@ -83,7 +97,7 @@ if (defined(ohos_lite)) {
         "./src/syscap_tool.c",
       ]
 
-      deps = [
+      deps += [
         "//build/lite/config/component/cJSON:cjson_static",
         "//third_party/bounds_checking_function:libsec_static",
       ]
@@ -91,6 +105,11 @@ if (defined(ohos_lite)) {
   }
 } else {
   ohos_shared_library("syscap_interface_shared") {
+    deps = []
+    if (syscap_codec_config_extern_path != "") {
+      deps += [ ":gen_syscap_define_custom" ]
+      inputs = [ "${root_build_dir}/syscap_define_custom.h" ]
+    }
     version_script = "libsyscap_interface_shared.versionscript"
     include_dirs = [ "src" ]
     configs = [ ":internal" ]
@@ -100,7 +119,7 @@ if (defined(ohos_lite)) {
       "./src/endian_internal.c",
       "./src/syscap_tool.c",
     ]
-    deps = [
+    deps += [
       "//third_party/bounds_checking_function:libsec_static",
       "//third_party/cJSON:cjson_static",
     ]
@@ -137,6 +156,26 @@ ohos_prebuilt_etc("PCID.sc") {
   source = "$root_out_dir/PCID.sc"
   subsystem_name = "developtools"
   part_name = "syscap_codec"
+}
+
+if (syscap_codec_config_extern_path != "") {
+  # generate syscap_define_custom.h
+  action("gen_syscap_define_custom") {
+    script = "./tools/syscap_config_merge.py"
+    args = [
+      "--base",
+      rebase_path("include/codec_config/syscap_define.h"),
+      "--extern",
+      rebase_path(syscap_codec_config_extern_path),
+      "--output",
+      rebase_path("${root_build_dir}/syscap_define_custom.h"),
+    ]
+    inputs = [
+      "include/codec_config/syscap_define.h",
+      syscap_codec_config_extern_path,
+    ]
+    outputs = [ "${root_build_dir}/syscap_define_custom.h" ]
+  }
 }
 
 group("pcid_sc") {
