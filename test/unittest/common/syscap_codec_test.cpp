@@ -83,7 +83,8 @@ HWTEST_F(SyscapCodecTest, DecodeOsSyscap, TestSize.Level1)
 HWTEST_F(SyscapCodecTest, DecodePrivateSyscap, TestSize.Level1)
 {
     char (*priOutput)[SINGLE_SYSCAP_LEN] = nullptr;
-    char priSyscap[] = "Device.syscap1GEDR,Device.syscap2WREGW,Vendor.syscap3RGD,Vendor.syscap4RWEG,Vendor.syscap5REWGWE,";
+    char priSyscap[] = "Device.syscap1GEDR,Device.syscap2WREGW,Vendor."
+        "syscap3RGD,Vendor.syscap4RWEG,Vendor.syscap5REWGWE,";
     int decodePriCnt;
     char expectPriOutput001[] = "SystemCapability.Device.syscap1GEDR";
     char expectPriOutput002[] = "SystemCapability.Device.syscap2WREGW";

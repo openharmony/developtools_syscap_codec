@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _SYSCAP_INTERFACE_H
-#define _SYSCAP_INTERFACE_H
+#ifndef SYSCAP_INTERFACE_H
+#define SYSCAP_INTERFACE_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -76,4 +76,4 @@ int32_t FreeCompareError(CompareError *result);
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-#endif /* _SYSCAP_INTERFACE_H */
+#endif /* SYSCAP_INTERFACE_H */
