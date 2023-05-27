@@ -285,7 +285,7 @@ typedef enum SystemCapabilityNum {
     WINDOW_WINDOW_MANAGER_LITE,
     DRIVER_DEVICEMANAGER_EXTENSION,
     // Add before here
-    SYSCAP_NUM_MAX = 960
+    SYSCAP_BASIC_END = 500
 } SyscapNum;
 
 
