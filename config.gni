@@ -15,6 +15,5 @@ declare_args() {
   syscap_codec_config_path =
       # customization for head file syscap_define.h.
       "//developtools/syscap_codec/include/codec_config"
-  syscap_codec_config_extern_path =
-      "include/codec_config/syscap_define_extern.h"
+  syscap_codec_config_extern_path = ""
 }
