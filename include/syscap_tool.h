@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _SYSCAP_TOOL_H
-#define _SYSCAP_TOOL_H
+#ifndef SYSCAP_TOOL_H
+#define SYSCAP_TOOL_H
 
 #include <stdint.h>
 
@@ -48,4 +48,4 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
 #endif /* __cplusplus */
 #endif /* __cplusplus */
 
-#endif /* _SYSCAP_TOOL_H */
+#endif /* SYSCAP_TOOL_H */
