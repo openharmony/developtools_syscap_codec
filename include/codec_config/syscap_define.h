@@ -285,6 +285,7 @@ typedef enum SystemCapabilityNum {
     WINDOW_WINDOW_MANAGER_LITE,
     DRIVER_DEVICEMANAGER_EXTENSION,
     FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE,
+    REQUEST_FILETRANSFERAGENT,
     // Add before here
     SYSCAP_BASIC_END = 500
 } SyscapNum;
@@ -552,6 +553,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Driver.DeviceManager.Extension", DRIVER_DEVICEMANAGER_EXTENSION},
     {"SystemCapability.FileManagement.DistributedFileService.CloudSync.Core",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE},
+    {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
 };
 
 #ifdef __cplusplus
