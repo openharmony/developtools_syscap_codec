@@ -70,6 +70,7 @@ after_struct = '''
 #endif  // SYSCAP_DEFINE_H
 '''
 
+
 def gen_define_enum(enum:list):
     header = 'typedef enum SystemCapabilityNum {\n'
     tail = '} SyscapNum;\n\n'
