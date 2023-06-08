@@ -286,6 +286,7 @@ typedef enum SystemCapabilityNum {
     DRIVER_DEVICEMANAGER_EXTENSION,
     FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE,
     REQUEST_FILETRANSFERAGENT,
+    HIVIEWDFX_HIVIEW_LOGLIBRARY,
     // Add before here
     SYSCAP_BASIC_END = 500
 } SyscapNum;
@@ -356,6 +357,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.HiviewDFX.HiTrace", HIVIEWDFX_HITRACE},
     {"SystemCapability.HiviewDFX.Hiview", HIVIEWDFX_HIVIEW},
     {"SystemCapability.HiviewDFX.Hiview.FaultLogger", HIVIEWDFX_HIVIEW_FAULTLOGGER},
+    {"SystemCapability.HiviewDFX.Hiview.LogLibrary", HIVIEWDFX_HIVIEW_LOGLIBRARY},
     {"SystemCapability.HiviewDFX.HiviewLite", HIVIEWDFX_HIVIEWLITE},
     {"SystemCapability.Global.I18n", GLOBAL_I18N},
     {"SystemCapability.Kernel.Linux", KERNEL_LINUX},
