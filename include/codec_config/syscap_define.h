@@ -286,7 +286,7 @@ typedef enum SystemCapabilityNum {
     DRIVER_DEVICEMANAGER_EXTENSION,
     FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE,
     // Add before here
-    SYSCAP_BASIC_END = 500
+    SYSCAP_BASIC_END = 500,
 } SyscapNum;
 
 

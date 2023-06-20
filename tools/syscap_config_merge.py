@@ -15,13 +15,11 @@
 
 '''
 注意：
-1. base 的枚举定义，须在末尾标记最大值。
-2. extern 的枚举定义，须在开始位置标记最大值。
-3. base 的 syscap 数组，必须以逗号(),)结尾。
+1. 扩展syscap头文件的枚举定义，须在开始位置标记最小值，且必须大于等于500。
 '''
 import argparse
 
-licence = '''/*
+LICENCE = '''/*
  * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +36,7 @@ licence = '''/*
  
 '''
 
-before_enum = '''#ifndef SYSCAP_DEFINE_H
+BEFORE_ENUM = '''#ifndef SYSCAP_DEFINE_H
 #define SYSCAP_DEFINE_H
 
 #include <stdint.h>
@@ -61,7 +59,7 @@ typedef struct SystemCapabilityWithNum {
  */
 '''
 
-after_struct = '''
+AFTER_STRUCT = '''
 #ifdef __cplusplus
 #if __cplusplus
 }
@@ -131,7 +129,7 @@ def assemble_header_file(fenum, fstru):
     enum, stru = merge_define(fenum, fstru)
     enum_def = gen_define_enum(enum)
     stru_def = gen_define_array(stru)
-    return licence + before_enum + enum_def + stru_def + after_struct
+    return LICENCE + BEFORE_ENUM + enum_def + stru_def + AFTER_STRUCT
 
 
 def parse_args():
