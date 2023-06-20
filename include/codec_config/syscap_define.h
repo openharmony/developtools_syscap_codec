@@ -290,7 +290,7 @@ typedef enum SystemCapabilityNum {
     DRIVER_USB_EXTENSION,
     HIVIEWDFX_HIVIEW_LOGLIBRARY,
     // Add before here
-    SYSCAP_BASIC_END = 500
+    SYSCAP_BASIC_END = 500,
 } SyscapNum;
 
 
