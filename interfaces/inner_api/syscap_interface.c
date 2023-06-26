@@ -242,53 +242,52 @@ bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SY
     return true;
 }
 
-bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
+int32_t GetPriSyscapCount(char *input)
 {
-    char (*outputArray)[SINGLE_SYSCAP_LEN] = NULL;
+    int32_t syscapCnt = 0;
+
     char *inputPos = input;
-    int bufferLen, ret;
-    int syscapCnt = 0;
-
-    if (input == NULL) {
-        *output = outputArray;
-        *outputCnt = syscapCnt;
-        return false;
-    }
-
     while (*inputPos != '\0') {
         if (*inputPos == ',') {
             syscapCnt++;
         }
         inputPos++;
     }
+
+    return syscapCnt;
+}
+
+bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *outputCnt)
+{
+    char *inputPos = input;
+    char (*outputArray)[SINGLE_SYSCAP_LEN] = NULL;
+
+    if (input == NULL) {
+        return false;
+    }
+
+    int syscapCnt = GetPriSyscapCount(inputPos);
+    *outputCnt = syscapCnt;
     if (syscapCnt == 0) {
-        *output = outputArray;
-        *outputCnt = syscapCnt;
         return true;
     }
 
-    inputPos = input;
-    bufferLen = SINGLE_SYSCAP_LEN * syscapCnt;
+    int bufferLen = SINGLE_SYSCAP_LEN * syscapCnt;
     outputArray = (char (*)[SINGLE_SYSCAP_LEN])malloc(bufferLen);
     if (outputArray == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", bufferLen, errno);
-        *outputCnt = 0;
         return false;
     }
     (void)memset_s(outputArray, bufferLen, 0, bufferLen);
 
     *output = outputArray;
+    inputPos = input;
     char buffer[SINGLE_FEAT_LEN] = {0};
     char *bufferPos = buffer;
     while (*inputPos != '\0') {
         if (*inputPos == ',') {
             *bufferPos = '\0';
-            ret = sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer);
-            if (ret == -1) {
-                PRINT_ERR("sprintf_s failed\n");
-                *outputCnt = 0;
+            if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
-                outputArray = NULL;
                 return false;
             }
             bufferPos = buffer;
@@ -299,7 +298,6 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
         *bufferPos++ = *inputPos++;
     }
 
-    *outputCnt = syscapCnt;
     return true;
 }
 
