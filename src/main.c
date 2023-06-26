@@ -18,7 +18,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <limits.h>
 #include "securec.h"
 #include "syscap_tool.h"
@@ -29,7 +28,7 @@
         printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
     } while (0)
-#define SYSCAP_VERSION "2.0.0"
+#define SYSCAP_VERSION "2.0.1"
 #define OUTPUT_VERSION_LEN 200
 #define ENCODE 0
 #define DECODE 1
