@@ -160,7 +160,6 @@ typedef enum SystemCapabilityNum {
     SENSORS_MISCDEVICE,
     SENSORS_SENSOR,
     SENSORS_SENSOR_LITE,
-    SENSORS_MISCDEVICE_LITE,
     TELEPHONY_CALLMANAGER,
     TELEPHONY_CELLULARCALL,
     TELEPHONY_CELLULARDATA,
@@ -290,6 +289,7 @@ typedef enum SystemCapabilityNum {
     DRIVER_HID_EXTENSION,
     DRIVER_USB_EXTENSION,
     HIVIEWDFX_HIVIEW_LOGLIBRARY,
+    SENSORS_MISCDEVICE_LITE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -428,7 +428,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Sensors.MiscDevice", SENSORS_MISCDEVICE},
     {"SystemCapability.Sensors.Sensor", SENSORS_SENSOR},
     {"SystemCapability.Sensors.Sensor.Lite", SENSORS_SENSOR_LITE},
-    {"SystemCapability.Sensors.MiscDevice.Lite", SENSORS_MISCDEVICE_LITE},
     {"SystemCapability.Telephony.CallManager", TELEPHONY_CALLMANAGER},
     {"SystemCapability.Telephony.CellularCall", TELEPHONY_CELLULARCALL},
     {"SystemCapability.Telephony.CellularData", TELEPHONY_CELLULARDATA},
@@ -562,6 +561,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
     {"SystemCapability.Driver.HID.Extension", DRIVER_HID_EXTENSION},
     {"SystemCapability.Driver.USB.Extension", DRIVER_USB_EXTENSION},
+    {"SystemCapability.Sensors.MiscDevice.Lite", SENSORS_MISCDEVICE_LITE},
 };
 
 #ifdef __cplusplus
