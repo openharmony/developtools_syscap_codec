@@ -289,6 +289,8 @@ typedef enum SystemCapabilityNum {
     DRIVER_HID_EXTENSION,
     DRIVER_USB_EXTENSION,
     HIVIEWDFX_HIVIEW_LOGLIBRARY,
+    SECURITY_HUKS_CORE,
+    SECURITY_HUKS_EXTENSION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -560,6 +562,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
     {"SystemCapability.Driver.HID.Extension", DRIVER_HID_EXTENSION},
     {"SystemCapability.Driver.USB.Extension", DRIVER_USB_EXTENSION},
+    {"SystemCapability.Security.Huks.Core", SECURITY_HUKS_CORE},
+    {"SystemCapability.Security.Huks.Extension", SECURITY_HUKS_EXTENSION},
 };
 
 #ifdef __cplusplus
