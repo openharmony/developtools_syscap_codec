@@ -563,61 +563,37 @@ FREE_CONTEXT_OUT:
     return ret;
 }
 
-int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uint32_t osArraySize,
-                                 char **priSyscap, uint32_t *priSyscapLen)
+char *CopyInputString(const char *inputString)
 {
-    int32_t ret = 0;
-    uint32_t i;
-    
-    uint32_t count = 0;
-    char *temp = NULL;
-    char *tok = NULL;
-    char *private = NULL;
-
-    if (osArraySize != PCID_OUT_BUFFER) {
-        return -1;
-    }
-
-    // copy to temp string input
-    if (inputString == NULL) {
-        PRINT_ERR("inputString is null.\n");
-        return -1;
+    if (inputString == NULL || *inputString == '\0') {
+        PRINT_ERR("inputString is null or empty.\n");
+        return NULL;
     }
     size_t inputLen = strlen(inputString);
     if (inputLen > STRING_FORMAT_LEN_MAX) {
         PRINT_ERR("input string too long(%zu).\n", inputLen);
-        return -1;
+        return NULL;
     }
     char *input = (char *)malloc(inputLen + 1);
     if (input == NULL) {
         PRINT_ERR("malloc failed.\n");
-        return -1;
+        return NULL;
     }
-    ret = strcpy_s(input, inputLen + 1, inputString);
+    int32_t ret = strcpy_s(input, inputLen + 1, inputString);
     if (ret != EOK) {
         PRINT_ERR("strcpy_s failed.\n");
         free(input);
-        return -1;
+        return NULL;
     }
     input[inputLen] = '\0';
+    return input;
+}
 
-    // get os syscap data
-    for (i = 0; i < PCID_OUT_BUFFER; i++) {
-        ret = sscanf_s(input, "%u,%s", &osArray[i], input, inputLen);
-        if (ret == -1) {
-            PRINT_ERR("sscanf_s failed.\n");
-            free(input);
-            return -1;
-        }
-    }
-
-    // count private syscap
-    if (*input == '\0') {
-        *priSyscap = 0;
-        *priSyscapLen = 0;
-        goto SKIP_PRI_SYSCAP;
-    }
-    for (i = 0; *(input + i) != '\0'; i++) {
+int32_t GetPriSyscapData(char *input, char **priSyscap, uint32_t *priSyscapLen)
+{
+    // count private syscaps
+    uint32_t count = 0;
+    for (uint32_t i = 0; *(input + i) != '\0'; i++) {
         if (*(input + i) == ',') {
             count++;
         }
@@ -627,20 +603,19 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
     char *priSysCapOut = (char *)malloc(SINGLE_SYSCAP_LEN * count);
     if (priSysCapOut == NULL) {
         PRINT_ERR("sscanf_s failed.\n");
-        free(input);
         return -1;
     }
     (void)memset_s(priSysCapOut, SINGLE_SYSCAP_LEN * count, 0, SINGLE_SYSCAP_LEN * count);
-    private = priSysCapOut;
+    char *private = priSysCapOut;
 
-    temp = strtok_r(input, ",", &tok);
+    char *tok = NULL;
+    char *temp = strtok_r(input, ",", &tok);
     while (temp) {
-        ret = strncpy_s(private, SINGLE_SYSCAP_LEN,
+        int ret = strncpy_s(private, SINGLE_SYSCAP_LEN,
                         temp, SINGLE_SYSCAP_LEN - 1);
         if (ret != EOK) {
             PRINT_ERR("strncpy_s failed.\n");
-            free(input);
-            free(private);
+            free(priSysCapOut);
             return -1;
         }
         temp = strtok_r(NULL, ",", &tok);
@@ -649,28 +624,112 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
 
     *priSyscap = priSysCapOut;
     *priSyscapLen = count;
+    return 0;
+}
 
-SKIP_PRI_SYSCAP:
+int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uint32_t osArraySize,
+                                 char **priSyscap, uint32_t *priSyscapLen)
+{
+    if (osArraySize != PCID_OUT_BUFFER) {
+        return -1;
+    }
+
+    // copy origin string
+    char *input = CopyInputString(inputString);
+    if (input == NULL) {
+        return -1;
+    }
+
+    // get os syscap data
+    for (uint32_t i = 0; i < PCID_OUT_BUFFER; i++) {
+        if (sscanf_s(input, "%u,%s", &osArray[i], input, strlen(input)) == -1) {
+            PRINT_ERR("sscanf_s failed.\n");
+            free(input);
+            return -1;
+        }
+    }
+
+    // get private syscap data
+    if (GetPriSyscapData(input, priSyscap, priSyscapLen) != 0) {
+        free(input);
+        return -1;
+    }
+
     free(input);
     return 0;
+}
+
+int32_t CompareOsSyscap(uint32_t pcidOsAarry[], uint32_t rpcidOsAarry[])
+{
+    int32_t ossyscapFlag = 0;
+    const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
+
+    for (uint32_t i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
+        uint32_t blockBits = (pcidOsAarry[i] ^ rpcidOsAarry[i]) & rpcidOsAarry[i];
+        if (!blockBits) {
+            continue;
+        }
+        for (uint8_t k = 0; k < INT_BIT; k++) {
+            if (!(blockBits & (1U << k))) {
+                continue;
+            }
+            // 2, header of pcid & rpcid
+            size_t pos = (size_t)((i - 2) * INT_BIT + k);
+            if (pos < allSyscapNum) {
+                printf("Missing: %s\n", g_arraySyscap[pos].str);
+                ossyscapFlag += 1;
+            }
+        }
+    }
+    return ossyscapFlag;
+}
+
+int32_t ComparePriSyscap(char *pcid, char *rpcid, uint32_t pcidLen, uint32_t rpcidLen)
+{
+    uint32_t i, j;
+    bool priSysFound = false;
+    int32_t prisyscapFlag = 0;
+
+    for (i = 0; i < rpcidLen; i++) {
+        for (j = 0; j < pcidLen; j++) {
+            if (strcmp(rpcid + SINGLE_SYSCAP_LEN * i,
+                       pcid + SINGLE_SYSCAP_LEN * j) == 0) {
+                priSysFound = true;
+                break;
+            }
+        }
+        if (priSysFound != true) {
+            printf("Missing: %s\n", rpcid + SINGLE_SYSCAP_LEN * i);
+            prisyscapFlag += 1;
+        }
+        priSysFound = false;
+    }
+
+    return prisyscapFlag;
+}
+
+int32_t CompoareVersion(uint32_t *pcidOsAarry, uint32_t *rpcidOsAarry)
+{
+    int32_t versionFlag = 0;
+    uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
+    uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
+    if (pcidVersion < rpcidVersion) {
+        printf("ERROR: Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
+        versionFlag = 1;
+    }
+    return versionFlag;
 }
 
 int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t type)
 {
     int32_t ret;
-    int32_t versionFlag = 0;
-    int32_t ossyscapFlag = 0;
-    int32_t prisyscapFlag = 0;
     char *pcidContent = NULL;
     char *rpcidContent = NULL;
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
     uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen;
-    uint32_t i, j, temp1, temp2;
-    bool priSysFound;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
-    const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
 
     if (type == TYPE_FILE) {
         if (GetFileContext(pcidFile, &pcidContent, &pcidContentLen)) {
@@ -698,49 +757,10 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
         return -1;
     }
-    // compare version
-    uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
-    uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
-    if (pcidVersion < rpcidVersion) {
-        printf("ERROR: Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
-        versionFlag = 1;
-    }
-    // compare os syscap
-    for (i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
-        temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
-        temp2 = temp1 & rpcidOsAarry[i];
-        if (!temp2) {
-            continue;
-        }
-        for (uint8_t k = 0; k < INT_BIT; k++) {
-            if (!(temp2 & (1U << k))) {
-                continue;
-            }
-            // 2, header of pcid & rpcid
-            size_t pos = (size_t)((i - 2) * INT_BIT + k);
-            if (pos < allSyscapNum) {
-                printf("Missing: %s\n", g_arraySyscap[pos].str);
-                ossyscapFlag += 1;
-            }
-        }
-    }
-    // compare pri syscap
-    priSysFound = false;
-    for (i = 0; i < rpcidPriSyscapLen; i++) {
-        for (j = 0; j < pcidPriSyscapLen; j++) {
-            if (strcmp(rpcidPriSyscap + SINGLE_SYSCAP_LEN * i,
-                       pcidPriSyscap + SINGLE_SYSCAP_LEN * j) == 0) {
-                priSysFound = true;
-                break;
-            }
-        }
-        if (priSysFound != true) {
-            printf("Missing: %s\n", rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
-            prisyscapFlag += 1;
-        }
-        priSysFound = false;
-    }
 
+    int32_t versionFlag = CompoareVersion(pcidOsAarry, rpcidOsAarry);
+    int32_t ossyscapFlag = CompareOsSyscap(pcidOsAarry, rpcidOsAarry);
+    int32_t prisyscapFlag = ComparePriSyscap(pcidPriSyscap, rpcidPriSyscap, pcidPriSyscapLen, rpcidPriSyscapLen);
     if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
         printf("Succeed! The pcid meets the rpcid.\n");
     } else {
