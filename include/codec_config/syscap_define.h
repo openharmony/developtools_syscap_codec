@@ -294,6 +294,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE,
     POWERMANAGER_DISPLAYPOWERMANAGER_LITE,
     FILEMANAGEMENT_FILE_FILEIO_LITE,
+    MULTIMEDIA_AVSESSION_AVCAST,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -531,6 +532,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.BundleManager.BundleFramework.Resource", BUNDLEMANAGER_BUNDLEFRAMEWORK_RESOURCE},
     {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
     {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
+    {"SystemCapability.Multimedia.AVSession.AVCast", MULTIMEDIA_AVSESSION_AVCAST},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
