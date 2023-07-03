@@ -292,7 +292,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_HUKS_CORE,
     SECURITY_HUKS_EXTENSION,
     SENSORS_MISCDEVICE_LITE,
-    DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_Lite,
+    DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE,
     FILEMANAGEMENT_FILE_FILEIO_LITE,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -332,7 +332,7 @@ const static SyscapWithNum g_arraySyscap[] = {
         DISTRIBUTEDDATAMANAGER_KVSTORE_DISTRIBUTEDKVSTORE},
     {"SystemCapability.DistributedDataManager.KVStore.Lite", DISTRIBUTEDDATAMANAGER_KVSTORE_LITE},
     {"SystemCapability.DistributedDataManager.Preferences.Core", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE},
-    {"SystemCapability.DistributedDataManager.Preferences.Core.Lite", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_Lite},
+    {"SystemCapability.DistributedDataManager.Preferences.Core.Lite", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE},
     {"SystemCapability.DistributedDataManager.RelationalStore.Core", DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE},
     {"SystemCapability.DistributedHardware.DeviceManager", DISTRIBUTEDHARDWARE_DEVICEMANAGER},
     {"SystemCapability.DistributedHardware.DistributedCamera", DISTRIBUTEDHARDWARE_DISTRIBUTEDCAMERA},
