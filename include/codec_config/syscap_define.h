@@ -293,6 +293,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_HUKS_EXTENSION,
     SENSORS_MISCDEVICE_LITE,
     DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE,
+    POWERMANAGER_DISPLAYPOWERMANAGER_LITE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -410,6 +411,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.PowerManager.BatteryManager.Lite", POWERMANAGER_BATTERYMANAGER_LITE},
     {"SystemCapability.PowerManager.BatteryStatistics", POWERMANAGER_BATTERYSTATISTICS},
     {"SystemCapability.PowerManager.DisplayPowerManager", POWERMANAGER_DISPLAYPOWERMANAGER},
+    {"SystemCapability.PowerManager.DisplayPowerManager.Lite", POWERMANAGER_DISPLAYPOWERMANAGER_LITE},
     {"SystemCapability.PowerManager.PowerManager.Core", POWERMANAGER_POWERMANAGER_CORE},
     {"SystemCapability.PowerManager.PowerManager.Extension", POWERMANAGER_POWERMANAGER_EXTENSION},
     {"SystemCapability.PowerManager.PowerManager.Lite", POWERMANAGER_POWERMANAGER_LITE},
