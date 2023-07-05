@@ -295,6 +295,7 @@ typedef enum SystemCapabilityNum {
     POWERMANAGER_DISPLAYPOWERMANAGER_LITE,
     FILEMANAGEMENT_FILE_FILEIO_LITE,
     MULTIMEDIA_AVSESSION_AVCAST,
+    STARTUP_SYSTEMINFO_LITE,
     MULTIMEDIA_MEDIA_AVSCREENCAPTURE,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -500,6 +501,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.Pointer", MULTIMODALINPUT_INPUT_POINTER},
     {"SystemCapability.Communication.IPC.Core", COMMUNICATION_IPC_CORE},
     {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
+    {"SystemCapability.Startup.SystemInfo.Lite", STARTUP_SYSTEMINFO_LITE},
     {"SystemCapability.Ai.MindSpore", AI_MINDSPORE},
     {"SystemCapability.FileManagement.StorageService.SpatialStatistics",
         FILEMANAGEMENT_STORAGESERVICE_SPATIALSTATISTICS},
