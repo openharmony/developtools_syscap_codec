@@ -296,6 +296,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_FILE_FILEIO_LITE,
     MULTIMEDIA_AVSESSION_AVCAST,
     STARTUP_SYSTEMINFO_LITE,
+    CLOUD_ADS,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -574,6 +575,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.Huks.Extension", SECURITY_HUKS_EXTENSION},
     {"SystemCapability.Sensors.MiscDevice.Lite", SENSORS_MISCDEVICE_LITE},
     {"SystemCapability.FileManagement.File.FileIO.Lite", FILEMANAGEMENT_FILE_FILEIO_LITE},
+    {"SystemCapability.Cloud.Ads", CLOUD_ADS},
 };
 
 #ifdef __cplusplus
