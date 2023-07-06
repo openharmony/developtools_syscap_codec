@@ -297,6 +297,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AVSESSION_AVCAST,
     STARTUP_SYSTEMINFO_LITE,
     CLOUD_ADS,
+    MULTIMEDIA_AUDIO_PLAYBACKCAPTURE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -576,6 +577,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Sensors.MiscDevice.Lite", SENSORS_MISCDEVICE_LITE},
     {"SystemCapability.FileManagement.File.FileIO.Lite", FILEMANAGEMENT_FILE_FILEIO_LITE},
     {"SystemCapability.Cloud.Ads", CLOUD_ADS},
+    {"SystemCapability.Multimedia.Audio.PlaybackCapture", MULTIMEDIA_AUDIO_PLAYBACKCAPTURE},
 };
 
 #ifdef __cplusplus
