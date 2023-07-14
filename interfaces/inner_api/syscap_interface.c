@@ -557,10 +557,11 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     char *rpcidPriSyscap = NULL;
     bool priSysFound;
     uint32_t pcidPriSyscapLen, rpcidPriSyscapLen;
-    uint32_t i, j, temp1, temp2;
+    uint32_t i, j;
     uint32_t retFlag = 0;
     uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
+    const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
 
     ret =  SeparateSyscapFromString(pcidString, pcidOsAarry, PCID_OUT_BUFFER,
                                     &pcidPriSyscap, &pcidPriSyscapLen);
@@ -580,27 +581,33 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     }
     // compare os sysscap
     for (i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
-        temp1 = pcidOsAarry[i] ^ rpcidOsAarry[i];
-        temp2 = temp1 & rpcidOsAarry[i];
-        if (!temp2) {
+        uint32_t blockBits = (pcidOsAarry[i] ^ rpcidOsAarry[i]) & rpcidOsAarry[i];
+        if (!blockBits) {
             continue;
         }
         for (uint8_t k = 0; k < INT_BIT; k++) {
-            if (temp2 & (1U << k)) {
-                char *temp = (char *)malloc(sizeof(char) * SINGLE_SYSCAP_LEN);
-                if (temp == NULL) {
+            if (blockBits & (1U << k)) {
+                char *tempSyscap = (char *)malloc(sizeof(char) * SINGLE_SYSCAP_LEN);
+                if (tempSyscap == NULL) {
                     PRINT_ERR("malloc failed.\n");
                     FreeCompareError(result);
                     return -1;
                 }
-                ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
-                               g_arraySyscap[(i - 2) * INT_BIT + k].str); // 2, header of pcid & rpcid
+                uint32_t pos = (i - 2) * INT_BIT + k;
+                uint32_t t_;
+                for (t_ = 0; t_ < allSyscapNum; t_++) {
+                    if (g_arraySyscap[t_].num == pos) {
+                        break;
+                    }
+                }
+                ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN,
+                               g_arraySyscap[t_].str); // 2, header of pcid & rpcid
                 if (ret != EOK) {
                     PRINT_ERR("strcpy_s failed.\n");
                     FreeCompareError(result);
                     return -1;
                 }
-                result->syscap[ossyscapFlag++] = temp;
+                result->syscap[ossyscapFlag++] = tempSyscap;
             }
         }
     }
