@@ -659,6 +659,17 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
     return 0;
 }
 
+int32_t GetSyscapByIndex(uint32_t index)
+{
+    const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
+    for (uint32_t i = 0; i < allSyscapNum; i++) {
+        if (g_arraySyscap[i].num == index) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int32_t CompareOsSyscap(uint32_t pcidOsAarry[], uint32_t rpcidOsAarry[])
 {
     int32_t ossyscapFlag = 0;
@@ -675,10 +686,11 @@ int32_t CompareOsSyscap(uint32_t pcidOsAarry[], uint32_t rpcidOsAarry[])
             }
             // 2, header of pcid & rpcid
             size_t pos = (size_t)((i - 2) * INT_BIT + k);
-            if (pos < allSyscapNum) {
-                printf("Missing: %s\n", g_arraySyscap[pos].str);
-                ossyscapFlag += 1;
+            if (pos >= allSyscapNum) {
+                break;
             }
+            printf("Missing: %s\n", g_arraySyscap[GetSyscapByIndex(pos)].str);
+            ossyscapFlag += 1;
         }
     }
     return ossyscapFlag;
