@@ -176,9 +176,13 @@ int32_t SetOsSyscap(PCIDMain *pcidBuffer, uint32_t osCapSize,
 
     for (uint32_t i = 0; i < osCapSize; i++) {
         jsonArrayItem = cJSON_GetArrayItem(jsonOsSyscapObj, (int)i);
+        if (jsonArrayItem == NULL || !cJSON_IsString(jsonArrayItem)) {
+            PRINT_ERR("Get jsonArrayItem failed.");
+            return -1;
+        }
         osCapIndex = cJSON_GetObjectItem(allOsSyscapObj, jsonArrayItem->valuestring);
-        if (osCapIndex == NULL) {
-            PRINT_ERR("can't find the syscap: %s, please add it in syscap_define.h.\n", jsonArrayItem->valuestring);
+        if (osCapIndex == NULL || !cJSON_IsNumber(osCapIndex)) {
+            PRINT_ERR("Get osCapIndex failed.");
             return -1;
         }
         sectorOfBits = (osCapIndex->valueint) / UINT8_BIT;
@@ -200,6 +204,10 @@ int32_t SetPriSyscap(PCIDMain *pcidBuffer, cJSON *jsonPriSyscapObj,
     char *priSyscapStr = NULL;
     for (uint32_t i = 0; i < privateCapSize; i++) {
         cJSON *jsonArrayItem = cJSON_GetArrayItem(jsonPriSyscapObj, (int)i);
+        if (jsonArrayItem == NULL || !cJSON_IsString(jsonArrayItem)) {
+            PRINT_ERR("get jsonArrayItem failed!");
+            return -1;
+        }
         priSyscapStr = strchr(jsonArrayItem->valuestring, '.') + 1;
         errno_t nRet = strcat_s(priSyscapHead, allPriSyscapStrLen + 1, priSyscapStr);
         nRet += strcat_s(priSyscapHead, allPriSyscapStrLen + 1, ",");
@@ -285,6 +293,10 @@ int32_t GetPriSyscapLen(uint32_t privateCapSize, cJSON *jsonPriSyscapObj, uint16
 {
     for (uint32_t i = 0; i < privateCapSize; i++) {
         cJSON *jsonArrayItem = cJSON_GetArrayItem(jsonPriSyscapObj, (int)i);
+        if (jsonArrayItem == NULL || !cJSON_IsString(jsonArrayItem)) {
+            PRINT_ERR("Get jsonArrayItem failed.");
+            return -1;
+        }
         *len += (uint16_t)strlen(strchr(jsonArrayItem->valuestring, '.') + 1);
         (*len)++;  // for separator ','
     }
