@@ -670,13 +670,13 @@ int32_t GetSyscapByIndex(uint32_t index)
     return -1;
 }
 
-int32_t CompareOsSyscap(uint32_t pcidOsAarry[], uint32_t rpcidOsAarry[])
+int32_t CompareOsSyscap(const uint32_t pcidOsArray[], const uint32_t rpcidOsAarry[])
 {
     int32_t ossyscapFlag = 0;
     const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
 
     for (uint32_t i = 2; i < PCID_OUT_BUFFER; i++) { // 2, header of pcid & rpcid
-        uint32_t blockBits = (pcidOsAarry[i] ^ rpcidOsAarry[i]) & rpcidOsAarry[i];
+        uint32_t blockBits = (pcidOsArray[i] ^ rpcidOsAarry[i]) & rpcidOsAarry[i];
         if (!blockBits) {
             continue;
         }
@@ -720,10 +720,10 @@ int32_t ComparePriSyscap(char *pcid, char *rpcid, uint32_t pcidLen, uint32_t rpc
     return prisyscapFlag;
 }
 
-int32_t CompoareVersion(uint32_t *pcidOsAarry, uint32_t *rpcidOsAarry)
+int32_t CompoareVersion(uint32_t *pcidOsArray, uint32_t *rpcidOsAarry)
 {
     int32_t versionFlag = 0;
-    uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsAarry)->apiVersion);
+    uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsArray)->apiVersion);
     uint16_t rpcidVersion = NtohsInter(((RPCIDHead *)rpcidOsAarry)->apiVersion);
     if (pcidVersion < rpcidVersion) {
         printf("ERROR: Pcid version(%u) less than rpcid version(%u).\n", pcidVersion, rpcidVersion);
@@ -740,7 +740,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
     char *pcidPriSyscap = NULL;
     char *rpcidPriSyscap = NULL;
     uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen;
-    uint32_t pcidOsAarry[PCID_OUT_BUFFER] = {0};
+    uint32_t pcidOsArray[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
 
     if (type == TYPE_FILE) {
@@ -761,7 +761,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         return -1;
     }
 
-    ret =  SeparateSyscapFromString(pcidContent, pcidOsAarry, PCID_OUT_BUFFER,
+    ret =  SeparateSyscapFromString(pcidContent, pcidOsArray, PCID_OUT_BUFFER,
                                     &pcidPriSyscap, &pcidPriSyscapLen);
     ret += SeparateSyscapFromString(rpcidContent, rpcidOsAarry, RPCID_OUT_BUFFER,
                                     &rpcidPriSyscap, &rpcidPriSyscapLen);
@@ -770,8 +770,8 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         return -1;
     }
 
-    int32_t versionFlag = CompoareVersion(pcidOsAarry, rpcidOsAarry);
-    int32_t ossyscapFlag = CompareOsSyscap(pcidOsAarry, rpcidOsAarry);
+    int32_t versionFlag = CompoareVersion(pcidOsArray, rpcidOsAarry);
+    int32_t ossyscapFlag = CompareOsSyscap(pcidOsArray, rpcidOsAarry);
     int32_t prisyscapFlag = ComparePriSyscap(pcidPriSyscap, rpcidPriSyscap, pcidPriSyscapLen, rpcidPriSyscapLen);
     if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
         printf("Succeed! The pcid meets the rpcid.\n");

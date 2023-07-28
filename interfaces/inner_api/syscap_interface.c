@@ -594,14 +594,14 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
                     return -1;
                 }
                 uint32_t pos = (i - 2) * INT_BIT + k;
-                uint32_t t_;
-                for (t_ = 0; t_ < allSyscapNum; t_++) {
-                    if (g_arraySyscap[t_].num == pos) {
+                uint32_t t;
+                for (t = 0; t < allSyscapNum; t++) {
+                    if (g_arraySyscap[t].num == pos) {
                         break;
                     }
                 }
                 ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN,
-                               g_arraySyscap[t_].str); // 2, header of pcid & rpcid
+                               g_arraySyscap[t].str); // 2, header of pcid & rpcid
                 if (ret != EOK) {
                     PRINT_ERR("strcpy_s failed.\n");
                     FreeCompareError(result);
