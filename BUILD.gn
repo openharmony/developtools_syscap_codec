@@ -28,6 +28,7 @@ sources_platform_common = [
   "./src/syscap_tool.c",
   "./src/create_pcid.c",
   "./src/endian_internal.c",
+  "./src/context_tool.c",
 ]
 
 ohos_executable("syscap_tool_bin") {
@@ -93,6 +94,7 @@ if (defined(ohos_lite)) {
       public_configs = [ ":syscap_interface_public_config" ]
       sources = [
         "./interfaces/inner_api/syscap_interface.c",
+        "./src/context_tool.c",
         "./src/endian_internal.c",
         "./src/syscap_tool.c",
       ]
@@ -116,6 +118,7 @@ if (defined(ohos_lite)) {
     public_configs = [ ":syscap_interface_public_config" ]
     sources = [
       "./interfaces/inner_api/syscap_interface.c",
+      "./src/context_tool.c",
       "./src/endian_internal.c",
       "./src/syscap_tool.c",
     ]

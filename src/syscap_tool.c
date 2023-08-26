@@ -26,17 +26,13 @@
 #include "cJSON.h"
 #include "create_pcid.h"
 #include "syscap_tool.h"
+#include "context_tool.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
 #else
 #include "syscap_define.h"
 #endif
-
-typedef struct RequiredProductCompatibilityIDHead {
-    uint16_t apiVersion : 15;
-    uint16_t apiVersionType : 1;
-} RPCIDHead;
 
 #define SYSCAP_PREFIX_LEN 17
 #define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
@@ -47,135 +43,6 @@ typedef struct RequiredProductCompatibilityIDHead {
 #define BYTES_OF_OS_SYSCAP 120
 #define U32_TO_STR_MAX_LEN 11
 #define STRING_FORMAT_LEN_MAX 1024
-
-#define PRINT_ERR(...) \
-    do { \
-        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
-        printf(__VA_ARGS__); \
-    } while (0)
-
-static void FreeContextBuffer(char *contextBuffer)
-{
-    (void)free(contextBuffer);
-}
-
-static int32_t GetFileContext(char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
-{
-    int32_t ret;
-    FILE *fp = NULL;
-    struct stat statBuf;
-    char *contextBuffer = NULL;
-    char path[PATH_MAX + 1] = {0x00};
-
-#ifdef _POSIX_
-    if (strlen(inputFile) > PATH_MAX || strncpy_s(path, PATH_MAX, inputFile, strlen(inputFile)) != EOK) {
-        PRINT_ERR("get path(%s) failed\n", inputFile);
-        return -1;
-    }
-#else
-    if (strlen(inputFile) > PATH_MAX || realpath(inputFile, path) == NULL) {
-        PRINT_ERR("get file(%s) real path failed\n", inputFile);
-        return -1;
-    }
-#endif
-
-    ret = stat(path, &statBuf);
-    if (ret != 0) {
-        PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", path, errno);
-        return -1;
-    }
-    if (!(statBuf.st_mode & S_IRUSR)) {
-        PRINT_ERR("don't have permission to read the file(%s)\n", path);
-        return -1;
-    }
-    contextBuffer = (char *)malloc(statBuf.st_size + 1);
-    if (contextBuffer == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
-        return -1;
-    }
-    fp = fopen(path, "rb");
-    if (fp == NULL) {
-        PRINT_ERR("open file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        return -1;
-    }
-    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (retFread != 1) {
-        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        (void)fclose(fp);
-        return -1;
-    }
-    contextBuffer[statBuf.st_size] = '\0';
-    (void)fclose(fp);
-
-    *contextBufPtr = contextBuffer;
-    *bufferLen = statBuf.st_size + 1;
-    return 0;
-}
-
-static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename,
-                                          char *convertedBuffer, size_t bufferLen)
-{
-    int32_t ret;
-    FILE *fp = NULL;
-    char path[PATH_MAX + 1] = {0x00};
-
-#ifdef _POSIX_
-    if (strlen(outDirPath) >= PATH_MAX || strncpy_s(path, PATH_MAX, outDirPath, strlen(outDirPath)) != EOK) {
-        PRINT_ERR("get path(%s) failed\n", outDirPath);
-        return -1;
-    }
-#else
-    if (strlen(outDirPath) >= PATH_MAX || realpath(outDirPath, path) == NULL) {
-        PRINT_ERR("get file(%s) real path failed\n", outDirPath);
-        return -1;
-    }
-#endif
-
-    int32_t pathLen = strlen(path);
-    if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
-        path[pathLen] = '/';
-    }
-
-    if (strlen(filename) + 1 > PATH_MAX) {
-        PRINT_ERR("filename(%s) too long.\n", filename);
-        return -1;
-    }
-    ret = strncat_s(path, PATH_MAX, filename, strlen(filename));
-    if (ret != 0) {
-        PRINT_ERR("strncat_s failed, (%s, %d, %s, %d), errno = %d\n",
-                  path, PATH_MAX, filename, (int32_t)strlen(filename) + 1, errno);
-        return -1;
-    }
-
-    fp = fopen(path, "wb");
-    if (fp == NULL) {
-        PRINT_ERR("can`t create file(%s), errno = %d\n", path, errno);
-        return -1;
-    }
-
-    size_t retFwrite = fwrite(convertedBuffer, bufferLen, 1, fp);
-    if (retFwrite != 1) {
-        PRINT_ERR("can`t write file(%s),errno = %d\n", path, errno);
-        (void)fclose(fp);
-        return -1;
-    }
-
-    (void)fclose(fp);
-
-    return 0;
-}
-
-static cJSON *CreateWholeSyscapJsonObj(void)
-{
-    size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
-    cJSON *root =  cJSON_CreateObject();
-    for (size_t i = 0; i < allSyscapNum; i++) {
-        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
-    }
-    return root;
-}
 
 int32_t RPCIDEncode(char *inputFile, char *outputPath)
 {
@@ -300,75 +167,37 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
         char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
         if (strlen(temp) >= SINGLE_FEAT_LEN || strlen(temp) == 0) {
             PRINT_ERR("Get SysCap failed, string length(%u) error.\n", (uint32_t)strlen(temp));
-            ret = -1;
-            goto FREE_SYSCAP_OUT;
+            cJSON_Delete(sysCapJson);
+            return -1;
         }
         char buffer[SINGLE_SYSCAP_LEN] = "SystemCapability.";
-        
+
         ret = strncat_s(buffer, sizeof(buffer), temp, SINGLE_FEAT_LEN);
         if (ret != EOK) {
             PRINT_ERR("strncat_s failed.\n");
-            goto FREE_SYSCAP_OUT;
+            cJSON_Delete(sysCapJson);
+            return ret;
         }
 
         if (!cJSON_AddItemToArray(sysCapJson, cJSON_CreateString(buffer))) {
             PRINT_ERR("Add syscap string to json failed.\n");
-            ret = -1;
-            goto FREE_SYSCAP_OUT;
+            cJSON_Delete(sysCapJson);
+            return -1;
         }
     }
 
     if (!cJSON_AddNumberToObject(rpcidJson, "api_version", NtohsInter(rpcidHeader->apiVersion))) {
         PRINT_ERR("Add api_version to json failed.\n");
-        ret = -1;
-        goto FREE_SYSCAP_OUT;
+        cJSON_Delete(sysCapJson);
+        return -1;
     }
     if (!cJSON_AddItemToObject(rpcidJson, "syscap", sysCapJson)) {
         PRINT_ERR("Add syscap to json failed.\n");
-        ret = -1;
-        goto FREE_SYSCAP_OUT;
+        cJSON_Delete(sysCapJson);
+        return -1;
     }
 
-    return 0;
-FREE_SYSCAP_OUT:
-    cJSON_Delete(sysCapJson);
     return ret;
-}
-
-static int32_t CheckRpcidFormat(char *inputFile, char **buffer, uint32_t *len)
-{
-    uint32_t bufferLen;
-    uint16_t sysCaptype, sysCapLength;
-    char *contextBuffer = NULL;
-    RPCIDHead *rpcidHeader = NULL;
-
-    if (GetFileContext(inputFile, &contextBuffer, &bufferLen)) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
-        return -1;
-    }
-    if (bufferLen < (2 * sizeof(uint32_t))) { // 2, header of rpcid.sc
-        PRINT_ERR("Parse file failed(format is invalid), input file : %s\n", inputFile);
-        return -1;
-    }
-    rpcidHeader = (RPCIDHead *)contextBuffer;
-    if (rpcidHeader->apiVersionType != 1) {
-        PRINT_ERR("Parse file failed(apiVersionType != 1), input file : %s\n", inputFile);
-        return -1;
-    }
-    sysCaptype = NtohsInter(*(uint16_t *)(rpcidHeader + 1));
-    if (sysCaptype != 2) { // 2, app syscap type
-        PRINT_ERR("Parse file failed(sysCaptype != 2), input file : %s\n", inputFile);
-        return -1;
-    }
-    sysCapLength = NtohsInter(*(uint16_t *)((char *)(rpcidHeader + 1) + sizeof(uint16_t)));
-    if (bufferLen < sizeof(RPCIDHead) + sizeof(uint32_t) + sysCapLength) {
-        PRINT_ERR("Parse file failed(SysCap length exceeded), input file : %s\n", inputFile);
-        return -1;
-    }
-
-    *buffer = contextBuffer;
-    *len = bufferLen;
-    return 0;
 }
 
 int32_t RPCIDDecode(char *inputFile, char *outputPath)
@@ -611,8 +440,7 @@ int32_t GetPriSyscapData(char *input, char **priSyscap, uint32_t *priSyscapLen)
     char *tok = NULL;
     char *temp = strtok_r(input, ",", &tok);
     while (temp) {
-        int ret = strncpy_s(private, SINGLE_SYSCAP_LEN,
-                        temp, SINGLE_SYSCAP_LEN - 1);
+        int ret = strncpy_s(private, SINGLE_SYSCAP_LEN, temp, SINGLE_SYSCAP_LEN - 1);
         if (ret != EOK) {
             PRINT_ERR("strncpy_s failed.\n");
             free(priSysCapOut);
