@@ -22,12 +22,8 @@
 #include "securec.h"
 #include "syscap_tool.h"
 #include "create_pcid.h"
+#include "context_tool.h"
 
-#define PRINT_ERR(...) \
-    do { \
-        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
-        printf(__VA_ARGS__); \
-    } while (0)
 #define SYSCAP_VERSION "2.0.1"
 #define OUTPUT_VERSION_LEN 200
 #define ENCODE 0

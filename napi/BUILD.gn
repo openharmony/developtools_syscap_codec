@@ -27,6 +27,7 @@ sources_platform_common = [
   "../src/syscap_tool.c",
   "../src/create_pcid.c",
   "../src/endian_internal.c",
+  "../src/context_tool.c",
   "../interfaces/inner_api/syscap_interface.c",
 ]
 

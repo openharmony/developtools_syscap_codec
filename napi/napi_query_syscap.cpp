@@ -20,6 +20,7 @@
 #include "napi/native_api.h"
 #include "napi/native_node_api.h"
 #include "syscap_interface.h"
+#include "context_tool.h"
 
 namespace OHOS {
 EXTERN_C_START
@@ -27,12 +28,6 @@ constexpr size_t OS_SYSCAP_U32_NUM = 30;
 constexpr size_t PCID_MAIN_U32 = OS_SYSCAP_U32_NUM + 2;
 constexpr size_t U32_TO_STR_MAX_LEN = 11;
 constexpr size_t KEY_BUFFER_SIZE = 32;
-
-#define PRINT_ERR(...) \
-    do { \
-        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
-        printf(__VA_ARGS__); \
-    } while (0)
 
 #define GET_PARAMS(env, info, num) \
     size_t argc = num;             \

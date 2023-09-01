@@ -24,6 +24,7 @@
 #include "cJSON.h"
 #include "endian_internal.h"
 #include "create_pcid.h"
+#include "context_tool.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -38,134 +39,6 @@
 #define UINT8_BIT 8
 
 #define U32_TO_STR_MAX_LEN 11
-
-#define PRINT_ERR(...) \
-    do { \
-        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
-        printf(__VA_ARGS__); \
-    } while (0)
-
-static void FreeContextBuffer(char *contextBuffer)
-{
-    (void)free(contextBuffer);
-}
-
-static int32_t GetFileContext(char *inputFile, char **contextBufPtr, size_t *contextBufLen)
-{
-    int32_t ret;
-    FILE *fp = NULL;
-    struct stat statBuf;
-    char *contextBuffer = NULL;
-    char path[PATH_MAX + 1] = {0x00};
-
-#ifdef _POSIX_
-    if (strlen(inputFile) > PATH_MAX || strncpy_s(path, PATH_MAX, inputFile, strlen(inputFile)) != EOK) {
-        PRINT_ERR("get path(%s) failed\n", inputFile);
-        return -1;
-    }
-#else
-    if (strlen(inputFile) > PATH_MAX || realpath(inputFile, path) == NULL) {
-        PRINT_ERR("get file(%s) real path failed\n", inputFile);
-        return -1;
-    }
-#endif
-    
-    ret = stat(path, &statBuf);
-    if (ret != 0) {
-        PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", path, errno);
-        return -1;
-    }
-    if (!(statBuf.st_mode & S_IRUSR)) {
-        PRINT_ERR("don't have permission to read the file(%s)\n", path);
-        return -1;
-    }
-    contextBuffer = (char *)malloc(statBuf.st_size + 1);
-    if (contextBuffer == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
-        return -1;
-    }
-
-    fp = fopen(path, "rb");
-    if (fp == NULL) {
-        PRINT_ERR("open file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        return -1;
-    }
-    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (retFread != 1) {
-        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        (void)fclose(fp);
-        return -1;
-    }
-    contextBuffer[statBuf.st_size] = '\0';
-    (void)fclose(fp);
-
-    *contextBufPtr = contextBuffer;
-    *contextBufLen = statBuf.st_size + 1;
-    return 0;
-}
-
-static int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename, \
-                                          char *convertedBuffer, size_t contextBufLen)
-{
-    int32_t ret;
-    FILE *fp = NULL;
-    char path[PATH_MAX + 1] = {0x00};
-
-#ifdef _POSIX_
-    if (strlen(outDirPath) > PATH_MAX || strncpy_s(path, PATH_MAX, outDirPath, strlen(outDirPath)) != EOK) {
-        PRINT_ERR("get path(%s) failed\n", outDirPath);
-        return -1;
-    }
-#else
-    if (strlen(outDirPath) > PATH_MAX || realpath(outDirPath, path) == NULL) {
-        PRINT_ERR("get file(%s) real path failed\n", outDirPath);
-        return -1;
-    }
-#endif
-    int32_t pathLen = strlen(path);
-    if (path[pathLen - 1] != '/' && path[pathLen - 1] != '\\') {
-        path[pathLen] = '/';
-    }
-
-    if (strlen(path) + strlen(filename) + 1 > PATH_MAX) {
-        PRINT_ERR("length of path too long.\n");
-        return -1;
-    }
-    ret = strncat_s(path, PATH_MAX, filename, strlen(filename) + 1);
-    if (ret != 0) {
-        PRINT_ERR("strncat_s failed, (%s, %d, %s, %d), errno = %d\n",
-                  path, PATH_MAX, filename, (int32_t)strlen(filename) + 1, errno);
-        return -1;
-    }
-
-    fp = fopen(path, "wb");
-    if (fp == NULL) {
-        PRINT_ERR("can't create file(%s), errno = %d\n", path, errno);
-        return -1;
-    }
-
-    if (fwrite(convertedBuffer, contextBufLen, 1, fp) != 1) {
-        PRINT_ERR("can't write file(%s),errno = %d\n", path, errno);
-        (void)fclose(fp);
-        return -1;
-    }
-
-    (void)fclose(fp);
-
-    return 0;
-}
-
-static cJSON *CreateWholeSyscapJsonObj(void)
-{
-    size_t numOfSyscapAll = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
-    cJSON *root =  cJSON_CreateObject();
-    for (size_t i = 0; i < numOfSyscapAll; i++) {
-        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
-    }
-    return root;
-}
 
 int32_t SetOsSyscap(PCIDMain *pcidBuffer, uint32_t osCapSize,
     const cJSON *jsonOsSyscapObj, const cJSON *allOsSyscapObj)
@@ -310,11 +183,11 @@ int32_t GetPriSyscapLen(uint32_t privateCapSize, cJSON *jsonPriSyscapObj, uint16
 int32_t CreatePCID(char *inputFile, char *outDirPath)
 {
     uint32_t privateCapSize, osCapSize;
-    size_t contextBufLen;
+    uint32_t contextBufLen;
     char *contextBuffer = NULL;
     cJSON *allOsSyscapObj = CreateWholeSyscapJsonObj();
 
-    int32_t ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
+    int32_t ret = GetFileContext(inputFile, &contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         goto FREE_CONVERT_OUT;
@@ -473,9 +346,9 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     char *contextBuffer = NULL;
-    size_t contextBufLen;
+    uint32_t contextBufLen;
 
-    ret = GetFileContext(inputFile, &contextBuffer, &contextBufLen);
+    ret = GetFileContext(inputFile, &contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         return -1;
@@ -725,11 +598,11 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     int32_t ret = -1;
     uint32_t osSyscap[OS_SYSCAP_NUM] = {0};
     uint32_t pcidHeader[PCID_HEADER];
-    size_t fileContextLen;
+    uint32_t fileContextLen;
     char *ctx = NULL;
     char *priSyscapStr = NULL;
 
-    if (GetFileContext(input, &ctx, &fileContextLen) != 0) {
+    if (GetFileContext(input, &ctx, (uint32_t *)&fileContextLen) != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", input);
         goto PARSE_FAILED;
     }
@@ -780,7 +653,7 @@ PARSE_FAILED:
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
-    size_t bufferLen, privateSyscapLen, outputLen;
+    uint32_t bufferLen, privateSyscapLen, outputLen;
     uint32_t i, j;
     uint32_t *mainSyscap = NULL;
     uint16_t priSyscapCount = 0;
@@ -790,14 +663,14 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     char *output = NULL;
     PCIDMain *pcidMain = NULL;
 
-    ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
+    ret = GetFileContext(inputFile, &contextBuffer, (uint32_t *)&bufferLen);
     if (ret != 0) {
         PRINT_ERR("Get pcid file failed, pcid file path: %s\n", inputFile);
         return -1;
     }
 
     if (bufferLen > 1128) { // 1128, max size of pcid.sc
-        PRINT_ERR("Input pcid file too large, pcid file size: %zu\n", bufferLen);
+        PRINT_ERR("Input pcid file too large, pcid file size: %u\n", bufferLen);
         goto FREE_CONTEXT;
     }
 
