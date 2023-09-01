@@ -25,6 +25,7 @@
 #include "syscap_tool.h"
 #include "endian_internal.h"
 #include "syscap_interface.h"
+#include "context_tool.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -41,18 +42,6 @@
 #define INT_BIT 32
 #define U32_TO_STR_MAX_LEN 11
 
-
-#define PRINT_ERR(...) \
-    do { \
-        printf("ERROR: [%s: %d] -> ", __FILE__, __LINE__); \
-        printf(__VA_ARGS__); \
-    } while (0)
-
-typedef struct RequiredProductCompatibilityIDHead {
-    uint16_t apiVersion : 15;
-    uint16_t apiVersionType : 1;
-} RPCIDHead;
-
 typedef struct ProductCompatibilityID {
     uint16_t apiVersion : 15;
     uint16_t apiVersionType : 1;
@@ -63,66 +52,6 @@ typedef struct ProductCompatibilityID {
 } PCIDMain;
 
 static const char *g_pcidPath = "/system/etc/PCID.sc";
-
-static void FreeContextBuffer(char *contextBuffer)
-{
-    (void)free(contextBuffer);
-}
-
-static int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
-{
-    int32_t ret;
-    FILE *fp = NULL;
-    struct stat statBuf;
-    char *contextBuffer = NULL;
-    char path[PATH_MAX + 1] = {0x00};
-
-#ifdef _POSIX_
-    if (strlen(inputFile) > PATH_MAX || strncpy_s(path, PATH_MAX, inputFile, strlen(inputFile)) != EOK) {
-        PRINT_ERR("get path(%s) failed\n", inputFile);
-        return -1;
-    }
-#else
-    if (strlen(inputFile) > PATH_MAX || realpath(inputFile, path) == NULL) {
-        PRINT_ERR("get file(%s) real path failed\n", inputFile);
-        return -1;
-    }
-#endif
-
-    ret = stat(path, &statBuf);
-    if (ret != 0) {
-        PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", path, errno);
-        return -1;
-    }
-    if (!(statBuf.st_mode & S_IRUSR)) {
-        PRINT_ERR("don't have permission to read the file(%s)\n", path);
-        return -1;
-    }
-    contextBuffer = (char *)malloc(statBuf.st_size + 1);
-    if (contextBuffer == NULL) {
-        PRINT_ERR("malloc buffer failed, size = %d, errno = %d\n", (int32_t)statBuf.st_size + 1, errno);
-        return -1;
-    }
-    fp = fopen(path, "rb");
-    if (fp == NULL) {
-        PRINT_ERR("open file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        return -1;
-    }
-    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (retFread != 1) {
-        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
-        FreeContextBuffer(contextBuffer);
-        (void)fclose(fp);
-        return -1;
-    }
-    contextBuffer[statBuf.st_size] = '\0';
-    (void)fclose(fp);
-
-    *contextBufPtr = contextBuffer;
-    *bufferLen = statBuf.st_size + 1;
-    return 0;
-}
 
 bool EncodeOsSyscap(char *output, int len)
 {
@@ -322,16 +251,6 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *inde
     return 0;
 }
 
-static cJSON *CreateWholeSyscapJsonObj(void)
-{
-    size_t numOfSyscapAll = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
-    cJSON *root =  cJSON_CreateObject();
-    for (size_t i = 0; i < numOfSyscapAll; i++) {
-        cJSON_AddItemToObject(root, g_arraySyscap[i].str, cJSON_CreateNumber(g_arraySyscap[i].num));
-    }
-    return root;
-}
-
 static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson)
 {
     uint32_t i;
@@ -378,42 +297,6 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
 FREE_SYSCAP_OUT:
     cJSON_Delete(sysCapJson);
     return ret;
-}
-
-static int32_t CheckRpcidFormat(const char *inputFile, char **buffer, uint32_t *len)
-{
-    uint32_t bufferLen;
-    uint16_t sysCaptype, sysCapLength;
-    char *contextBuffer = NULL;
-    RPCIDHead *rpcidHeader = NULL;
-
-    if (GetFileContext(inputFile, &contextBuffer, &bufferLen)) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
-        return -1;
-    }
-    if (bufferLen < (2 * sizeof(uint32_t))) { // 2, header of rpcid.sc
-        PRINT_ERR("Parse file failed(format is invalid), input file : %s\n", inputFile);
-        return -1;
-    }
-    rpcidHeader = (RPCIDHead *)contextBuffer;
-    if (rpcidHeader->apiVersionType != 1) {
-        PRINT_ERR("Parse file failed(apiVersionType != 1), input file : %s\n", inputFile);
-        return -1;
-    }
-    sysCaptype = NtohsInter(*(uint16_t *)(rpcidHeader + 1));
-    if (sysCaptype != 2) { // 2, app syscap type
-        PRINT_ERR("Parse file failed(sysCaptype != 2), input file : %s\n", inputFile);
-        return -1;
-    }
-    sysCapLength = NtohsInter(*(uint16_t *)((char *)(rpcidHeader + 1) + sizeof(uint16_t)));
-    if (bufferLen < sizeof(RPCIDHead) + sizeof(uint32_t) + sysCapLength) {
-        PRINT_ERR("Parse file failed(SysCap length exceeded), input file : %s\n", inputFile);
-        return -1;
-    }
-
-    *buffer = contextBuffer;
-    *len = bufferLen;
-    return 0;
 }
 
 char *DecodeRpcidToStringFormat(const char *inputFile)

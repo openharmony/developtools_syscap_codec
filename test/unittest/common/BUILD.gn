@@ -37,6 +37,7 @@ if (defined(ohos_lite)) {
 
       sources = [
         "../../../interfaces/inner_api/syscap_interface.c",
+        "../../../src/context_tool.c",
         "../../../src/create_pcid.c",
         "../../../src/endian_internal.c",
         "../../../src/syscap_tool.c",
@@ -46,7 +47,6 @@ if (defined(ohos_lite)) {
       defines = [ "NAPI_TEST" ]
 
       deps = [
-        "//base//hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
         "//build/lite/config/component/cJSON:cjson_static",
         "//test/testfwk/developer_test/third_party/lib/cpp:gtest_main",
         "//third_party/bounds_checking_function:libsec_static",
@@ -78,6 +78,7 @@ if (defined(ohos_lite)) {
 
     sources = [
       "../../../interfaces/inner_api/syscap_interface.c",
+      "../../../src/context_tool.c",
       "../../../src/create_pcid.c",
       "../../../src/endian_internal.c",
       "../../../src/syscap_tool.c",
