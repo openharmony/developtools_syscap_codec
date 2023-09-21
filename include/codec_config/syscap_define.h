@@ -554,7 +554,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NFC.Tag", COMMUNICATION_NFC_TAG},
     {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
     {"SystemCapability.Security.Cert", SECURITY_CERT},
-    {"SystemCapability.ADVERTISING.OAID", ADVERTISING_OAID},
+    {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
     {"SystemCapability.XTS.DeviceAttest", XTS_DEVICEATTEST},
     {"SystemCapability.XTS.DeviceAttestLite", XTS_DEVICEATTESTLITE},
     {"SystemCapability.Multimedia.Media.AVPlayer", MULTIMEDIA_MEDIA_AVPLAYER},
