@@ -304,6 +304,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_SOUNDPOOL,
     SECURITY_DATALOSSPREVENTION,
     MSDP_USERSTATUSAWARENESS,
+    ADVERTISING_OAID,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -590,6 +591,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.SoundPool", MULTIMEDIA_MEDIA_SOUNDPOOL},
     {"SystemCapability.Security.DataLossPrevention", SECURITY_DATALOSSPREVENTION},
     {"SystemCapability.Msdp.UserStatusAwareness", MSDP_USERSTATUSAWARENESS},
+    {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
 };
 
 #ifdef __cplusplus
