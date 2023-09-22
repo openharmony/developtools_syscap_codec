@@ -266,7 +266,6 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NFC_CARDEMULATION,
     SECURITY_CERT,
     CLOUD_OAID,
-    ADVERTISING_OAID,
     XTS_DEVICEATTEST,
     XTS_DEVICEATTESTLITE,
     MULTIMEDIA_MEDIA_AVPLAYER,
@@ -305,6 +304,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_SOUNDPOOL,
     SECURITY_DATALOSSPREVENTION,
     MSDP_USERSTATUSAWARENESS,
+    ADVERTISING_OAID,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -556,7 +556,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NFC.CardEmulation", COMMUNICATION_NFC_CARDEMULATION},
     {"SystemCapability.Security.Cert", SECURITY_CERT},
     {"SystemCapability.Cloud.OAID", CLOUD_OAID},
-    {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
     {"SystemCapability.XTS.DeviceAttest", XTS_DEVICEATTEST},
     {"SystemCapability.XTS.DeviceAttestLite", XTS_DEVICEATTESTLITE},
     {"SystemCapability.Multimedia.Media.AVPlayer", MULTIMEDIA_MEDIA_AVPLAYER},
@@ -592,6 +591,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.SoundPool", MULTIMEDIA_MEDIA_SOUNDPOOL},
     {"SystemCapability.Security.DataLossPrevention", SECURITY_DATALOSSPREVENTION},
     {"SystemCapability.Msdp.UserStatusAwareness", MSDP_USERSTATUSAWARENESS},
+    {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
 };
 
 #ifdef __cplusplus
