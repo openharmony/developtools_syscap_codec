@@ -395,6 +395,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
     ret = sprintf_s(outBuffer, outBufferLen, "%u", outUint[0]);
     if (ret == -1) {
         PRINT_ERR("sprintf_s failed.\n");
+        free(outBuffer);
         outBuffer = NULL;
         goto FREE_MALLOC_PRISYSCAP;
     }
@@ -402,6 +403,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
         ret = sprintf_s(outBuffer, outBufferLen, "%s,%u", outBuffer, outUint[i]);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
+            free(outBuffer);
             outBuffer = NULL;
             goto FREE_MALLOC_PRISYSCAP;
         }
@@ -412,6 +414,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
                         priSyscapArray + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed.\n");
+            free(outBuffer);
             outBuffer = NULL;
             goto FREE_MALLOC_PRISYSCAP;
         }
@@ -428,8 +431,6 @@ FREE_RPCID_ROOT:
 FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
     return outBuffer;
-
-free(outBuffer);
 }
 
 int32_t ComparePcidString(const char *pcidString, const char *rpcidString, CompareError *result)
