@@ -429,7 +429,7 @@ FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
     return outBuffer;
 
-free(outBuffer)
+free(outBuffer);
 }
 
 int32_t ComparePcidString(const char *pcidString, const char *rpcidString, CompareError *result)
