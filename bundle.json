@@ -1,9 +1,12 @@
 {
   "name": "@ohos/syscap_codec",
   "description": "System capability encode and decode.",
-  "version": "3.2",
+  "version": "4.0.2",
   "license": "Apache License 2.0",
-  "pubiishAs": "code-segment",
+  "publishAs": "code-segment",
+  "homePage": "https://gitee.com/openharmony",
+  "repository": "https://gitee.com/openharmony/developtools_syscap_codec",
+  "supplier": "Origanization: OpenHarmony",
   "segment": {
     "destPath": "developtools/syscap_codec"
   },
