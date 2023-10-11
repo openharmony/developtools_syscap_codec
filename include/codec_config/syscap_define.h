@@ -305,6 +305,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_DATALOSSPREVENTION,
     MSDP_USERSTATUSAWARENESS,
     ADVERTISING_OAID,
+    GRAPHIC_GRAPHIC2D_GLES2,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -356,6 +357,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.StorageService.Backup", FILEMANAGEMENT_STORAGESERVICE_BACKUP},
     {"SystemCapability.Global.ResourceManager", GLOBAL_RESOURCEMANAGER},
     {"SystemCapability.Graphic.Graphic2D.EGL", GRAPHIC_GRAPHIC2D_EGL},
+    {"SystemCapability.Graphic.Graphic2D.GLES2", GRAPHIC_GRAPHIC2D_GLES2},
     {"SystemCapability.Graphic.Graphic2D.GLES3", GRAPHIC_GRAPHIC2D_GLES3},
     {"SystemCapability.Graphic.Graphic2D.NativeDrawing", GRAPHIC_GRAPHIC2D_NATIVEDRAWING},
     {"SystemCapability.Graphic.Graphic2D.NativeWindow", GRAPHIC_GRAPHIC2D_NATIVEWINDOW},
