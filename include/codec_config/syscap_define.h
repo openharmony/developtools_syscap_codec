@@ -595,7 +595,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.DataLossPrevention", SECURITY_DATALOSSPREVENTION},
     {"SystemCapability.Msdp.UserStatusAwareness", MSDP_USERSTATUSAWARENESS},
     {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
-    {"SystemCapability.BundleManager.EcologicalRuleManager", BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER),
+    {"SystemCapability.BundleManager.EcologicalRuleManager", BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER},
 };
 
 #ifdef __cplusplus
