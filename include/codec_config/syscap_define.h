@@ -306,6 +306,7 @@ typedef enum SystemCapabilityNum {
     MSDP_USERSTATUSAWARENESS,
     ADVERTISING_OAID,
     GRAPHIC_GRAPHIC2D_GLES2,
+    BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -594,6 +595,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.DataLossPrevention", SECURITY_DATALOSSPREVENTION},
     {"SystemCapability.Msdp.UserStatusAwareness", MSDP_USERSTATUSAWARENESS},
     {"SystemCapability.Advertising.OAID", ADVERTISING_OAID},
+    {"SystemCapability.BundleManager.EcologicalRuleManager", BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER},
 };
 
 #ifdef __cplusplus
