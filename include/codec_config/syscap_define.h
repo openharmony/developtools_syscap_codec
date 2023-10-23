@@ -167,7 +167,6 @@ typedef enum SystemCapabilityNum {
     TELEPHONY_DATASTORAGE,
     TELEPHONY_DCALL,
     TELEPHONY_SMSMMS,
-    TELEPHONY_RCS,
     TELEPHONY_STATEREGISTRY,
     TEST_UITEST,
     TEST_WUKONG,
@@ -308,6 +307,7 @@ typedef enum SystemCapabilityNum {
     ADVERTISING_OAID,
     GRAPHIC_GRAPHIC2D_GLES2,
     BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER,
+    TELEPHONY_RCS,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -456,7 +456,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Telephony.DataStorage", TELEPHONY_DATASTORAGE},
     {"SystemCapability.Telephony.DCall", TELEPHONY_DCALL},
     {"SystemCapability.Telephony.SmsMms", TELEPHONY_SMSMMS},
-    {"SystemCapability.Telephony.SmsMms", TELEPHONY_RCS},
+    {"SystemCapability.Telephony.Rcs", TELEPHONY_RCS},
     {"SystemCapability.Telephony.StateRegistry", TELEPHONY_STATEREGISTRY},
     {"SystemCapability.Test.UiTest", TEST_UITEST},
     {"SystemCapability.Test.WuKong", TEST_WUKONG},
