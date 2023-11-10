@@ -55,7 +55,7 @@ int32_t SetOsSyscap(PCIDMain *pcidBuffer, uint32_t osCapSize,
         }
         osCapIndex = cJSON_GetObjectItem(allOsSyscapObj, jsonArrayItem->valuestring);
         if (osCapIndex == NULL) {
-            PRINT_ERR("can't find ths syscap: %s, please add it syscap_define.h.\n", jsonArrayItem->valuestring);
+            PRINT_ERR("can't find the syscap: %s, please add it in syscap_define.h.\n", jsonArrayItem->valuestring);
             return -1;
         }
         if (!cJSON_IsNumber(osCapIndex)) {
