@@ -310,6 +310,7 @@ typedef enum SystemCapabilityNum {
     TELEPHONY_RCS,
     ADVERTISING_ADS,
     SECURITY_ASSET,
+    ABILITY_ABILITYRUNTIME_AUTOFILL,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -602,6 +603,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.BundleManager.EcologicalRuleManager", BUNDLEMANAGER_ECOLOGICAL_RULE_MANAGER},
     {"SystemCapability.Advertising.Ads", ADVERTISING_ADS},
     {"SystemCapability.Security.Asset", SECURITY_ASSET},
+    {"SystemCapability.Ability.AbilityRuntime.AutoFill", ABILITY_ABILITYRUNTIME_AUTOFILL},
 };
 
 #ifdef __cplusplus
