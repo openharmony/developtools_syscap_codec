@@ -311,6 +311,7 @@ typedef enum SystemCapabilityNum {
     ADVERTISING_ADS,
     SECURITY_ASSET,
     MISCSERVICES_THEME,
+    ABILITY_ABILITYRUNTIME_AUTOFILL,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -604,6 +605,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Advertising.Ads", ADVERTISING_ADS},
     {"SystemCapability.Security.Asset", SECURITY_ASSET},
     {"SystemCapability.MiscServices.Theme", MISCSERVICES_THEME},
+    {"SystemCapability.Ability.AbilityRuntime.AutoFill", ABILITY_ABILITYRUNTIME_AUTOFILL},
 };
 
 #ifdef __cplusplus
