@@ -314,6 +314,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_ABILITYRUNTIME_AUTOFILL,
     MULTIMEDIA_DRM_CORE,
     ACCESSCONTROL_SANDBOX_MANAGER,
+    WINDOW_SESSIONMANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -610,6 +611,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AbilityRuntime.AutoFill", ABILITY_ABILITYRUNTIME_AUTOFILL},
     {"SystemCapability.Multimedia.Drm.Core", MULTIMEDIA_DRM_CORE},
     {"SystemCapability.AccessControl.SandboxManager", ACCESSCONTROL_SANDBOX_MANAGER},
+    {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
 };
 
 #ifdef __cplusplus
