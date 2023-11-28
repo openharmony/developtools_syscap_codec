@@ -315,6 +315,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_DRM_CORE,
     ACCESSCONTROL_SANDBOX_MANAGER,
     WINDOW_SESSIONMANAGER,
+    DISTRIBUTEDDATAMANAGER_COMMONTYPE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -612,6 +613,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Drm.Core", MULTIMEDIA_DRM_CORE},
     {"SystemCapability.AccessControl.SandboxManager", ACCESSCONTROL_SANDBOX_MANAGER},
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
+    {"SystemCapability.DistributedDataManager.CommonType", DISTRIBUTEDDATAMANAGER_COMMONTYPE},
 };
 
 #ifdef __cplusplus
