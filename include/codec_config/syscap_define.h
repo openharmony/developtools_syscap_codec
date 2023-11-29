@@ -313,7 +313,6 @@ typedef enum SystemCapabilityNum {
     MISCSERVICES_THEME,
     ABILITY_ABILITYRUNTIME_AUTOFILL,
     MULTIMEDIA_DRM_CORE,
-    ACCESSCONTROL_SANDBOX_MANAGER,
     DISTRIBUTEDDATAMANAGER_COMMONTYPE,
     WINDOW_SESSIONMANAGER,
     // Add before here
@@ -611,7 +610,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MiscServices.Theme", MISCSERVICES_THEME},
     {"SystemCapability.Ability.AbilityRuntime.AutoFill", ABILITY_ABILITYRUNTIME_AUTOFILL},
     {"SystemCapability.Multimedia.Drm.Core", MULTIMEDIA_DRM_CORE},
-    {"SystemCapability.AccessControl.SandboxManager", ACCESSCONTROL_SANDBOX_MANAGER},
     {"SystemCapability.DistributedDataManager.CommonType", DISTRIBUTEDDATAMANAGER_COMMONTYPE},
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
 };
