@@ -317,6 +317,7 @@ typedef enum SystemCapabilityNum {
     WINDOW_SESSIONMANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
+    PRINT_PRINT_FRAMEWORK_NATIVEPRINT,
 } SyscapNum;
 
 
@@ -612,6 +613,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Drm.Core", MULTIMEDIA_DRM_CORE},
     {"SystemCapability.DistributedDataManager.CommonType", DISTRIBUTEDDATAMANAGER_COMMONTYPE},
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
+    {"SystemCapability.Print.PrintFramework.NativePrint", PRINT_PRINT_FRAMEWORK_NATIVEPRINT},
 };
 
 #ifdef __cplusplus
