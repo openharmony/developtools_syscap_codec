@@ -43,97 +43,85 @@ static void PrintVersion(void);
 static void OutputVersion(const char *arg, int opt);
 static void OutputHelp(void);
 
+void setBitMap(char *const *argv, int32_t flag, uint16_t *bitMap, char **outputpath);
+
+int32_t operateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath);
+
+static struct option g_longOptions[] = {
+        {"help",           no_argument,       0,  'h' },
+        {"version",        no_argument,       0,  'v' },
+        {"RPCID",          no_argument,       0,  'R' },
+        {"PCID",           no_argument,       0,  'P' },
+        {"compare",        required_argument, 0,  'C' },
+        {"encode",         no_argument,       0,  'e' },
+        {"decode",         no_argument,       0,  'd' },
+        {"string",         no_argument,       0,  's' },
+        {"input",          required_argument, 0,  'i' },
+        {"output",         required_argument, 0,  'o' },
+        {0,                0,                 0,  0   }
+};
+
+static struct {
+    char *inputfile;
+    char *pcidfile;
+    char *rpcidfile;
+} customerfileinfo;
+
+
 int main(int argc, char **argv)
 {
     int32_t optIndex;
-    int32_t ret = 0;
+    int32_t ret;
     uint16_t bitMap = 0x0;
     char curpath[PATH_MAX] = {0};
-    char *inputfile = NULL;
-    char *pcidfile = NULL;
-    char *rpcidfile = NULL;
+    customerfileinfo.inputfile = NULL;
+    customerfileinfo.pcidfile = NULL;
+    customerfileinfo.rpcidfile = NULL;
     char *outputpath = getcwd(curpath, sizeof(curpath));
 
     while (1) {
-        static struct option longOptions[] = {
-            {"help",           no_argument,       0,  'h' },
-            {"version",        no_argument,       0,  'v' },
-            {"RPCID",          no_argument,       0,  'R' },
-            {"PCID",           no_argument,       0,  'P' },
-            {"compare",        required_argument, 0,  'C' },
-            {"encode",         no_argument,       0,  'e' },
-            {"decode",         no_argument,       0,  'd' },
-            {"string",         no_argument,       0,  's' },
-            {"input",          required_argument, 0,  'i' },
-            {"output",         required_argument, 0,  'o' },
-            {0,                0,                 0,  0   }
-        };
-
-        int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", longOptions, &optIndex);
+        int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", g_longOptions, &optIndex);
         if (flag == -1) {
             break;
         }
-        switch (flag) {
-            case 'e':
-                bitMap |= 0x1 << ENCODE;
-                break;
-            case 'd':
-                bitMap |= 0x1 << DECODE;
-                break;
-            case 's':
-                bitMap |= 0x1 << STRING_DECODE;
-                break;
-            case 'R':
-                bitMap |= 0x1 << RPCID;
-                break;
-            case 'P':
-                bitMap |= 0x1 << PCID;
-                break;
-            case 'C':
-                bitMap |= 0x1 << PCID_STRING;
-                bitMap |= 0x1 << RPCID_STRING;
-                if (argc != 4 || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
-                    PRINT_ERR("Input file too few or too many.\n");
-                    return -1;
-                }
-                pcidfile = optarg;
-                rpcidfile = argv[optind];
-                break;
-            case 'i':
-                bitMap |= 0x1 << INPUT_FILE;
-                inputfile = optarg;
-                break;
-            case 'o':
-                outputpath = optarg;
-                break;
-            case 'v':
-                bitMap |= 0x1 << VERSION;
-                break;
-            case 'h':
-            default:
-                bitMap |= 0x1 << HELP;;
+        if (flag == 'C') {
+            if (argc != 4 || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
+                PRINT_ERR("Input file too few or too many.\n");
+                return -1;
+            }
         }
+        setBitMap(argv, flag, &bitMap, &outputpath);
     }
+    ret = operateByBitMap(argv, bitMap, outputpath);
+    if (ret != 0) {
+        PRINT_ERR("syscap_tool failed to complete. input: %s\n", customerfileinfo.inputfile);
+    }
+    return ret;
+}
 
+int32_t operateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath) {
+    int32_t ret = 0;
     switch (bitMap) {
         case 0x109: // 0x109, -Rei inputfile
-            ret = RPCIDEncode(inputfile, outputpath); break;
+            ret = RPCIDEncode(customerfileinfo.inputfile, outputpath); break;
         case 0x10A: // 0x10A, -Rdi inputfile
-            ret = RPCIDDecode(inputfile, outputpath); break;
+            ret = RPCIDDecode(customerfileinfo.inputfile, outputpath); break;
         case 0x10D: // 0x10D, -Resi inputfile
-            ret = EncodeRpcidscToString(inputfile, outputpath); break;
+            ret = EncodeRpcidscToString(customerfileinfo.inputfile, outputpath); break;
         case 0x115: // 0x115, -Pesi inputfile
-            ret = EncodePcidscToString(inputfile, outputpath); break;
+            ret = EncodePcidscToString(customerfileinfo.inputfile, outputpath); break;
         case 0x60:  // 0x60,  -C PCID.txt RPCID.txt
-            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile, TYPE_FILE); break;
+            ret = ComparePcidWithRpcidString(customerfileinfo.pcidfile, customerfileinfo.rpcidfile, TYPE_FILE);
+            break;
         case 0x64:  // 0x64,  -sC "pcidstring" "rpcidstring"
-            ret = ComparePcidWithRpcidString(pcidfile, rpcidfile, TYPE_STRING); break;
+            ret = ComparePcidWithRpcidString(customerfileinfo.pcidfile, customerfileinfo.rpcidfile, TYPE_STRING);
+            break;
         case 0x111: // 0x111, -Pei inputfile
-            ret = CreatePCID(inputfile, outputpath); break;
+            ret = CreatePCID(customerfileinfo.inputfile, outputpath); break;
         case 0x112: // 0x112, -Pdi inputfile
-            ret = DecodePCID(inputfile, outputpath); break;
+            ret = DecodePCID(customerfileinfo.inputfile, outputpath); break;
         case 0x116: // 0x116, -Pdsi inputfile
-            ret = DecodeStringPCIDToJson(inputfile, outputpath); break;
+            ret = DecodeStringPCIDToJson(customerfileinfo.inputfile, outputpath); break;
         case 0x10E: // 0x10E, -Rdsi inputfile
             printf("-Rdsi is not support currently.\n"); break;
         case 0x80:  // 0x80,  -v
@@ -141,11 +129,46 @@ int main(int argc, char **argv)
         default:
             (void)OutputHelp();
     }
-
-    if (ret != 0) {
-        PRINT_ERR("syscap_tool failed to complete. input: %s\n", inputfile);
-    }
     return ret;
+}
+
+void setBitMap(char *const *argv, int32_t flag, uint16_t *bitMap, char **outputpath) {
+    switch (flag) {
+        case 'e':
+            (*bitMap) |= 0x1 << ENCODE;
+            break;
+        case 'd':
+            (*bitMap) |= 0x1 << DECODE;
+            break;
+        case 's':
+            (*bitMap) |= 0x1 << STRING_DECODE;
+            break;
+        case 'R':
+            (*bitMap) |= 0x1 << RPCID;
+            break;
+        case 'P':
+            (*bitMap) |= 0x1 << PCID;
+            break;
+        case 'C':
+            (*bitMap) |= 0x1 << PCID_STRING;
+            (*bitMap) |= 0x1 << RPCID_STRING;
+            customerfileinfo.pcidfile = optarg;
+            customerfileinfo.rpcidfile = argv[optind];
+            break;
+        case 'i':
+            (*bitMap) |= 0x1 << INPUT_FILE;
+            customerfileinfo.inputfile = optarg;
+            break;
+        case 'o':
+            (*outputpath) = optarg;
+            break;
+        case 'v':
+            (*bitMap) |= 0x1 << VERSION;
+            break;
+        case 'h':
+        default:
+            (*bitMap) |= 0x1 << HELP;;
+    }
 }
 
 void PrintVersion(void)
