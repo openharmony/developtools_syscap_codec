@@ -82,13 +82,12 @@ def read_json_file(bundle_json_path: str) -> tuple:
     bundle_syscap_list = list()
     error_list = dict()
     try:
-        f = open(bundle_json_path, 'r', encoding='utf-8')
-        bundle_data = json.load(f)
-        component_data = bundle_data.get("component")
-        component_syscaps_list = component_data.get("syscap")
-        if component_syscaps_list:
-            bundle_syscap_list = bundle_syscap_list_handler(bundle_syscap_list, component_syscaps_list)
-        f.close()
+        with open(bundle_json_path, 'r', encoding='utf-8') as f:
+            bundle_data = json.load(f)
+            component_data = bundle_data.get("component")
+            component_syscaps_list = component_data.get("syscap")
+            if component_syscaps_list:
+                bundle_syscap_list = bundle_syscap_list_handler(bundle_syscap_list, component_syscaps_list)
     except FileNotFoundError as e:
         error_list[bundle_json_path] = str(e)
     except Exception as e:
@@ -98,9 +97,8 @@ def read_json_file(bundle_json_path: str) -> tuple:
 
 def get_all_components_path(components_file_path: str):
     try:
-        f = open(components_file_path, 'r', encoding='utf-8')
-        path_dict = json.load(f)
-        f.close()
+        with open(components_file_path, 'r', encoding='utf-8') as f:
+            path_dict = json.load(f)
         return path_dict
     except FileNotFoundError:
         logging.error(r"PATH ERROR")
