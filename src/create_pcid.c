@@ -275,7 +275,8 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     return FreeAfterCreatePCID(pcidBuffer, allOsSyscapObj, contextBuffer, FREE_CREATE_PCID_BUFFER_OUT, ret);
 }
 
-int32_t checkResult(cJSON *allOsSyscapObj, char *contextBuffer, int32_t type, int32_t ret) {
+int32_t checkResult(cJSON *allOsSyscapObj, char *contextBuffer, int32_t type, int32_t ret)
+{
     if (ret != 0) {
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, ret);
     }
@@ -283,7 +284,8 @@ int32_t checkResult(cJSON *allOsSyscapObj, char *contextBuffer, int32_t type, in
 }
 
 int32_t FreeAfterCreatePCID(PCIDMain *pcidBuffer, cJSON *allOsSyscapObj, char *contextBuffer,
-                            int32_t type, int32_t ret) {
+        int32_t type, int32_t ret)
+{
     if (type == FREE_CREATE_PCID_BUFFER_OUT) {
         free(pcidBuffer);
     }
@@ -384,35 +386,35 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
     return 0;
 }
 
-int32_t CreateJsonRootObj(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, PCIDMain *pcidMain, char *systemType);
+int32_t CreateJsonRootObj(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, PCIDMain *pcidMain, char *systemType);
 
-int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, int32_t type, int32_t ret);
+int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, int32_t type, int32_t ret);
 
-int32_t CheckSysCapObj(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, PCIDMain *pcidMain, 
+int32_t CheckSysCapObj(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, PCIDMain *pcidMain,
         uint32_t contextBufLen, int32_t ret);
 
 int32_t DecodePCID(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     uint32_t contextBufLen;
-    struct FreeDecodePcidJsonInfo g_free_pcid_json_info;
-    g_free_pcid_json_info.strJson = NULL;
-    g_free_pcid_json_info.contextBuffer = NULL;
-    g_free_pcid_json_info.jsonRootObj = NULL;
-    g_free_pcid_json_info.sysCapObj = NULL;
+    struct FreeDecodePcidJsonInfo gFreePcidJsonInfo;
+    gFreePcidJsonInfo.strJson = NULL;
+    gFreePcidJsonInfo.contextBuffer = NULL;
+    gFreePcidJsonInfo.jsonRootObj = NULL;
+    gFreePcidJsonInfo.sysCapObj = NULL;
 
-    ret = GetFileContext(inputFile, &g_free_pcid_json_info.contextBuffer, (uint32_t *)&contextBufLen);
+    ret = GetFileContext(inputFile, &gFreePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         return -1;
     }
 
-    PCIDMain *pcidMain = (PCIDMain *)g_free_pcid_json_info.contextBuffer;
+    PCIDMain *pcidMain = (PCIDMain *)gFreePcidJsonInfo.contextBuffer;
 
     /* api version */
     if (pcidMain->apiVersionType != 0) {
         PRINT_ERR("Prase file failed, apiVersionType is invaild, input file : %s\n", inputFile);
-        return FreeAfterDecodePCID(g_free_pcid_json_info, FREE_DECODE_PCID_CONTEXT_OUT, -1);
+        return FreeAfterDecodePCID(gFreePcidJsonInfo, FREE_DECODE_PCID_CONTEXT_OUT, -1);
     }
 
     /* system type */
@@ -421,91 +423,92 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
                         (pcidMain->systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
         PRINT_ERR("prase file failed, systemType is invaild, %u\n", pcidMain->systemType);
-        return FreeAfterDecodePCID(g_free_pcid_json_info, FREE_DECODE_PCID_CONTEXT_OUT, -1);
+        return FreeAfterDecodePCID(gFreePcidJsonInfo, FREE_DECODE_PCID_CONTEXT_OUT, -1);
     }
 
     /* syscap */
-    g_free_pcid_json_info.sysCapObj = cJSON_CreateObject();
-    ret = CheckSysCapObj(g_free_pcid_json_info, pcidMain, contextBufLen, ret);
-    if (g_free_pcid_json_info.flag == -1) { 
-        return FreeAfterDecodePCID(g_free_pcid_json_info, FREE_DECODE_PCID_CONTEXT_OUT, ret);
+    gFreePcidJsonInfo.sysCapObj = cJSON_CreateObject();
+    ret = CheckSysCapObj(gFreePcidJsonInfo, pcidMain, contextBufLen, ret);
+    if (gFreePcidJsonInfo.flag == -1) {
+        return FreeAfterDecodePCID(gFreePcidJsonInfo, FREE_DECODE_PCID_CONTEXT_OUT, ret);
     }
 
     // create json root
-    g_free_pcid_json_info.jsonRootObj = cJSON_CreateObject();
-    ret = CreateJsonRootObj(g_free_pcid_json_info, pcidMain, systemType);
+    gFreePcidJsonInfo.jsonRootObj = cJSON_CreateObject();
+    ret = CreateJsonRootObj(gFreePcidJsonInfo, pcidMain, systemType);
     if (ret == -1) {
-        return FreeAfterDecodePCID(g_free_pcid_json_info, FREE_DECODE_PCID_ROOT_OUT, ret);
+        return FreeAfterDecodePCID(gFreePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
 
-    g_free_pcid_json_info.sysCapObj = NULL; // avoid being released repeatedly.
+    gFreePcidJsonInfo.sysCapObj = NULL; // avoid being released repeatedly.
 
-    char *strJson = cJSON_Print(g_free_pcid_json_info.jsonRootObj);
+    char *strJson = cJSON_Print(gFreePcidJsonInfo.jsonRootObj);
     const char outputFileName[] = "PCID.json";
     ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, strJson, strlen(strJson));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, outputFileName);
     }
-    return FreeAfterDecodePCID(g_free_pcid_json_info, FREE_DECODE_PCID_CONVERT_OUT, ret);
+    return FreeAfterDecodePCID(gFreePcidJsonInfo, FREE_DECODE_PCID_CONVERT_OUT, ret);
 }
 
-int32_t CheckSysCapObj(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, PCIDMain *pcidMain, 
-        uint32_t contextBufLen, int32_t ret) {
-    g_free_pcid_json_info.flag = 0;
-    if (g_free_pcid_json_info.sysCapObj == NULL) {
+int32_t CheckSysCapObj(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, PCIDMain *pcidMain,
+        uint32_t contextBufLen, int32_t ret)
+{
+    gFreePcidJsonInfo.flag = 0;
+    if (gFreePcidJsonInfo.sysCapObj == NULL) {
         PRINT_ERR("cJSON_CreateObject failed\n");
-        g_free_pcid_json_info.flag = -1;
+        gFreePcidJsonInfo.flag = -1;
         return -1;
     }
-    if (GetOsSyscap(pcidMain, g_free_pcid_json_info.sysCapObj) != 0) {
-        g_free_pcid_json_info.flag = -1;
+    if (GetOsSyscap(pcidMain, gFreePcidJsonInfo.sysCapObj) != 0) {
+        gFreePcidJsonInfo.flag = -1;
         return ret;
     }
-    if (GetPriSyscap(pcidMain, g_free_pcid_json_info.sysCapObj, contextBufLen) != 0) {
-        g_free_pcid_json_info.flag = -1;
+    if (GetPriSyscap(pcidMain, gFreePcidJsonInfo.sysCapObj, contextBufLen) != 0) {
+        gFreePcidJsonInfo.flag = -1;
     }
     return ret;
 }
 
-
-int32_t CreateJsonRootObj(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, PCIDMain *pcidMain, char *systemType) {
-    if (g_free_pcid_json_info.jsonRootObj == NULL) {
+int32_t CreateJsonRootObj(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, PCIDMain *pcidMain, char *systemType)
+{
+    if (gFreePcidJsonInfo.jsonRootObj == NULL) {
         PRINT_ERR("cJSON_CreateObject failed\n");
         return -1;
     }
 
-    if (!cJSON_AddNumberToObject(g_free_pcid_json_info.jsonRootObj, "api_version", NtohsInter(pcidMain->apiVersion))) {
+    if (!cJSON_AddNumberToObject(gFreePcidJsonInfo.jsonRootObj, "api_version", NtohsInter(pcidMain->apiVersion))) {
         PRINT_ERR("cJSON_AddNumberToObject failed\n");
         return -1;
     }
-    if (!cJSON_AddNumberToObject(g_free_pcid_json_info.jsonRootObj, "manufacturer_id",
+    if (!cJSON_AddNumberToObject(gFreePcidJsonInfo.jsonRootObj, "manufacturer_id",
                                  NtohlInter(pcidMain->manufacturerID))) {
         PRINT_ERR("cJSON_AddNumberToObject failed\n");
         return -1;
     }
-    if (!cJSON_AddStringToObject(g_free_pcid_json_info.jsonRootObj, "system_type", systemType)) {
+    if (!cJSON_AddStringToObject(gFreePcidJsonInfo.jsonRootObj, "system_type", systemType)) {
         PRINT_ERR("cJSON_AddStringToObject failed\n");
         return -1;
     }
-    if (!cJSON_AddItemToObject(g_free_pcid_json_info.jsonRootObj, "syscap", g_free_pcid_json_info.sysCapObj)) {
+    if (!cJSON_AddItemToObject(gFreePcidJsonInfo.jsonRootObj, "syscap", gFreePcidJsonInfo.sysCapObj)) {
         PRINT_ERR("cJSON_AddItemToObject failed\n");
         return -1;
     }
     return 0;
 }
 
-int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo g_free_pcid_json_info, int32_t type, int32_t ret) {
-    switch (type)
-    {
+int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo gFreePcidJsonInfo, int32_t type, int32_t ret)
+{
+    switch (type) {
         case FREE_DECODE_PCID_CONVERT_OUT:
-            free(g_free_pcid_json_info.strJson);
+            free(gFreePcidJsonInfo.strJson);
         case FREE_DECODE_PCID_ROOT_OUT:
-            cJSON_Delete(g_free_pcid_json_info.jsonRootObj);
+            cJSON_Delete(gFreePcidJsonInfo.jsonRootObj);
         case FREE_DECODE_PCID_SYSCAP_OUT:
-            cJSON_Delete(g_free_pcid_json_info.sysCapObj);
+            cJSON_Delete(gFreePcidJsonInfo.sysCapObj);
         case FREE_DECODE_PCID_CONTEXT_OUT:
         default:
-            FreeContextBuffer(g_free_pcid_json_info.contextBuffer);
+            FreeContextBuffer(gFreePcidJsonInfo.contextBuffer);
     }
     return ret;
 }
@@ -723,10 +726,10 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     return ret;
 }
 
-int32_t FreeAfterEncodePCID(struct FreeEncodePcidInfo g_free_pcid_info, int32_t type, int32_t ret);
+int32_t FreeAfterEncodePCID(struct FreeEncodePcidInfo gFreePcidInfo, int32_t type, int32_t ret);
 
 int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapLen, uint32_t *mainSyscap,
-                         struct FreeEncodePcidInfo g_free_pcid_info, int32_t ret);
+        struct FreeEncodePcidInfo gFreePcidInfo, int32_t ret);
 
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
@@ -737,14 +740,14 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     uint16_t priSyscapCount = 0;
 
     char *privateSyscap = NULL;
-    struct FreeEncodePcidInfo g_free_pcid_info;
-    g_free_pcid_info.contextBuffer = NULL;
-    g_free_pcid_info.priSyscapFull = NULL;
-    g_free_pcid_info.output = NULL;
-    g_free_pcid_info.outDirPathFinal = outDirPath;
+    struct FreeEncodePcidInfo gFreePcidInfo;
+    gFreePcidInfo.contextBuffer = NULL;
+    gFreePcidInfo.priSyscapFull = NULL;
+    gFreePcidInfo.output = NULL;
+    gFreePcidInfo.outDirPathFinal = outDirPath;
     PCIDMain *pcidMain = NULL;
 
-    ret = GetFileContext(inputFile, &g_free_pcid_info.contextBuffer, (uint32_t *)&bufferLen);
+    ret = GetFileContext(inputFile, &gFreePcidInfo.contextBuffer, (uint32_t *)&bufferLen);
     if (ret != 0) {
         PRINT_ERR("Get pcid file failed, pcid file path: %s\n", inputFile);
         return -1;
@@ -752,10 +755,10 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 
     if (bufferLen > 1128) { // 1128, max size of pcid.sc
         PRINT_ERR("Input pcid file too large, pcid file size: %u\n", bufferLen);
-        return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_CONTEXT_OUT, ret);
+        return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_CONTEXT_OUT, ret);
     }
 
-    pcidMain = (PCIDMain *)g_free_pcid_info.contextBuffer;
+    pcidMain = (PCIDMain *)gFreePcidInfo.contextBuffer;
     privateSyscap = (char *)(pcidMain + 1);
     privateSyscapLen = strlen(privateSyscap);
 
@@ -769,25 +772,25 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
         }
     }
     if (priSyscapCount == 0) {
-        GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  g_free_pcid_info, ret);
+        GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  gFreePcidInfo, ret);
     }
-    g_free_pcid_info.priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_SYSCAP_LEN);
-    if (g_free_pcid_info.priSyscapFull == NULL) {
+    gFreePcidInfo.priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_SYSCAP_LEN);
+    if (gFreePcidInfo.priSyscapFull == NULL) {
         PRINT_ERR("malloc failed\n");
-        FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
+        FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
     }
-    (void)memset_s(g_free_pcid_info.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
+    (void)memset_s(gFreePcidInfo.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
                    0, priSyscapCount * SINGLE_SYSCAP_LEN);
     char tempSyscap[SINGLE_SYSCAP_LEN] = {0};
     char *temp = tempSyscap;
     for (i = 0, j = 0; i < privateSyscapLen; i++) {
         if (*privateSyscap == ',') {
             *temp = '\0';
-            ret = sprintf_s(g_free_pcid_info.priSyscapFull + j * SINGLE_SYSCAP_LEN, SINGLE_SYSCAP_LEN,
+            ret = sprintf_s(gFreePcidInfo.priSyscapFull + j * SINGLE_SYSCAP_LEN, SINGLE_SYSCAP_LEN,
                             "SystemCapability.%s", tempSyscap);
             if (ret == -1) {
                 PRINT_ERR("sprintf_s failed\n");
-                FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
+                FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
             }
             temp = tempSyscap;
             privateSyscap++;
@@ -797,11 +800,12 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
         *temp++ = *privateSyscap++;
     }
     // output
-    return GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  g_free_pcid_info, ret);
+    return GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  gFreePcidInfo, ret);
 }
 
 int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapLen, uint32_t *mainSyscap,
-                         struct FreeEncodePcidInfo g_free_pcid_info, int32_t ret) {
+        struct FreeEncodePcidInfo gFreePcidInfo, int32_t ret)
+{
     // 17, size of "SystemCapability."
     uint32_t outputLen = U32_TO_STR_MAX_LEN * PCID_OUT_BUFFER + 17 * priSyscapCount + privateSyscapLen + 1;
     char *output = NULL;
@@ -809,48 +813,48 @@ int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapLen, uin
     output = (char *)malloc(outputLen);
     if (output == NULL) {
         PRINT_ERR("malloc failed\n");
-        return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
+        return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
     }
     (void)memset_s(output, outputLen, 0, outputLen);
     ret = sprintf_s(output, outputLen, "%u", mainSyscap[0]);
     if (ret == -1) {
         PRINT_ERR("sprintf_s failed\n");
-        return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_OUT, ret);
+        return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_OUT, ret);
     }
     for (i = 1; i < PCID_OUT_BUFFER; i++) {
         ret = sprintf_s(output, outputLen, "%s,%u", output, mainSyscap[i]);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed\n");
-            return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_OUT, ret);
+            return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_OUT, ret);
         }
     }
     for (i = 0; i < priSyscapCount; i++) {
-        ret = sprintf_s(output, outputLen, "%s,%s", output, g_free_pcid_info.priSyscapFull + i * SINGLE_SYSCAP_LEN);
+        ret = sprintf_s(output, outputLen, "%s,%s", output, gFreePcidInfo.priSyscapFull + i * SINGLE_SYSCAP_LEN);
         if (ret == -1) {
             PRINT_ERR("sprintf_s failed\n");
-            return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_OUT, ret);
+            return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_OUT, ret);
         }
     }
     // save as file
     const char outputFileName[] = "PCID.txt";
-    ret = ConvertedContextSaveAsFile(g_free_pcid_info.outDirPathFinal, outputFileName, output, strlen(output));
+    ret = ConvertedContextSaveAsFile(gFreePcidInfo.outDirPathFinal, outputFileName, output, strlen(output));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n",
-                  g_free_pcid_info.outDirPathFinal, outputFileName);
+                  gFreePcidInfo.outDirPathFinal, outputFileName);
     }
-    return FreeAfterEncodePCID(g_free_pcid_info, FREE_ENCODE_PCID_OUT, ret);
+    return FreeAfterEncodePCID(gFreePcidInfo, FREE_ENCODE_PCID_OUT, ret);
 }
 
-int32_t FreeAfterEncodePCID(struct FreeEncodePcidInfo g_free_pcid_info, int32_t type, int32_t ret) {
-    switch (type)
-    {
+int32_t FreeAfterEncodePCID(struct FreeEncodePcidInfo gFreePcidInfo, int32_t type, int32_t ret)
+{
+    switch (type) {
         case FREE_ENCODE_PCID_OUT:
-            free(g_free_pcid_info.output);
+            free(gFreePcidInfo.output);
         case FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT:
-            free(g_free_pcid_info.priSyscapFull);
+            free(gFreePcidInfo.priSyscapFull);
         case FREE_ENCODE_PCID_CONTEXT_OUT:
         default:
-            free(g_free_pcid_info.contextBuffer);
+            free(gFreePcidInfo.contextBuffer);
     }
     return ret;
 }
