@@ -315,6 +315,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_COMMONTYPE,
     WINDOW_SESSIONMANAGER,
     PRINT_PRINT_FRAMEWORK_NATIVEPRINT,
+    ARKUI_GRAPHICS3D,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -612,6 +613,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.CommonType", DISTRIBUTEDDATAMANAGER_COMMONTYPE},
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
     {"SystemCapability.Print.PrintFramework.NativePrint", PRINT_PRINT_FRAMEWORK_NATIVEPRINT},
+    {"SystemCapability.ArkUi.Graphics3D", ARKUI_GRAPHICS3D},
 };
 
 #ifdef __cplusplus
