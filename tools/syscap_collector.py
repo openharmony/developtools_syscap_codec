@@ -16,6 +16,7 @@ import logging
 import os
 import json
 import argparse
+import stat
 
 
 def get_args():
@@ -33,9 +34,11 @@ def get_args():
 
 def dict_to_json(output_path: str, syscaps_dict: dict):
     print("start generate syscap json...")
+    flags = os.O_WRONLY | os.O_CREAT
+    modes = stat.S_IWUSR | stat.S_IRUSR
     for product_name, syscaps_list in syscaps_dict.items():
         filename = os.path.join(output_path, f'{product_name}.json')
-        with open(filename, 'w') as f:
+        with os.fdopen(os.open(filename, flags, modes), 'w') as f:
             json.dump({'SysCaps': syscaps_list}, f)
     print("end...")
 
@@ -139,7 +142,7 @@ def collect_all_product_component_syscap_dict(parts_path_info: dict, project_pat
 def get_subsystem_info(subsystem_config_file, source_root_dir):
     subsystem_configs = scan(subsystem_config_file, source_root_dir)
     _all_components_path = []
-    for key, value in subsystem_configs.get('subsystem').items():
+    for _, value in subsystem_configs.get('subsystem').items():
         for i in value.get('build_files'):
             _all_components_path.append(i)
     return subsystem_configs.get('subsystem')
@@ -190,8 +193,8 @@ def _scan_build_file(subsystem_path):
     _bundle_files = []
     try:
         _files = traversal_files(subsystem_path, _files)
-    except FileNotFoundError as e:
-        print(e)
+    except FileNotFoundError:
+        print(f"read file {subsystem_path} failed.")
     return _files
 
 
@@ -413,17 +416,24 @@ def get_product_define_path(source_root_dir):
     return os.path.join(source_root_dir, 'productdefine', 'common', 'inherit')
 
 
+def components_list_handler(product_file_json):
+    components_list = list()
+    for subsystems in product_file_json.get('subsystems'):
+        for components in subsystems.get('components'):
+            components_list.append(components.get('component'))
+
+    return components_list
+
+
 def product_component_handler(product_file, product_file_path):
     all_components_dict = dict()
     components_list = list()
     try:
         with open(product_file_path, 'r', encoding='utf-8') as f:
             product_file_json = json.load(f)
-            for subsystems in product_file_json.get('subsystems'):
-                for components in subsystems.get('components'):
-                    components_list.append(components.get('component'))
-    except Exception as e:
-        print(e)
+            components_list = components_list_handler(product_file_json)
+    except FileNotFoundError:
+        print(f"read file {product_file_path} failed.")
     all_components_dict.update({product_file.split('.')[0]: components_list})
     return all_components_dict
 
