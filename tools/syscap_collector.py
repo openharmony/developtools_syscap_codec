@@ -336,7 +336,6 @@ class LoadBuildConfig(object):
                 bundle_part_obj = BundlePartObj(_build_file)
                 _parts_config = bundle_part_obj.to_ohos_build()
             else:
-
                 _parts_config = read_build_file(_build_file)
             _subsystem_name = _parts_config.get('subsystem')
             if not is_thirdparty_subsystem and subsystem_name and _subsystem_name != subsystem_name:
@@ -399,7 +398,7 @@ def get_parts_info(source_root_dir, subsystem_info, build_xts=False):
 def _read_json_file(input_file):
     if not os.path.exists(input_file):
         print("file '{}' doesn't exist.".format(input_file))
-        return 0
+        return {}
     try:
         with open(input_file, 'r') as input_f:
             data = json.load(input_f)
