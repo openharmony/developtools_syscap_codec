@@ -249,7 +249,7 @@ def read_build_file(ohos_build_file):
     if not os.path.exists(ohos_build_file):
         raise Exception("config file '{}' doesn't exist.".format(ohos_build_file), "2014")
     subsystem_config = _read_json_file(ohos_build_file)
-    if subsystem_config is None:
+    if not subsystem_config:
         raise Exception("read file '{}' failed.".format(ohos_build_file), "2014")
     return subsystem_config
 
@@ -264,7 +264,7 @@ class BundlePartObj(object):
             raise Exception("file '{}' doesn't exist.".format(
                 self._build_config_file), "2011")
         self.bundle_info = _read_json_file(self._build_config_file)
-        if self.bundle_info is None:
+        if not self.bundle_info:
             raise Exception("read file '{}' failed.".format(
                 self._build_config_file), "2011")
 
@@ -399,7 +399,7 @@ def get_parts_info(source_root_dir, subsystem_info, build_xts=False):
 def _read_json_file(input_file):
     if not os.path.exists(input_file):
         print("file '{}' doesn't exist.".format(input_file))
-        return None
+        return 0
     try:
         with open(input_file, 'r') as input_f:
             data = json.load(input_f)
