@@ -273,7 +273,8 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     return FreeAfterCreatePCID(pcidBuffer, allOsSyscapObj, contextBuffer, FREE_CREATE_PCID_BUFFER_OUT, ret);
 }
 
-int32_t CheckConvertedContextSaveAsFile(char *outDirPath, PCIDMain *pcidBuffer, uint16_t pcidLength, int32_t ret) {
+int32_t CheckConvertedContextSaveAsFile(char *outDirPath, PCIDMain *pcidBuffer, uint16_t pcidLength, int32_t ret)
+{
     const char pcidFileName[] = "PCID.sc";
     ret = ConvertedContextSaveAsFile(outDirPath, pcidFileName, (char *)pcidBuffer, pcidLength);
     if (ret != 0) {
