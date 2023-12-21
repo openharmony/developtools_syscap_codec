@@ -29,6 +29,9 @@ constexpr size_t PCID_MAIN_U32 = OS_SYSCAP_U32_NUM + 2;
 constexpr size_t U32_TO_STR_MAX_LEN = 11;
 constexpr size_t KEY_BUFFER_SIZE = 32;
 
+#define FREE_PRICAP_ARRAY_AFTER_GET_SYS_CAP 1
+#define FREE_PRIOUTPUT_AFTER_GET_SYS_CAP 2
+
 #define GET_PARAMS(env, info, num) \
     size_t argc = num;             \
     napi_value argv[num] = {0};    \
@@ -50,47 +53,21 @@ struct SystemCapabilityAsyncContext {
     int status = 0;
 };
 
-static char* GetSystemCapability()
+static char* CalculateAllStringLength(char *priOutput, char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN],
+        char (*priCapArray)[SINGLE_SYSCAP_LEN], char *allSyscapBuffer)
 {
     bool retBool;
-    int retError, priOutputLen, priCapArrayCnt, sumLen;
-    char osOutput[SINGLE_SYSCAP_LEN] = {};
     errno_t err = EOK;
-    uint32_t *osCapU32 = nullptr;
-    char *priOutput = nullptr;
     char *temp = nullptr;
-    char *allSyscapBuffer = nullptr;
-    char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN] = {};
-    char (*priCapArray)[SINGLE_SYSCAP_LEN] = nullptr;
-
-    retBool = EncodeOsSyscap(osOutput, PCID_MAIN_BYTES);
-    if (!retBool) {
-        PRINT_ERR("get encoded os syscap failed.");
-        return nullptr;
-    }
-    retBool = EncodePrivateSyscap(&priOutput, &priOutputLen);
-    if (!retBool) {
-        PRINT_ERR("get encoded private syscap failed.");
-        goto FREE_PRIOUTPUT;
-    }
-
-    osCapU32 = reinterpret_cast<uint32_t *>(osOutput);
-    for (size_t i = 0; i < PCID_MAIN_U32; i++) { // 2, header of pcid.sc
-        retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
-        if (retError == -1) {
-            PRINT_ERR("get uint32_t syscap string failed.");
-            goto FREE_PRIOUTPUT;
-        }
-    }
+    int retError, priCapArrayCnt;
+    int sumLen = 0;
 
     retBool = DecodePrivateSyscap(priOutput, &priCapArray, &priCapArrayCnt);
     if (!retBool) {
         PRINT_ERR("get encoded private syscap failed.");
-        goto FREE_PRICAP_ARRAY;
+        return allSyscapBuffer;
     }
 
-    // calculate all string length
-    sumLen = 0;
     for (size_t i = 0; i < PCID_MAIN_U32; i++) {
         sumLen += strlen(osCapArray[i]);
     }
@@ -103,14 +80,13 @@ static char* GetSystemCapability()
     allSyscapBuffer = (char *)malloc(sumLen);
     if (allSyscapBuffer == nullptr) {
         PRINT_ERR("malloc failed!");
-        goto FREE_PRICAP_ARRAY;
+        return allSyscapBuffer;
     }
     err = memset_s(allSyscapBuffer, sumLen, 0, sumLen);
     if (err != EOK) {
         PRINT_ERR("memset failed!");
         free(allSyscapBuffer);
-        allSyscapBuffer = nullptr;
-        goto FREE_PRICAP_ARRAY;
+        return nullptr;
     }
     temp = *osCapArray;
 
@@ -119,8 +95,7 @@ static char* GetSystemCapability()
         if (retError == -1) {
             PRINT_ERR("splicing os syscap string failed.");
             free(allSyscapBuffer);
-            allSyscapBuffer = nullptr;
-            goto FREE_PRICAP_ARRAY;
+            return nullptr;
         }
         temp = allSyscapBuffer;
     }
@@ -129,18 +104,58 @@ static char* GetSystemCapability()
         if (retError == -1) {
             PRINT_ERR("splicing pri syscap string failed.");
             free(allSyscapBuffer);
-            allSyscapBuffer = nullptr;
-            goto FREE_PRICAP_ARRAY;
+            return nullptr;
         }
         temp = allSyscapBuffer;
     }
-
-FREE_PRICAP_ARRAY:
-    free(priCapArray);
-FREE_PRIOUTPUT:
-    free(priOutput);
-
     return allSyscapBuffer;
+}
+
+static char* FreeAfterGetSysCap(char *priOutput, char (*priCapArray)[SINGLE_SYSCAP_LEN], char *allSyscapBuffer,
+        int32_t type)
+{
+    if (type == FREE_PRICAP_ARRAY_AFTER_GET_SYS_CAP) {
+        free(priCapArray);
+    }
+    free(priOutput);
+    return allSyscapBuffer;
+}
+
+static char* GetSystemCapability()
+{
+    bool retBool;
+    int retError, priOutputLen;
+    char osOutput[SINGLE_SYSCAP_LEN] = {};
+    
+    uint32_t *osCapU32 = nullptr;
+    char *priOutput = nullptr;
+
+    char *allSyscapBuffer = nullptr;
+    char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN] = {};
+    char (*priCapArray)[SINGLE_SYSCAP_LEN] = nullptr;
+
+    retBool = EncodeOsSyscap(osOutput, PCID_MAIN_BYTES);
+    if (!retBool) {
+        PRINT_ERR("get encoded os syscap failed.");
+        return nullptr;
+    }
+    retBool = EncodePrivateSyscap(&priOutput, &priOutputLen);
+    if (!retBool) {
+        PRINT_ERR("get encoded private syscap failed.");
+        return FreeAfterGetSysCap(priOutput, priCapArray, allSyscapBuffer, FREE_PRIOUTPUT_AFTER_GET_SYS_CAP);
+    }
+
+    osCapU32 = reinterpret_cast<uint32_t *>(osOutput);
+    for (size_t i = 0; i < PCID_MAIN_U32; i++) { // 2, header of pcid.sc
+        retError = sprintf_s(osCapArray[i], U32_TO_STR_MAX_LEN, "%u", osCapU32[i]);
+        if (retError == -1) {
+            PRINT_ERR("get uint32_t syscap string failed.");
+            return FreeAfterGetSysCap(priOutput, priCapArray, allSyscapBuffer, FREE_PRIOUTPUT_AFTER_GET_SYS_CAP);
+        }
+    }
+
+    allSyscapBuffer = CalculateAllStringLength(priOutput, osCapArray, priCapArray, allSyscapBuffer);
+    return FreeAfterGetSysCap(priOutput, priCapArray, allSyscapBuffer, FREE_PRICAP_ARRAY_AFTER_GET_SYS_CAP);
 }
 
 napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
