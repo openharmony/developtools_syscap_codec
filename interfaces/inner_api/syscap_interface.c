@@ -323,8 +323,8 @@ FREE_SYSCAP_OUT:
     return ret;
 }
 
-static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo, cJSON *sysCapArray,
-        const char *inputFile)
+static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo,
+    cJSON *sysCapArray, const char *inputFile)
 {
     // trans to string format
     freeAfterDecodeRpcidInfo.sysCapDefine =  CreateWholeSyscapJsonObj();
@@ -339,7 +339,8 @@ static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo fr
         return -1;
     }
     // malloc for save os syscap index
-    freeAfterDecodeRpcidInfo.osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t) * freeAfterDecodeRpcidInfo.sysCapArraySize);
+    freeAfterDecodeRpcidInfo.osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t)
+        * freeAfterDecodeRpcidInfo.sysCapArraySize);
     if (freeAfterDecodeRpcidInfo.osSysCapIndex == NULL) {
         PRINT_ERR("malloc failed.\n");
         return -1;
@@ -398,7 +399,8 @@ static void PrintResultToOutBuffer(struct FreeAfterDecodeRpcidInfo freeAfterDeco
 }
 
 static void PartSysCapAndOutBuffer(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo, char *outBuffer,
-    char *priSyscapArray, cJSON *sysCapArray) {
+    char *priSyscapArray, cJSON *sysCapArray)
+{
     uint32_t i;
     int32_t ret = 0;
     uint16_t indexOs = 0;
@@ -428,7 +430,8 @@ static void PartSysCapAndOutBuffer(struct FreeAfterDecodeRpcidInfo freeAfterDeco
 }
 
 static char *FreeAfterDecodeRpcidToString(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo, int32_t type,
-        char *outBuffer) {
+    char *outBuffer)
+{
     switch (type) {
     case FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID:
         free(freeAfterDecodeRpcidInfo.priSyscap);
@@ -497,8 +500,9 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
     return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID, outBuffer);
 }
 
-static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const size_t allSyscapNum, char *tempSyscap,
-        uint32_t i, uint8_t k) {
+static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const size_t allSyscapNum,
+    char *tempSyscap, uint32_t i, uint8_t k)
+{
     uint32_t pos = (i - 2) * INT_BIT + k;
     uint32_t t;
     for (t = 0; t < allSyscapNum; t++) {
@@ -506,15 +510,16 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const
             break;
         }
     }
-    pcidPriSyscapInfo.ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str); // 2, header of pcid & rpcid
+    pcidPriSyscapInfo.ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str); 
+    // 2, header of pcid & rpcid
     if (pcidPriSyscapInfo.ret != EOK) {
         return -1;
     }
     return 0;
 }
 
-static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, CompareError *result, const size_t allSyscapNum,
-        uint32_t i, uint32_t blockBits)
+static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, CompareError *result,
+    const size_t allSyscapNum, uint32_t i, uint32_t blockBits)
 {
     int32_t flag = 0;
     for (uint8_t k = 0; k < INT_BIT; k++) {
@@ -531,14 +536,15 @@ static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, Comp
                 FreeCompareError(result);
                 return -1;
             }
-            result->syscap[pcidPriSyscapInfo.ossyscapFlag++] = tempSyscap;   
+            result->syscap[pcidPriSyscapInfo.ossyscapFlag++] = tempSyscap;
         }
     }
     return 0;
 }
 
-static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo, uint32_t pcidOsAarry[PCID_OUT_BUFFER],
-        uint32_t rpcidOsAarry[PCID_OUT_BUFFER], CompareError *result, const size_t allSyscapNum)
+static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo, 
+    uint32_t pcidOsAarry[PCID_OUT_BUFFER], uint32_t rpcidOsAarry[PCID_OUT_BUFFER], CompareError *result,
+    const size_t allSyscapNum)
 {
     uint32_t i;
     int32_t ret = 0;
