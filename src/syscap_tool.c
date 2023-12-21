@@ -44,6 +44,87 @@
 #define U32_TO_STR_MAX_LEN 11
 #define STRING_FORMAT_LEN_MAX 1024
 
+#define FREE_CONVERT_OUT_RPCID_ENCODE 1
+#define FREE_CONTEXT_OUT_RPCID_ENCODE 2
+
+#define FREE_OUTBUFFER_AFTER_RPCIDSC 1
+#define FREE_MALLOC_RPISYSCAP_AFTER_RPCIDSC 2
+#define FREE_MALLOC_OSSYSCAP_AFTER_RPCIDSC 3
+#define FREE_WHOLE_SYSCAP_AFTER_RPCIDSC 4
+#define FREE_RPCID_ROOT_AFTER_RPCIDSC 5
+#define FREE_CONTEXT_OUT_AFTER_RPCIDSC 6
+
+struct JsonObjectSysCap {
+    cJSON *cjsonObjectRoot;
+    cJSON *sysCapPtr;
+};
+
+struct FreeAfterEncodeRpcidscInfo {
+    char *outBuffer;
+    char *priSyscapArray;
+    uint16_t *osSysCapIndex;
+    cJSON *sysCapDefine;
+    cJSON *rpcidRoot;
+    char *contextBuffer;
+    int32_t type;
+    int16_t flag;
+};
+
+static int32_t FillOsCapLength(char *convertedBuffer, char *contextBuffer, struct JsonObjectSysCap gJsonObjectSysCap,
+        uint32_t sysCapSize, int32_t ret)
+{
+    RPCIDHead *headPtr = NULL;
+    char *fillTmpPtr = NULL;
+    cJSON *apiVerItem = NULL;
+    cJSON *arrayItemPtr = NULL;
+
+    headPtr = (RPCIDHead *)convertedBuffer;
+    apiVerItem = cJSON_GetObjectItem(gJsonObjectSysCap.cjsonObjectRoot, "api_version");
+    if (apiVerItem == NULL || !cJSON_IsNumber(apiVerItem)) {
+        PRINT_ERR("get \"api_version\" failed\n");
+        return -1;
+    }
+    headPtr->apiVersion = HtonsInter((uint16_t)apiVerItem->valueint);
+    headPtr->apiVersionType = 1;
+
+    fillTmpPtr = convertedBuffer + sizeof(RPCIDHead);
+    *(uint16_t *)fillTmpPtr = HtonsInter(2); // 2, SysCap Type, 2: request Cap
+    fillTmpPtr += sizeof(uint16_t);
+    // fill osCap Length
+    *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LEN));
+    fillTmpPtr += sizeof(uint16_t);
+    for (uint32_t i = 0; i < sysCapSize; i++) {
+        arrayItemPtr = cJSON_GetArrayItem(gJsonObjectSysCap.sysCapPtr, (int)i);
+        char *pointPos = strchr(arrayItemPtr->valuestring, '.');
+        if (pointPos == NULL) {
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
+            return -1;
+        }
+        ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
+        if (ret != 0) {
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
+            return -1;
+        }
+
+        ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LEN, pointPos + 1, strlen(pointPos + 1));
+        if (ret != 0) {
+            PRINT_ERR("context of \"syscap\" array is invalid\n");
+            return -1;
+        }
+        fillTmpPtr += SINGLE_FEAT_LEN;
+    }
+    return ret;
+}
+
+static int32_t FreeAfterRPCIDEncode(char *convertedBuffer, char *contextBuffer, int32_t type, int32_t ret)
+{
+    if (type == FREE_CONVERT_OUT_RPCID_ENCODE) {
+        free(convertedBuffer);
+    }
+    FreeContextBuffer(contextBuffer);
+    return ret;
+}
+
 int32_t RPCIDEncode(char *inputFile, char *outputPath)
 {
     int32_t ret;
@@ -51,12 +132,9 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     uint32_t bufferLen, sysCapSize;
     char *convertedBuffer = NULL;
     uint32_t convertedBufLen = sizeof(RPCIDHead);
-    RPCIDHead *headPtr = NULL;
-    char *fillTmpPtr = NULL;
-    cJSON *cjsonObjectRoot = NULL;
-    cJSON *apiVerItem = NULL;
-    cJSON *sysCapPtr = NULL;
-    cJSON *arrayItemPtr = NULL;
+    struct JsonObjectSysCap gJsonObjectSysCap;
+    gJsonObjectSysCap.cjsonObjectRoot = NULL;
+    gJsonObjectSysCap.sysCapPtr = NULL;
 
     ret = GetFileContext(inputFile, &contextBuffer, &bufferLen);
     if (ret != 0) {
@@ -64,25 +142,22 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
         return ret;
     }
 
-    cjsonObjectRoot = cJSON_ParseWithLength(contextBuffer, bufferLen);
-    if (cjsonObjectRoot == NULL) {
+    gJsonObjectSysCap.cjsonObjectRoot = cJSON_ParseWithLength(contextBuffer, bufferLen);
+    if (gJsonObjectSysCap.cjsonObjectRoot == NULL) {
         PRINT_ERR("cJSON_Parse failed, context buffer is:\n%s\n", contextBuffer);
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
+        return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
 
-    sysCapPtr = cJSON_GetObjectItem(cjsonObjectRoot, "syscap");
-    if (sysCapPtr == NULL || !cJSON_IsArray(sysCapPtr)) {
+    gJsonObjectSysCap.sysCapPtr = cJSON_GetObjectItem(gJsonObjectSysCap.cjsonObjectRoot, "syscap");
+    if (gJsonObjectSysCap.sysCapPtr == NULL || !cJSON_IsArray(gJsonObjectSysCap.sysCapPtr)) {
         PRINT_ERR("get \"syscap\" object failed.\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
+        return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
 
-    ret = cJSON_GetArraySize(sysCapPtr);
+    ret = cJSON_GetArraySize(gJsonObjectSysCap.sysCapPtr);
     if (ret < 0) {
         PRINT_ERR("get \"syscap\" array size failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
+        return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
     sysCapSize = (uint32_t)ret;
     // 2, to save SysCaptype & SysCapLength
@@ -91,63 +166,19 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     convertedBuffer = (char *)malloc(convertedBufLen);
     if (convertedBuffer == NULL) {
         PRINT_ERR("malloc failed\n");
-        ret = -1;
-        goto FREE_CONTEXT_OUT;
+        return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
     (void)memset_s(convertedBuffer, convertedBufLen, 0, convertedBufLen);
 
-    headPtr = (RPCIDHead *)convertedBuffer;
-    apiVerItem = cJSON_GetObjectItem(cjsonObjectRoot, "api_version");
-    if (apiVerItem == NULL || !cJSON_IsNumber(apiVerItem)) {
-        PRINT_ERR("get \"api_version\" failed\n");
-        ret = -1;
-        goto FREE_CONVERT_OUT;
+    ret = FillOsCapLength(convertedBuffer, contextBuffer, gJsonObjectSysCap,  sysCapSize, ret);
+    if (ret == -1) {
+        return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
     }
-    headPtr->apiVersion = HtonsInter((uint16_t)apiVerItem->valueint);
-    headPtr->apiVersionType = 1;
-
-    fillTmpPtr = convertedBuffer + sizeof(RPCIDHead);
-
-    *(uint16_t *)fillTmpPtr = HtonsInter(2); // 2, SysCap Type, 2: request Cap
-    fillTmpPtr += sizeof(uint16_t);
-    // fill osCap Length
-    *(uint16_t *)fillTmpPtr = HtonsInter((uint16_t)(sysCapSize * SINGLE_FEAT_LEN));
-    fillTmpPtr += sizeof(uint16_t);
-    for (uint32_t i = 0; i < sysCapSize; i++) {
-        arrayItemPtr = cJSON_GetArrayItem(sysCapPtr, (int)i);
-        char *pointPos = strchr(arrayItemPtr->valuestring, '.');
-        if (pointPos == NULL) {
-            PRINT_ERR("context of \"syscap\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-        ret = strncmp(arrayItemPtr->valuestring, "SystemCapability.", pointPos - arrayItemPtr->valuestring + 1);
-        if (ret != 0) {
-            PRINT_ERR("context of \"syscap\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-
-        ret = memcpy_s(fillTmpPtr, SINGLE_FEAT_LEN, pointPos + 1, strlen(pointPos + 1));
-        if (ret != 0) {
-            PRINT_ERR("context of \"syscap\" array is invalid\n");
-            ret = -1;
-            goto FREE_CONVERT_OUT;
-        }
-        fillTmpPtr += SINGLE_FEAT_LEN;
-    }
-
     ret = ConvertedContextSaveAsFile(outputPath, "RPCID.sc", convertedBuffer, convertedBufLen);
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.sc\n", outputPath);
-        goto FREE_CONVERT_OUT;
     }
-
-FREE_CONVERT_OUT:
-    free(convertedBuffer);
-FREE_CONTEXT_OUT:
-    FreeContextBuffer(contextBuffer);
-    return ret;
+    return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
 }
 
 static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson)
@@ -256,140 +287,187 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *inde
     return 0;
 }
 
-int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
+static int32_t PrintOutputToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo, uint16_t outBufferLen,
+        uint32_t outUint[RPCID_OUT_BUFFER], uint16_t indexPri, char *outDirPath)
 {
     int32_t ret = 0;
-    int32_t sysCapArraySize;
-    uint32_t bufferLen;
-    uint16_t indexPri = 0;
-    uint16_t *osSysCapIndex;
-    char *contextBuffer = NULL;
-    char *priSyscapArray = NULL;
+    freeAfterEncodeRpcidscInfo.type = FREE_OUTBUFFER_AFTER_RPCIDSC;
+    (void)memset_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, 0, outBufferLen);
+    ret = sprintf_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, "%u", outUint[0]);
+    if (ret == -1) {
+        PRINT_ERR("sprintf_s failed.\n");
+        freeAfterEncodeRpcidscInfo.flag = 1;
+        return ret;
+    }
+    for (int i = 1; i < RPCID_OUT_BUFFER; i++) {
+        ret = sprintf_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, "%s,%u",
+                freeAfterEncodeRpcidscInfo.outBuffer, outUint[i]);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed.\n");
+            freeAfterEncodeRpcidscInfo.flag = 1;
+            return ret;
+        }
+    }
+
+    for (uint16_t i = 0; i < indexPri; i++) {
+        ret = sprintf_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, "%s,%s",
+            freeAfterEncodeRpcidscInfo.outBuffer, freeAfterEncodeRpcidscInfo.priSyscapArray + i * SINGLE_SYSCAP_LEN);
+        if (ret == -1) {
+            PRINT_ERR("sprintf_s failed.\n");
+            freeAfterEncodeRpcidscInfo.flag = 1;
+            return ret;
+        }
+    }
+
+    const char outputFilename[] = "RPCID.txt";
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFilename, freeAfterEncodeRpcidscInfo.outBuffer,
+            strlen(freeAfterEncodeRpcidscInfo.outBuffer));
+    if (ret != 0) {
+        PRINT_ERR("Save to txt file failed. Output path:%s/%s\n", outDirPath, outputFilename);
+        freeAfterEncodeRpcidscInfo.flag = 1;
+    }
+    return ret;
+}
+
+static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo,
+    int32_t sysCapArraySize, cJSON *sysCapArray, char *outDirPath)
+{
     char *priSyscap = NULL;
     cJSON *cJsonTemp = NULL;
-    cJSON *rpcidRoot = NULL;
-    cJSON *sysCapDefine = NULL;
-    cJSON *sysCapArray = NULL;
+    uint16_t indexPri = 0;
+    int32_t ret = 0;
+    freeAfterEncodeRpcidscInfo.type = FREE_MALLOC_OSSYSCAP_AFTER_RPCIDSC;
 
-    // check rpcid.sc
-    if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen) != 0) {
-        PRINT_ERR("Check rpcid.sc format failed. Input file: %s\n", inputFile);
-        goto FREE_CONTEXT_OUT;
-    }
-
-    // parse rpcid to json
-    rpcidRoot = cJSON_CreateObject();
-    if (ParseRpcidToJson(contextBuffer, bufferLen, rpcidRoot) != 0) {
-        PRINT_ERR("Prase rpcid to json failed. Input file: %s\n", inputFile);
-        goto FREE_RPCID_ROOT;
-    }
-
-    // trans to string format
-    sysCapDefine =  CreateWholeSyscapJsonObj();
-    sysCapArray = cJSON_GetObjectItem(rpcidRoot, "syscap");
-    if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
-        PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
-        goto FREE_WHOLE_SYSCAP;
-    }
-    sysCapArraySize = cJSON_GetArraySize(sysCapArray);
-    if (sysCapArraySize < 0) {
-        PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
-        goto FREE_WHOLE_SYSCAP;
-    }
-    // malloc for save os syscap index
-    osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t) * sysCapArraySize);
-    if (osSysCapIndex == NULL) {
-        PRINT_ERR("malloc failed.\n");
-        goto FREE_WHOLE_SYSCAP;
-    }
-    (void)memset_s(osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
+    (void)memset_s(freeAfterEncodeRpcidscInfo.osSysCapIndex, sizeof(uint16_t) * sysCapArraySize,
                    0, sizeof(uint16_t) * sysCapArraySize);
     // malloc for save private syscap string
-    priSyscapArray = (char *)malloc((uint32_t)sysCapArraySize * SINGLE_SYSCAP_LEN);
-    if (priSyscapArray == NULL) {
+    freeAfterEncodeRpcidscInfo.priSyscapArray = (char *)malloc((uint32_t)sysCapArraySize * SINGLE_SYSCAP_LEN);
+    if (freeAfterEncodeRpcidscInfo.priSyscapArray == NULL) {
         PRINT_ERR("malloc(%d) failed.\n", sysCapArraySize * SINGLE_SYSCAP_LEN);
-        goto FREE_MALLOC_OSSYSCAP;
+        freeAfterEncodeRpcidscInfo.flag = 1;
+        return ret;
     }
-    (void)memset_s(priSyscapArray, (size_t)(sysCapArraySize * SINGLE_SYSCAP_LEN),
+    (void)memset_s(freeAfterEncodeRpcidscInfo.priSyscapArray, (size_t)(sysCapArraySize * SINGLE_SYSCAP_LEN),
                    0, (size_t)(sysCapArraySize * SINGLE_SYSCAP_LEN));
-    priSyscap = priSyscapArray;
+    priSyscap = freeAfterEncodeRpcidscInfo.priSyscapArray;
     // part os syscap and ptivate syscap
     uint16_t indexOs = 0;
     for (int i = 0; i < sysCapArraySize; i++) {
         cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
-        cJsonTemp = cJSON_GetObjectItem(sysCapDefine, cJsonItem->valuestring);
+        cJsonTemp = cJSON_GetObjectItem(freeAfterEncodeRpcidscInfo.sysCapDefine, cJsonItem->valuestring);
         if (cJsonTemp != NULL) {
-            osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
+            freeAfterEncodeRpcidscInfo.osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
             ret = strcpy_s(priSyscap, SINGLE_SYSCAP_LEN, cJsonItem->valuestring);
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
-                goto FREE_MALLOC_PRISYSCAP;
+                freeAfterEncodeRpcidscInfo.flag = 1;
+                return ret;
             }
             priSyscap += SINGLE_SYSCAP_LEN;
             indexPri++;
         }
     }
     uint32_t outUint[RPCID_OUT_BUFFER] = {0};
-    outUint[0] = *(uint32_t *)contextBuffer;
-    outUint[1] = *(uint32_t *)(contextBuffer + sizeof(uint32_t));
+    outUint[0] = *(uint32_t *)freeAfterEncodeRpcidscInfo.contextBuffer;
+    outUint[1] = *(uint32_t *)(freeAfterEncodeRpcidscInfo.contextBuffer + sizeof(uint32_t));
     uint8_t *osOutUint = (uint8_t *)(outUint + 2);
-    if (SetOsSysCapBitMap(osOutUint, 120, osSysCapIndex, indexOs) != 0) {  // 120, len of osOutUint
+    // 120, len of osOutUint
+    if (SetOsSysCapBitMap(osOutUint, 120, freeAfterEncodeRpcidscInfo.osSysCapIndex, indexOs) != 0) {
         PRINT_ERR("Set os syscap bit map failed.\n");
-        goto FREE_MALLOC_PRISYSCAP;
+        freeAfterEncodeRpcidscInfo.flag = 1;
+        return ret;
     }
 
-    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER
-                            + SINGLE_SYSCAP_LEN * indexPri;
-    char *outBuffer = (char *)malloc(outBufferLen);
-    if (outBuffer == NULL) {
+    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER + SINGLE_SYSCAP_LEN * indexPri;
+    freeAfterEncodeRpcidscInfo.outBuffer = (char *)malloc(outBufferLen);
+    if (freeAfterEncodeRpcidscInfo.outBuffer == NULL) {
         PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
-        goto FREE_MALLOC_PRISYSCAP;
+        freeAfterEncodeRpcidscInfo.flag = 1;
+        return ret;
     }
-    (void)memset_s(outBuffer, outBufferLen, 0, outBufferLen);
+    return PrintOutputToFile(freeAfterEncodeRpcidscInfo, outBufferLen, outUint, indexPri, outDirPath);
+}
 
-    ret = sprintf_s(outBuffer, outBufferLen, "%u", outUint[0]);
-    if (ret == -1) {
-        PRINT_ERR("sprintf_s failed.\n");
-        goto FREE_OUTBUFFER;
+static int32_t FreeAfterEncodeRpcidsc(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo, int32_t type,
+        int32_t ret)
+{
+    switch (type) {
+        case FREE_OUTBUFFER_AFTER_RPCIDSC:
+            free(freeAfterEncodeRpcidscInfo.outBuffer);
+            /* fall-through */
+        case FREE_MALLOC_RPISYSCAP_AFTER_RPCIDSC:
+            free(freeAfterEncodeRpcidscInfo.priSyscapArray);
+            /* fall-through */
+        case FREE_MALLOC_OSSYSCAP_AFTER_RPCIDSC:
+            free(freeAfterEncodeRpcidscInfo.osSysCapIndex);
+            /* fall-through */
+        case FREE_WHOLE_SYSCAP_AFTER_RPCIDSC:
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.sysCapDefine);
+            /* fall-through */
+        case FREE_RPCID_ROOT_AFTER_RPCIDSC:
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
+            /* fall-through */
+        case FREE_CONTEXT_OUT_AFTER_RPCIDSC:
+        default:
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
     }
-    for (int i = 1; i < RPCID_OUT_BUFFER; i++) {
-        ret = sprintf_s(outBuffer, outBufferLen, "%s,%u", outBuffer, outUint[i]);
-        if (ret == -1) {
-            PRINT_ERR("sprintf_s failed.\n");
-            goto FREE_OUTBUFFER;
-        }
-    }
-
-    for (uint16_t i = 0; i < indexPri; i++) {
-        ret = sprintf_s(outBuffer, outBufferLen, "%s,%s", outBuffer,
-                        priSyscapArray + i * SINGLE_SYSCAP_LEN);
-        if (ret == -1) {
-            PRINT_ERR("sprintf_s failed.\n");
-            goto FREE_OUTBUFFER;
-        }
-    }
-
-    const char outputFilename[] = "RPCID.txt";
-    ret = ConvertedContextSaveAsFile(outDirPath, outputFilename, outBuffer, strlen(outBuffer));
-    if (ret != 0) {
-        PRINT_ERR("Save to txt file failed. Output path:%s/%s\n", outDirPath, outputFilename);
-        goto FREE_OUTBUFFER;
-    }
-
-FREE_OUTBUFFER:
-    free(outBuffer);
-FREE_MALLOC_PRISYSCAP:
-    free(priSyscapArray);
-FREE_MALLOC_OSSYSCAP:
-    free(osSysCapIndex);
-FREE_WHOLE_SYSCAP:
-    cJSON_Delete(sysCapDefine);
-FREE_RPCID_ROOT:
-    cJSON_Delete(rpcidRoot);
-FREE_CONTEXT_OUT:
-    FreeContextBuffer(contextBuffer);
     return ret;
+}
+
+int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
+{
+    int32_t ret = 0;
+    int32_t sysCapArraySize;
+    uint32_t bufferLen;
+    cJSON *sysCapArray = NULL;
+    struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo;
+    freeAfterEncodeRpcidscInfo.priSyscapArray = NULL;
+    freeAfterEncodeRpcidscInfo.osSysCapIndex = NULL;
+    freeAfterEncodeRpcidscInfo.sysCapDefine = NULL;
+    freeAfterEncodeRpcidscInfo.rpcidRoot = NULL;
+    freeAfterEncodeRpcidscInfo.contextBuffer = NULL;
+    freeAfterEncodeRpcidscInfo.type = 0;
+    freeAfterEncodeRpcidscInfo.flag = 0;
+
+    // check rpcid.sc
+    if (CheckRpcidFormat(inputFile, &freeAfterEncodeRpcidscInfo.contextBuffer, &bufferLen) != 0) {
+        PRINT_ERR("Check rpcid.sc format failed. Input file: %s\n", inputFile);
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_CONTEXT_OUT_AFTER_RPCIDSC, ret);
+    }
+
+    // parse rpcid to json
+    freeAfterEncodeRpcidscInfo.rpcidRoot = cJSON_CreateObject();
+    if (ParseRpcidToJson(freeAfterEncodeRpcidscInfo.contextBuffer, bufferLen,
+            freeAfterEncodeRpcidscInfo.rpcidRoot) != 0) {
+        PRINT_ERR("Prase rpcid to json failed. Input file: %s\n", inputFile);
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_RPCID_ROOT_AFTER_RPCIDSC, ret);
+    }
+
+    // trans to string format
+    freeAfterEncodeRpcidscInfo.sysCapDefine =  CreateWholeSyscapJsonObj();
+    sysCapArray = cJSON_GetObjectItem(freeAfterEncodeRpcidscInfo.rpcidRoot, "syscap");
+    if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
+        PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
+    }
+    sysCapArraySize = cJSON_GetArraySize(sysCapArray);
+    if (sysCapArraySize < 0) {
+        PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
+    }
+    // malloc for save os syscap index
+    freeAfterEncodeRpcidscInfo.osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t) * sysCapArraySize);
+    if (freeAfterEncodeRpcidscInfo.osSysCapIndex == NULL) {
+        PRINT_ERR("malloc failed.\n");
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
+    }
+
+    ret = OutputSetMemAndPrintToFile(freeAfterEncodeRpcidscInfo, sysCapArraySize, sysCapArray, outDirPath);
+    if (freeAfterEncodeRpcidscInfo.flag == 1) {
+        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, freeAfterEncodeRpcidscInfo.type, ret);
+    }
+    return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_OUTBUFFER_AFTER_RPCIDSC, ret);
 }
 
 char *CopyInputString(const char *inputString)
