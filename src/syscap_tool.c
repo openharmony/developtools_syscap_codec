@@ -87,7 +87,6 @@ static int32_t FillOsCapLength(char *convertedBuffer, char *contextBuffer, struc
     headPtr->apiVersion = HtonsInter((uint16_t)apiVerItem->valueint);
     headPtr->apiVersionType = 1;
 
-
     fillTmpPtr = convertedBuffer + sizeof(RPCIDHead);
     *(uint16_t *)fillTmpPtr = HtonsInter(2); // 2, SysCap Type, 2: request Cap
     fillTmpPtr += sizeof(uint16_t);
@@ -330,8 +329,8 @@ static int32_t PrintOutputToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEnco
     return ret;
 }
 
-static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo, 
-        int32_t sysCapArraySize, cJSON *sysCapArray, char *outDirPath)
+static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo,
+    int32_t sysCapArraySize, cJSON *sysCapArray, char *outDirPath)
 {
     char *priSyscap = NULL;
     cJSON *cJsonTemp = NULL;
@@ -373,7 +372,8 @@ static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo free
     outUint[0] = *(uint32_t *)freeAfterEncodeRpcidscInfo.contextBuffer;
     outUint[1] = *(uint32_t *)(freeAfterEncodeRpcidscInfo.contextBuffer + sizeof(uint32_t));
     uint8_t *osOutUint = (uint8_t *)(outUint + 2);
-    if (SetOsSysCapBitMap(osOutUint, 120, freeAfterEncodeRpcidscInfo.osSysCapIndex, indexOs) != 0) {  // 120, len of osOutUint
+    // 120, len of osOutUint
+    if (SetOsSysCapBitMap(osOutUint, 120, freeAfterEncodeRpcidscInfo.osSysCapIndex, indexOs) != 0) {  
         PRINT_ERR("Set os syscap bit map failed.\n");
         freeAfterEncodeRpcidscInfo.flag = 1;
         return ret;

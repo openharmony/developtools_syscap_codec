@@ -54,7 +54,7 @@ struct SystemCapabilityAsyncContext {
 };
 
 static char* CalculateAllStringLength(char *priOutput, char osCapArray[PCID_MAIN_U32][U32_TO_STR_MAX_LEN],
-        char (*priCapArray)[SINGLE_SYSCAP_LEN], char *allSyscapBuffer)
+    char (*priCapArray)[SINGLE_SYSCAP_LEN], char *allSyscapBuffer)
 {
     bool retBool;
     errno_t err = EOK;
@@ -112,7 +112,7 @@ static char* CalculateAllStringLength(char *priOutput, char osCapArray[PCID_MAIN
 }
 
 static char* FreeAfterGetSysCap(char *priOutput, char (*priCapArray)[SINGLE_SYSCAP_LEN], char *allSyscapBuffer,
-        int32_t type)
+    int32_t type)
 {
     if (type == FREE_PRICAP_ARRAY_AFTER_GET_SYS_CAP) {
         free(priCapArray);
