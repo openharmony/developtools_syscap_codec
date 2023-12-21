@@ -775,11 +775,36 @@ static int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapL
     return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_OUT, ret);
 }
 
+static int32_t CheckPrivateSyCap(struct FreeEncodePcidInfo freePcidInfo, uint32_t privateSyscapLen,
+    char *privateSyscap, int32_t ret)
+{
+    uint32_t i, j;
+    char tempSyscap[SINGLE_SYSCAP_LEN] = {0};
+    char *temp = tempSyscap;
+    for (i = 0, j = 0; i < privateSyscapLen; i++) {
+        if (*privateSyscap == ',') {
+            *temp = '\0';
+            ret = sprintf_s(freePcidInfo.priSyscapFull + j * SINGLE_SYSCAP_LEN, SINGLE_SYSCAP_LEN,
+                            "SystemCapability.%s", tempSyscap);
+            if (ret == -1) {
+                PRINT_ERR("sprintf_s failed\n");
+                return ret;
+            }
+            temp = tempSyscap;
+            privateSyscap++;
+            j++;
+            continue;
+        }
+        *temp++ = *privateSyscap++;
+    }
+    return ret;
+}
+
 int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     uint32_t bufferLen, privateSyscapLen;
-    uint32_t i, j;
+    uint32_t i;
     uint32_t *mainSyscap = NULL;
     uint16_t priSyscapCount = 0;
 
@@ -825,24 +850,12 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     }
     (void)memset_s(freePcidInfo.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
                    0, priSyscapCount * SINGLE_SYSCAP_LEN);
-    char tempSyscap[SINGLE_SYSCAP_LEN] = {0};
-    char *temp = tempSyscap;
-    for (i = 0, j = 0; i < privateSyscapLen; i++) {
-        if (*privateSyscap == ',') {
-            *temp = '\0';
-            ret = sprintf_s(freePcidInfo.priSyscapFull + j * SINGLE_SYSCAP_LEN, SINGLE_SYSCAP_LEN,
-                            "SystemCapability.%s", tempSyscap);
-            if (ret == -1) {
-                PRINT_ERR("sprintf_s failed\n");
-                return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
-            }
-            temp = tempSyscap;
-            privateSyscap++;
-            j++;
-            continue;
-        }
-        *temp++ = *privateSyscap++;
+
+    ret = CheckPrivateSyCap(freePcidInfo, privateSyscapLen, privateSyscap, ret);
+    if (ret == -1) {
+        return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
     }
+
     // output
     return GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  freePcidInfo, ret);
 }
