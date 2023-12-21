@@ -510,7 +510,7 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const
             break;
         }
     }
-    pcidPriSyscapInfo.ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str); 
+    pcidPriSyscapInfo.ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
     // 2, header of pcid & rpcid
     if (pcidPriSyscapInfo.ret != EOK) {
         return -1;
@@ -542,7 +542,7 @@ static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, Comp
     return 0;
 }
 
-static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo, 
+static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo,
     uint32_t pcidOsAarry[PCID_OUT_BUFFER], uint32_t rpcidOsAarry[PCID_OUT_BUFFER], CompareError *result,
     const size_t allSyscapNum)
 {

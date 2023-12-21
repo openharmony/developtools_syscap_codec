@@ -54,7 +54,7 @@
 #define FREE_RPCID_ROOT_AFTER_RPCIDSC 5
 #define FREE_CONTEXT_OUT_AFTER_RPCIDSC 6
 
-struct JsonObjectSysCap{
+struct JsonObjectSysCap {
     cJSON *cjsonObjectRoot;
     cJSON *sysCapPtr;
 };
@@ -373,7 +373,7 @@ static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo free
     outUint[1] = *(uint32_t *)(freeAfterEncodeRpcidscInfo.contextBuffer + sizeof(uint32_t));
     uint8_t *osOutUint = (uint8_t *)(outUint + 2);
     // 120, len of osOutUint
-    if (SetOsSysCapBitMap(osOutUint, 120, freeAfterEncodeRpcidscInfo.osSysCapIndex, indexOs) != 0) {  
+    if (SetOsSysCapBitMap(osOutUint, 120, freeAfterEncodeRpcidscInfo.osSysCapIndex, indexOs) != 0) {
         PRINT_ERR("Set os syscap bit map failed.\n");
         freeAfterEncodeRpcidscInfo.flag = 1;
         return ret;
