@@ -316,6 +316,7 @@ typedef enum SystemCapabilityNum {
     WINDOW_SESSIONMANAGER,
     PRINT_PRINT_FRAMEWORK_NATIVEPRINT,
     ARKUI_GRAPHICS3D,
+    MULTIMEDIA_AUDIO_SPATIALIZATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -614,6 +615,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
     {"SystemCapability.Print.PrintFramework.NativePrint", PRINT_PRINT_FRAMEWORK_NATIVEPRINT},
     {"SystemCapability.ArkUi.Graphics3D", ARKUI_GRAPHICS3D},
+    {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
 };
 
 #ifdef __cplusplus
