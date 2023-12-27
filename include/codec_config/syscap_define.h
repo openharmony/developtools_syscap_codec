@@ -316,6 +316,9 @@ typedef enum SystemCapabilityNum {
     WINDOW_SESSIONMANAGER,
     PRINT_PRINT_FRAMEWORK_NATIVEPRINT,
     ARKUI_GRAPHICS3D,
+    FILEMANAGEMENT_FILE_ENVIRONMENT_FOLDEROBTAIN,
+    FILEMANAGEMENT_USERFILESERVICE_FOLDERSELECTION,
+    FILEMANAGEMENT_APPFILESERVICE_FOLDERAUTHORIZATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -614,6 +617,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Window.SessionManager", WINDOW_SESSIONMANAGER},
     {"SystemCapability.Print.PrintFramework.NativePrint", PRINT_PRINT_FRAMEWORK_NATIVEPRINT},
     {"SystemCapability.ArkUi.Graphics3D", ARKUI_GRAPHICS3D},
+    {"SystemCapability.FileManagement.File.Environment.FolderObtain", FILEMANAGEMENT_FILE_ENVIRONMENT_FOLDEROBTAIN},
+    {"SystemCapability.FileManagement.UserFileService.FolderSelection", FILEMANAGEMENT_USERFILESERVICE_FOLDERSELECTION},
+    {"SystemCapability.FileManagement.AppFileService.FolderAuthorization",
+        FILEMANAGEMENT_APPFILESERVICE_FOLDERAUTHORIZATION},
 };
 
 #ifdef __cplusplus
