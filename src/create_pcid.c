@@ -427,13 +427,19 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
     switch (type) {
         case FREE_DECODE_PCID_CONVERT_OUT:
             free(freePcidJsonInfo.strJson);
-            /* fall-through */
+            cJSON_Delete(freePcidJsonInfo.jsonRootObj);
+            cJSON_Delete(freePcidJsonInfo.sysCapObj);
+            FreeContextBuffer(freePcidJsonInfo.contextBuffer);
+            break;
         case FREE_DECODE_PCID_ROOT_OUT:
             cJSON_Delete(freePcidJsonInfo.jsonRootObj);
-            /* fall-through */
+            cJSON_Delete(freePcidJsonInfo.sysCapObj);
+            FreeContextBuffer(freePcidJsonInfo.contextBuffer);
+            break;
         case FREE_DECODE_PCID_SYSCAP_OUT:
             cJSON_Delete(freePcidJsonInfo.sysCapObj);
-            /* fall-through */
+            FreeContextBuffer(freePcidJsonInfo.contextBuffer);
+            break;
         case FREE_DECODE_PCID_CONTEXT_OUT:
         default:
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
@@ -722,10 +728,13 @@ static int32_t FreeAfterEncodePCID(struct FreeEncodePcidInfo freePcidInfo, int32
     switch (type) {
         case FREE_ENCODE_PCID_OUT:
             free(freePcidInfo.output);
-            /* fall-through */
+            free(freePcidInfo.priSyscapFull);
+            free(freePcidInfo.contextBuffer);
+            break;
         case FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT:
             free(freePcidInfo.priSyscapFull);
-            /* fall-through */
+            free(freePcidInfo.contextBuffer);
+            break;
         case FREE_ENCODE_PCID_CONTEXT_OUT:
         default:
             free(freePcidInfo.contextBuffer);

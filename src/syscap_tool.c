@@ -95,6 +95,11 @@ static int32_t FillOsCapLength(char *convertedBuffer, char *contextBuffer, struc
     fillTmpPtr += sizeof(uint16_t);
     for (uint32_t i = 0; i < sysCapSize; i++) {
         arrayItemPtr = cJSON_GetArrayItem(gJsonObjectSysCap.sysCapPtr, (int)i);
+        if (arrayItemPtr->valuestring == NULL) {
+            PRINT_ERR("arrayItemPtr->valuestring is NULL\n");
+            return -1;
+        }
+        
         char *pointPos = strchr(arrayItemPtr->valuestring, '.');
         if (pointPos == NULL) {
             PRINT_ERR("context of \"syscap\" array is invalid\n");
@@ -287,10 +292,19 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *inde
     return 0;
 }
 
-static int32_t PrintOutputToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo, uint16_t outBufferLen,
+static int32_t PrintOutputToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo,
         uint32_t outUint[RPCID_OUT_BUFFER], uint16_t indexPri, char *outDirPath)
 {
     int32_t ret = 0;
+
+    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER + SINGLE_SYSCAP_LEN * indexPri;
+    freeAfterEncodeRpcidscInfo.outBuffer = (char *)malloc(outBufferLen);
+    if (freeAfterEncodeRpcidscInfo.outBuffer == NULL) {
+        PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
+        freeAfterEncodeRpcidscInfo.flag = 1;
+        return ret;
+    }
+
     freeAfterEncodeRpcidscInfo.type = FREE_OUTBUFFER_AFTER_RPCIDSC;
     (void)memset_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, 0, outBufferLen);
     ret = sprintf_s(freeAfterEncodeRpcidscInfo.outBuffer, outBufferLen, "%u", outUint[0]);
@@ -354,8 +368,11 @@ static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo free
     uint16_t indexOs = 0;
     for (int i = 0; i < sysCapArraySize; i++) {
         cJSON *cJsonItem = cJSON_GetArrayItem(sysCapArray, i);
+        if (cJsonItem->valuestring == NULL) {
+            continue;
+        }
         cJsonTemp = cJSON_GetObjectItem(freeAfterEncodeRpcidscInfo.sysCapDefine, cJsonItem->valuestring);
-        if (cJsonTemp != NULL) {
+        if (cJsonTemp != NULL && cJSON_IsNumber(cJsonTemp)) {
             freeAfterEncodeRpcidscInfo.osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
         } else {
             ret = strcpy_s(priSyscap, SINGLE_SYSCAP_LEN, cJsonItem->valuestring);
@@ -378,15 +395,7 @@ static int32_t OutputSetMemAndPrintToFile(struct FreeAfterEncodeRpcidscInfo free
         freeAfterEncodeRpcidscInfo.flag = 1;
         return ret;
     }
-
-    uint16_t outBufferLen = U32_TO_STR_MAX_LEN * RPCID_OUT_BUFFER + SINGLE_SYSCAP_LEN * indexPri;
-    freeAfterEncodeRpcidscInfo.outBuffer = (char *)malloc(outBufferLen);
-    if (freeAfterEncodeRpcidscInfo.outBuffer == NULL) {
-        PRINT_ERR("malloc(%u) failed.\n", outBufferLen);
-        freeAfterEncodeRpcidscInfo.flag = 1;
-        return ret;
-    }
-    return PrintOutputToFile(freeAfterEncodeRpcidscInfo, outBufferLen, outUint, indexPri, outDirPath);
+    return PrintOutputToFile(freeAfterEncodeRpcidscInfo, outUint, indexPri, outDirPath);
 }
 
 static int32_t FreeAfterEncodeRpcidsc(struct FreeAfterEncodeRpcidscInfo freeAfterEncodeRpcidscInfo, int32_t type,
@@ -395,19 +404,34 @@ static int32_t FreeAfterEncodeRpcidsc(struct FreeAfterEncodeRpcidscInfo freeAfte
     switch (type) {
         case FREE_OUTBUFFER_AFTER_RPCIDSC:
             free(freeAfterEncodeRpcidscInfo.outBuffer);
-            /* fall-through */
+            free(freeAfterEncodeRpcidscInfo.priSyscapArray);
+            free(freeAfterEncodeRpcidscInfo.osSysCapIndex);
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.sysCapDefine);
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
+            break;
         case FREE_MALLOC_RPISYSCAP_AFTER_RPCIDSC:
             free(freeAfterEncodeRpcidscInfo.priSyscapArray);
-            /* fall-through */
+            free(freeAfterEncodeRpcidscInfo.osSysCapIndex);
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.sysCapDefine);
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
+            break;
         case FREE_MALLOC_OSSYSCAP_AFTER_RPCIDSC:
             free(freeAfterEncodeRpcidscInfo.osSysCapIndex);
-            /* fall-through */
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.sysCapDefine);
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
+            break;
         case FREE_WHOLE_SYSCAP_AFTER_RPCIDSC:
             cJSON_Delete(freeAfterEncodeRpcidscInfo.sysCapDefine);
-            /* fall-through */
+            cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
+            break;
         case FREE_RPCID_ROOT_AFTER_RPCIDSC:
             cJSON_Delete(freeAfterEncodeRpcidscInfo.rpcidRoot);
-            /* fall-through */
+            FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
+            break;
         case FREE_CONTEXT_OUT_AFTER_RPCIDSC:
         default:
             FreeContextBuffer(freeAfterEncodeRpcidscInfo.contextBuffer);
