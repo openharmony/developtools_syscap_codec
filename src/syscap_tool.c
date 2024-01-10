@@ -450,6 +450,7 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     freeAfterEncodeRpcidscInfo.osSysCapIndex = NULL;
     freeAfterEncodeRpcidscInfo.sysCapDefine = NULL;
     freeAfterEncodeRpcidscInfo.rpcidRoot = NULL;
+    freeAfterEncodeRpcidscInfo.outBuffer =NULL;
     freeAfterEncodeRpcidscInfo.contextBuffer = NULL;
     freeAfterEncodeRpcidscInfo.type = 0;
     freeAfterEncodeRpcidscInfo.flag = 0;
