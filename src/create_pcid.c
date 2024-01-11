@@ -384,7 +384,6 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
 static int32_t CheckSysCapObj(struct FreeDecodePcidJsonInfo freePcidJsonInfo, PCIDMain *pcidMain,
         uint32_t contextBufLen, int32_t ret)
 {
-    freePcidJsonInfo.flag = 0;
     if (freePcidJsonInfo.sysCapObj == NULL) {
         PRINT_ERR("cJSON_CreateObject failed\n");
         freePcidJsonInfo.flag = -1;
@@ -456,6 +455,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.contextBuffer = NULL;
     freePcidJsonInfo.jsonRootObj = NULL;
     freePcidJsonInfo.sysCapObj = NULL;
+    freePcidJsonInfo.flag = 0;
 
     ret = GetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
