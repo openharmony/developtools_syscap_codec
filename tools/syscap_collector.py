@@ -33,6 +33,12 @@ def get_args():
 
 
 def dict_to_json(output_path: str, syscaps_dict: dict):
+    """
+    output diff product syscaps json to output path
+    :param output_path:
+    :param syscaps_dict:
+    :return:
+    """
     print("start generate syscap json...")
     flags = os.O_WRONLY | os.O_CREAT
     modes = stat.S_IWUSR | stat.S_IRUSR
@@ -52,6 +58,12 @@ def check_syscap(syscap_str: str):
 
 
 def bundle_syscap_list_handler(bundle_syscap_list: list, component_syscaps_list: list):
+    """
+    check syscap
+    :param bundle_syscap_list:
+    :param component_syscaps_list:
+    :return:
+    """
     for component_syscap in component_syscaps_list:
         component_syscap = check_syscap(component_syscap)
         if component_syscap:
@@ -92,6 +104,11 @@ def path_component_to_bundle(path: str) -> str:
 
 
 def handle_bundle_json_file(component_path_dict: dict):
+    """
+    from product required part bundle.json to all products parts list
+    :param component_path_dict:
+    :return: all products parts list
+    """
     print("start collect syscap path...")
     syscap_dict = dict()
     errors_list = list()
@@ -130,6 +147,13 @@ def traversal_path(parts_path_info: dict, project_path: str, product_define_dict
 
 
 def collect_all_product_component_syscap_dict(parts_path_info: dict, project_path: str, product_define_dict):
+    """
+    get all syscap to dict
+    :param parts_path_info:
+    :param project_path:
+    :param product_define_dict:
+    :return:
+    """
     if parts_path_info:
         print("start collect component path...")
         component_path_dict = traversal_path(parts_path_info, project_path, product_define_dict)
@@ -140,6 +164,12 @@ def collect_all_product_component_syscap_dict(parts_path_info: dict, project_pat
 
 
 def get_subsystem_info(subsystem_config_file, source_root_dir):
+    """
+    get subsystem name and subsystem path from oh/build/subsystem_config.json
+    :param subsystem_config_file: subsystem_config_file path
+    :param source_root_dir: oh project path
+    :return: subsystem name and subsystem path
+    """
     subsystem_configs = scan(subsystem_config_file, source_root_dir)
     _all_components_path = []
     for _, value in subsystem_configs.get('subsystem').items():
@@ -226,7 +256,7 @@ def scan(subsystem_config_file, source_root_dir):
         'source_path': source_root_dir,
         'subsystem': _build_configs,
     }
-    print('subsytem config scan completed')
+    print('subsystem config scan completed')
     return scan_result
 
 
@@ -376,7 +406,12 @@ class LoadBuildConfig(object):
 
 
 def get_parts_info(source_root_dir, subsystem_info, build_xts=False):
-    """parts info, get info from build config file.
+    """
+    get parts path info from subsystem info
+    :param source_root_dir: oh project path
+    :param subsystem_info:
+    :param build_xts:
+    :return: parts path info
     """
     _phony_target = {}
     _parts_path_info = {}
@@ -458,8 +493,9 @@ def get_product_define_dict(source_root_dir):
 def output_path_handler(project_path):
     output_path = os.path.join(project_path, 'interface', 'sdk-js', 'api', 'device-define-common')
     folder = os.path.exists(output_path)
+    # 多线程创建文件夹问题
     if not folder:
-        os.mkdir(output_path)
+        os.makedirs(output_path, exist_ok=True)
     return output_path
 
 
