@@ -319,6 +319,8 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_FILE_ENVIRONMENT_FOLDEROBTAIN,
     FILEMANAGEMENT_USERFILESERVICE_FOLDERSELECTION,
     FILEMANAGEMENT_APPFILESERVICE_FOLDERAUTHORIZATION,
+    MULTIMEDIA_MEDIA_AUDIOCODEC,
+    GRAPHICS_DRAWING,
     MULTIMEDIA_AUDIO_SPATIALIZATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -413,6 +415,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AudioRecorder", MULTIMEDIA_MEDIA_AUDIORECORDER},
     {"SystemCapability.Multimedia.Media.AudioDecoder", MULTIMEDIA_MEDIA_AUDIODECODER},
     {"SystemCapability.Multimedia.Media.AudioEncoder", MULTIMEDIA_MEDIA_AUDIOENCODER},
+    {"SystemCapability.Multimedia.Media.AudioCodec", MULTIMEDIA_MEDIA_AUDIOCODEC},
     {"SystemCapability.Multimedia.Media.VideoDecoder", MULTIMEDIA_MEDIA_VIDEODECODER},
     {"SystemCapability.Multimedia.Media.VideoEncoder", MULTIMEDIA_MEDIA_VIDEOENCODER},
     {"SystemCapability.Multimedia.Media.CodecBase", MULTIMEDIA_MEDIA_CODECBASE},
@@ -622,6 +625,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.UserFileService.FolderSelection", FILEMANAGEMENT_USERFILESERVICE_FOLDERSELECTION},
     {"SystemCapability.FileManagement.AppFileService.FolderAuthorization",
         FILEMANAGEMENT_APPFILESERVICE_FOLDERAUTHORIZATION},
+    {"SystemCapability.Graphics.Drawing", GRAPHICS_DRAWING},
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
 };
 
