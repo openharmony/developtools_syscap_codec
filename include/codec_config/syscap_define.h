@@ -322,6 +322,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_AUDIOCODEC,
     GRAPHICS_DRAWING,
     MULTIMEDIA_AUDIO_SPATIALIZATION,
+    APPLICATIONS_CALENDARDATA,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -627,6 +628,7 @@ const static SyscapWithNum g_arraySyscap[] = {
         FILEMANAGEMENT_APPFILESERVICE_FOLDERAUTHORIZATION},
     {"SystemCapability.Graphics.Drawing", GRAPHICS_DRAWING},
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
+    {"SystemCapability.Applications.CalendarData", APPLICATIONS_CALENDARDATA},
 };
 
 #ifdef __cplusplus
