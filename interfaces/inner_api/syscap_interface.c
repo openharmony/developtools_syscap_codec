@@ -414,7 +414,7 @@ static void PartSysCapAndOutBuffer(struct FreeAfterDecodeRpcidInfo freeAfterDeco
             cJSON_Delete(cJsonItem);
             return;
         }
-        
+
         cJsonTemp = cJSON_GetObjectItem(freeAfterDecodeRpcidInfo.sysCapDefine, cJsonItem->valuestring);
         if (cJsonTemp != NULL && cJSON_IsNumber(cJsonTemp)) {
             freeAfterDecodeRpcidInfo.osSysCapIndex[indexOs++] = (uint16_t)(cJsonTemp->valueint);
@@ -435,31 +435,31 @@ static char *FreeAfterDecodeRpcidToString(struct FreeAfterDecodeRpcidInfo freeAf
     char *outBuffer)
 {
     switch (type) {
-    case FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID:
-        free(freeAfterDecodeRpcidInfo.priSyscap);
-        free(freeAfterDecodeRpcidInfo.osSysCapIndex);
-        cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
-        cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
-        FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
-        break;
-    case FREE_MALLOC_OSSYSCAP_AFTER_DECODE_RPCID:
-        free(freeAfterDecodeRpcidInfo.osSysCapIndex);
-        cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
-        cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
-        FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
-        break;
-    case FREE_WHOLE_SYSCAP_AFTER_DECODE_RPCID:
-        cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
-        cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
-        FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
-        break;
-    case FREE_RPCID_ROOT_AFTER_DECODE_RPCID:
-        cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
-        FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
-        break;
-    case FREE_CONTEXT_OUT_AFTER_DECODE_RPCID:
-    default:
-        FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
+        case FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID:
+            free(freeAfterDecodeRpcidInfo.priSyscap);
+            free(freeAfterDecodeRpcidInfo.osSysCapIndex);
+            cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
+            cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
+            break;
+        case FREE_MALLOC_OSSYSCAP_AFTER_DECODE_RPCID:
+            free(freeAfterDecodeRpcidInfo.osSysCapIndex);
+            cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
+            cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
+            break;
+        case FREE_WHOLE_SYSCAP_AFTER_DECODE_RPCID:
+            cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
+            cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
+            break;
+        case FREE_RPCID_ROOT_AFTER_DECODE_RPCID:
+            cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
+            FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
+            break;
+        case FREE_CONTEXT_OUT_AFTER_DECODE_RPCID:
+        default:
+            FreeContextBuffer(freeAfterDecodeRpcidInfo.contextBuffer);
     }
     return outBuffer;
 }
@@ -511,7 +511,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
     return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID, outBuffer);
 }
 
-static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const size_t allSyscapNum,
+static int32_t CopySyscopToRet(struct PcidPriSyscapInfo *pcidPriSyscapInfo, const size_t allSyscapNum,
     char *tempSyscap, uint32_t i, uint8_t k)
 {
     uint32_t pos = (i - 2) * INT_BIT + k;
@@ -521,15 +521,15 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo pcidPriSyscapInfo, const
             break;
         }
     }
-    pcidPriSyscapInfo.ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
+    pcidPriSyscapInfo->ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
     // 2, header of pcid & rpcid
-    if (pcidPriSyscapInfo.ret != EOK) {
+    if (pcidPriSyscapInfo->ret != EOK) {
         return -1;
     }
     return 0;
 }
 
-static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, CompareError *result,
+static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo *pcidPriSyscapInfo, CompareError *result,
     const size_t allSyscapNum, uint32_t i, uint32_t blockBits)
 {
     int32_t ret = 0;
@@ -547,14 +547,14 @@ static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo pcidPriSyscapInfo, Comp
                 FreeCompareError(result);
                 return -1;
             }
-            result->syscap[pcidPriSyscapInfo.ossyscapFlag++] = tempSyscap;
+            result->syscap[pcidPriSyscapInfo->ossyscapFlag++] = tempSyscap;
         }
     }
     return ret;
 }
 
-static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo,
-    const uint32_t pcidOsAarry[PCID_OUT_BUFFER], const uint32_t rpcidOsAarry[PCID_OUT_BUFFER], CompareError *result,
+static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo *pcidPriSyscapInfo,
+    const uint32_t *pcidOsAarry, const uint32_t *rpcidOsAarry, CompareError *result,
     const size_t allSyscapNum)
 {
     uint32_t i;
@@ -574,7 +574,7 @@ static int32_t ComparePcidWithOsSyscap(struct PcidPriSyscapInfo pcidPriSyscapInf
 }
 
 static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapInfo, CompareError *result,
-        uint16_t versionFlag)
+    uint16_t versionFlag)
 {
     uint32_t i, j;
     uint16_t prisyscapFlag = 0;
@@ -597,7 +597,7 @@ static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapIn
                 return -1;
             }
             pcidPriSyscapInfo.ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
-                           pcidPriSyscapInfo.rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
+                pcidPriSyscapInfo.rpcidPriSyscap + SINGLE_SYSCAP_LEN * i);
             if (pcidPriSyscapInfo.ret != EOK) {
                 FreeCompareError(result);
                 PRINT_ERR("strcpy_s failed.\n");
@@ -635,9 +635,9 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
 
     pcidPriSyscapInfo.ret =  SeparateSyscapFromString(pcidString, pcidOsAarry, PCID_OUT_BUFFER,
-                                    &pcidPriSyscapInfo.pcidPriSyscap, &pcidPriSyscapInfo.pcidPriSyscapLen);
+        &pcidPriSyscapInfo.pcidPriSyscap, &pcidPriSyscapInfo.pcidPriSyscapLen);
     pcidPriSyscapInfo.ret += SeparateSyscapFromString(rpcidString, rpcidOsAarry, RPCID_OUT_BUFFER,
-                                    &pcidPriSyscapInfo.rpcidPriSyscap, &pcidPriSyscapInfo.rpcidPriSyscapLen);
+        &pcidPriSyscapInfo.rpcidPriSyscap, &pcidPriSyscapInfo.rpcidPriSyscapLen);
     if (pcidPriSyscapInfo.ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", pcidPriSyscapInfo.ret);
         return -1;
@@ -652,7 +652,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     }
 
     // compare os sysscap
-    errorFlag = ComparePcidWithOsSyscap(pcidPriSyscapInfo, pcidOsAarry, rpcidOsAarry, result, allSyscapNum);
+    errorFlag = ComparePcidWithOsSyscap(&pcidPriSyscapInfo, pcidOsAarry, rpcidOsAarry, result, allSyscapNum);
     if (errorFlag == -1) {
         return errorFlag;
     }
