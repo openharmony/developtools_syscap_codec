@@ -323,6 +323,7 @@ typedef enum SystemCapabilityNum {
     GRAPHICS_DRAWING,
     MULTIMEDIA_AUDIO_SPATIALIZATION,
     APPLICATIONS_CALENDARDATA,
+    RSS_DEVICESTANDBY,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -629,6 +630,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphics.Drawing", GRAPHICS_DRAWING},
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
     {"SystemCapability.Applications.CalendarData", APPLICATIONS_CALENDARDATA},
+    {"SystemCapability.ResourceSchedule.DeviceStandby", RSS_DEVICESTANDBY},
 };
 
 #ifdef __cplusplus
