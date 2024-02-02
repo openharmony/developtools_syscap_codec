@@ -327,6 +327,9 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR,
     MULTIMEDIA_MEDIA_AVIMAGEGENERATOR,
     MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE,
+    DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CLIENT,
+    DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER,
+    DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -367,6 +370,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.Preferences.Core", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE},
     {"SystemCapability.DistributedDataManager.Preferences.Core.Lite", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE},
     {"SystemCapability.DistributedDataManager.RelationalStore.Core", DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE},
+    {"SystemCapability.DistributedDataManager.CloudSync.Client", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CLIENT},
+    {"SystemCapability.DistributedDataManager.CloudSync.Server", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER},
+    {"SystemCapability.DistributedDataManager.CloudSync.Config", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG},
     {"SystemCapability.DistributedHardware.DeviceManager", DISTRIBUTEDHARDWARE_DEVICEMANAGER},
     {"SystemCapability.DistributedHardware.DistributedCamera", DISTRIBUTEDHARDWARE_DISTRIBUTEDCAMERA},
     {"SystemCapability.DistributedHardware.DistributedAudio", DISTRIBUTEDHARDWARE_DISTRIBUTEDAUDIO},
@@ -598,7 +604,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.SurfaceLite", GRAPHIC_SURFACE_LITE},
     {"SystemCapability.Graphic.GraphicUtilsLite", GRAPHIC_GRAPHIC_UTILS_LITE},
     {"SystemCapability.Window.WindowManagerLite", WINDOW_WINDOW_MANAGER_LITE},
-    {"SystemCapability.Driver.DeviceManager.Extension", DRIVER_DEVICEMANAGER_EXTENSION},
+    {"SystemCapability.Driver.ExternalDevice", DRIVER_DEVICEMANAGER_EXTENSION},
     {"SystemCapability.FileManagement.DistributedFileService.CloudSync.Core",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE},
     {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
