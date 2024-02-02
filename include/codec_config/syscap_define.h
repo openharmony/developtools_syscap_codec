@@ -324,6 +324,9 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_SPATIALIZATION,
     APPLICATIONS_CALENDARDATA,
     RSS_DEVICESTANDBY,
+    MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR,
+    MULTIMEDIA_MEDIA_AVIMAGEGENERATOR,
+    MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE,
     RESOURCESCHEDULE_FFRT_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -632,6 +635,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
     {"SystemCapability.Applications.CalendarData", APPLICATIONS_CALENDARDATA},
     {"SystemCapability.ResourceSchedule.DeviceStandby", RSS_DEVICESTANDBY},
+    {"SystemCapability.Multimedia.Media.AVMetadataExtractor", MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR},
+    {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
+    {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
 };
 
