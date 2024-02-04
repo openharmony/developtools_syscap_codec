@@ -326,6 +326,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CLIENT,
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER,
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG,
+    RESOURCESCHEDULE_FFRT_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -635,6 +636,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphics.Drawing", GRAPHICS_DRAWING},
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
     {"SystemCapability.ResourceSchedule.DeviceStandby", RSS_DEVICESTANDBY},
+    {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
 };
 
 #ifdef __cplusplus
