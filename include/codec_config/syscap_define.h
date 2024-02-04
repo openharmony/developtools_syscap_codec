@@ -327,6 +327,9 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER,
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG,
     RESOURCESCHEDULE_FFRT_CORE,
+    MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR,
+    MULTIMEDIA_MEDIA_AVIMAGEGENERATOR,
+    MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -637,6 +640,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.Spatialization", MULTIMEDIA_AUDIO_SPATIALIZATION},
     {"SystemCapability.ResourceSchedule.DeviceStandby", RSS_DEVICESTANDBY},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
+    {"SystemCapability.Multimedia.Media.AVMetadataExtractor", MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR},
+    {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
+    {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
 };
 
 #ifdef __cplusplus
