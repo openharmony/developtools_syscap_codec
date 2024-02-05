@@ -330,6 +330,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_AVMETADATAEXTRACTOR,
     MULTIMEDIA_MEDIA_AVIMAGEGENERATOR,
     MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE,
+    ARKCOMPILER_JSVM,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -527,6 +528,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Full", ARKUI_ARKUI_FULL},
     {"SystemCapability.ArkUI.ArkUI.Libuv", ARKUI_ARKUI_LIBUV},
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
+    {"SystemCapability.ArkCompiler.JSVM", ARKCOMPILER_JSVM},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
