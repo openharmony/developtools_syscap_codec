@@ -332,6 +332,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG,
     RESOURCESCHEDULE_FFRT_CORE,
     MSDP_DEVICESTATUS_DRAG,
+    ARKCOMPILER_JSVM,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -529,6 +530,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Full", ARKUI_ARKUI_FULL},
     {"SystemCapability.ArkUI.ArkUI.Libuv", ARKUI_ARKUI_LIBUV},
     {"SystemCapability.ArkUI.ArkUI.Napi", ARKUI_ARKUI_NAPI},
+    {"SystemCapability.ArkCompiler.JSVM", ARKCOMPILER_JSVM},
     {"SystemCapability.MiscServices.InputMethodFramework", MISCSERVICES_INPUTMETHOD_FRAMEWORK},
     {"SystemCapability.Utils.Lang", UTILS_LANG},
     {"SystemCapability.Web.Webview.Core", WEB_WEBVIEW_CORE},
