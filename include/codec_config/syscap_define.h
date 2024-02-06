@@ -337,6 +337,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC2D_NATIVEBUFFER,
     GRAPHIC_GRAPHIC2D_NATIVEIMAGE,
     GRAPHIC_GRAPHIC2D_NATIVEVSYNC,
+    AI_MINDSPORELITE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -657,6 +658,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
     {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
+    {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
 };
 
 #ifdef __cplusplus
