@@ -650,7 +650,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
     {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
-    {"SystemCapability.Base", Base},
+    {"SystemCapability.Base", BASE},
 };
 
 #ifdef __cplusplus
