@@ -335,7 +335,7 @@ typedef enum SystemCapabilityNum {
     ARKCOMPILER_JSVM,
     BASE,
     // Add before here
-    SYSCAP_BASIC_END = 500
+    SYSCAP_BASIC_END = 500,
 } SyscapNum;
 
 
