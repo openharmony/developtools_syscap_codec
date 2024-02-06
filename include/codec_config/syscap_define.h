@@ -331,6 +331,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER,
     DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG,
     RESOURCESCHEDULE_FFRT_CORE,
+    MSDP_DEVICESTATUS_DRAG,
     ARKCOMPILER_JSVM,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -602,6 +603,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.DistributedFileService.CloudSyncManager",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNCMANAGER},
     {"SystemCapability.MultimodalInput.Input.ShortKey", MULTIMODALINPUT_INPUT_SHORTKEY},
+    {"SystemCapability.Msdp.DeviceStatus.Drag", MSDP_DEVICESTATUS_DRAG},
     {"SystemCapability.Msdp.DeviceStatus.Cooperate", MSDP_DEVICESTATUS_COOPERATE},
     {"SystemCapability.Arkui.UILite", ARKUI_UI_LITE},
     {"SystemCapability.Graphic.SurfaceLite", GRAPHIC_SURFACE_LITE},
