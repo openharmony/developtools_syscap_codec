@@ -333,9 +333,9 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_FFRT_CORE,
     MSDP_DEVICESTATUS_DRAG,
     ARKCOMPILER_JSVM,
+    BASE,
     // Add before here
-    SYSCAP_BASIC_END = 500,
-    BASE
+    SYSCAP_BASIC_END = 500
 } SyscapNum;
 
 
