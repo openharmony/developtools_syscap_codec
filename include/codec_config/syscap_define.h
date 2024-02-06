@@ -606,7 +606,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.SurfaceLite", GRAPHIC_SURFACE_LITE},
     {"SystemCapability.Graphic.GraphicUtilsLite", GRAPHIC_GRAPHIC_UTILS_LITE},
     {"SystemCapability.Window.WindowManagerLite", WINDOW_WINDOW_MANAGER_LITE},
-    {"SystemCapability.Driver.DeviceManager.Extension", DRIVER_DEVICEMANAGER_EXTENSION},
+    {"SystemCapability.Driver.ExternalDevice", DRIVER_DEVICEMANAGER_EXTENSION},
     {"SystemCapability.FileManagement.DistributedFileService.CloudSync.Core",
         FILEMANAGEMENT_DISTRIBUTEDFILESERVICE_CLOUDSYNC_CORE},
     {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
