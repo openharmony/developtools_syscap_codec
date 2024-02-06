@@ -333,7 +333,11 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_FFRT_CORE,
     MSDP_DEVICESTATUS_DRAG,
     ARKCOMPILER_JSVM,
-    BASE,
+    GRAPHIC_GRAPHIC2D_HYPERGRAPHICMANAGER,
+    GRAPHIC_GRAPHIC2D_NATIVEBUFFER,
+    GRAPHIC_GRAPHIC2D_NATIVEIMAGE,
+    GRAPHIC_GRAPHIC2D_NATIVEVSYNC,
+    BASE
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -390,6 +394,10 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.Graphic2D.EGL", GRAPHIC_GRAPHIC2D_EGL},
     {"SystemCapability.Graphic.Graphic2D.GLES2", GRAPHIC_GRAPHIC2D_GLES2},
     {"SystemCapability.Graphic.Graphic2D.GLES3", GRAPHIC_GRAPHIC2D_GLES3},
+    {"SystemCapability.Graphic.Graphic2D.HyperGraphicManager", GRAPHIC_GRAPHIC2D_HYPERGRAPHICMANAGER},
+    {"SystemCapability.Graphic.Graphic2D.NativeBuffer", GRAPHIC_GRAPHIC2D_NATIVEBUFFER},
+    {"SystemCapability.Graphic.Graphic2D.NativeImage", GRAPHIC_GRAPHIC2D_NATIVEIMAGE},
+    {"SystemCapability.Graphic.Graphic2D.NativeVsync", GRAPHIC_GRAPHIC2D_NATIVEVSYNC},
     {"SystemCapability.Graphic.Graphic2D.NativeDrawing", GRAPHIC_GRAPHIC2D_NATIVEDRAWING},
     {"SystemCapability.Graphic.Graphic2D.NativeWindow", GRAPHIC_GRAPHIC2D_NATIVEWINDOW},
     {"SystemCapability.Graphic.Graphic2D.WebGL", GRAPHIC_GRAPHIC2D_WEBGL},
