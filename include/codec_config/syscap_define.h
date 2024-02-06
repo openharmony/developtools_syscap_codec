@@ -335,6 +335,7 @@ typedef enum SystemCapabilityNum {
     ARKCOMPILER_JSVM,
     // Add before here
     SYSCAP_BASIC_END = 500,
+    BASE
 } SyscapNum;
 
 
@@ -649,6 +650,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
     {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
+    {"SystemCapability.Base", Base},
 };
 
 #ifdef __cplusplus
