@@ -337,7 +337,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC2D_NATIVEBUFFER,
     GRAPHIC_GRAPHIC2D_NATIVEIMAGE,
     GRAPHIC_GRAPHIC2D_NATIVEVSYNC,
-    BASE
+    BASE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
