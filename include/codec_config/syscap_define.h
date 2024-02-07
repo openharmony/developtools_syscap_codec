@@ -337,6 +337,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC2D_NATIVEBUFFER,
     GRAPHIC_GRAPHIC2D_NATIVEIMAGE,
     GRAPHIC_GRAPHIC2D_NATIVEVSYNC,
+    AI_MINDSPORELITE,
     BASE,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -568,7 +569,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
-    {"SystemCapability.Applications.settings.Core", APPLICATIONS_SETTINGS_CORE},
+    {"SystemCapability.Applications.Settings.Core", APPLICATIONS_SETTINGS_CORE},
     {"SystemCapability.FileManagement.UserFileManager.Core", FILEMANAGEMENT_USERFILEMANAGER_CORE},
     {"SystemCapability.FileManagement.UserFileManager.DistributedCore", FILEMANAGEMENT_USERFILEMANAGER_DISTRIBUTEDCORE},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
@@ -658,6 +659,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AVImageGenerator", MULTIMEDIA_MEDIA_AVIMAGEGENERATOR},
     {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
+    {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
     {"SystemCapability.Base", BASE},
 };
 
