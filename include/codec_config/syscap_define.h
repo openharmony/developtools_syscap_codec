@@ -568,7 +568,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
-    {"SystemCapability.Applications.settings.Core", APPLICATIONS_SETTINGS_CORE},
+    {"SystemCapability.Applications.Settings.Core", APPLICATIONS_SETTINGS_CORE},
     {"SystemCapability.FileManagement.UserFileManager.Core", FILEMANAGEMENT_USERFILEMANAGER_CORE},
     {"SystemCapability.FileManagement.UserFileManager.DistributedCore", FILEMANAGEMENT_USERFILEMANAGER_DISTRIBUTEDCORE},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
