@@ -339,6 +339,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC2D_NATIVEVSYNC,
     AI_MINDSPORELITE,
     BASE,
+    AI_NEURAL_NETWORK_RUNTIME,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -556,6 +557,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Startup.SystemInfo", STARTUP_SYSTEMINFO},
     {"SystemCapability.Startup.SystemInfo.Lite", STARTUP_SYSTEMINFO_LITE},
     {"SystemCapability.Ai.MindSpore", AI_MINDSPORE},
+    {"SystemCapability.AI.NeuralNetworkRuntime", AI_NEURAL_NETWORK_RUNTIME},
     {"SystemCapability.FileManagement.StorageService.SpatialStatistics",
         FILEMANAGEMENT_STORAGESERVICE_SPATIALSTATISTICS},
     {"SystemCapability.FileManagement.StorageService.Volume", FILEMANAGEMENT_STORAGESERVICE_VOLUME},
