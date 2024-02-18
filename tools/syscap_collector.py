@@ -45,7 +45,7 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
     for product_name, syscaps_list in syscaps_dict.items():
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
-            json.dump({'SysCaps': syscaps_list}, f)
+            json.dump({'SysCaps': syscaps_list}, f, indent=4)
     print("end...")
 
 
