@@ -45,7 +45,8 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
     standard_product = ["default", "ipcamera", "pc", "tablet"]
     for product_name, syscaps_list in syscaps_dict.items():
         syscaps_list = list(set(syscaps_list))
-        syscaps_list.remove("SystemCapability.HiviewDFX.Hiview")
+        if "SystemCapability.HiviewDFX.Hiview" in syscaps_list:
+            syscaps_list.remove("SystemCapability.HiviewDFX.Hiview")
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
             if product_name not in standard_product:
