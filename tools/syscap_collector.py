@@ -31,6 +31,14 @@ def get_args():
     args = parser.parse_args()
     return args
 
+def adjust_syscaps_list(sys_list: str, product: str):
+    standard_product = ["default", "ipcamera", "pc", "tablet"]
+    if product in standard_product:
+        for syscap in sys_list:
+            if syscap[-5:] == ".Lite":
+                sys_list.remove(syscap)
+    return sys_list
+
 
 def dict_to_json(output_path: str, syscaps_dict: dict):
     """
@@ -42,20 +50,14 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
     print("start generate syscap json...")
     flags = os.O_WRONLY | os.O_CREAT
     modes = stat.S_IWUSR | stat.S_IRUSR
-    standard_product = ["default", "ipcamera", "pc", "tablet"]
     for product_name, syscaps_list in syscaps_dict.items():
         syscaps_list = list(set(syscaps_list))
         if "SystemCapability.HiviewDFX.Hiview" in syscaps_list:
             syscaps_list.remove("SystemCapability.HiviewDFX.Hiview")
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
-            if product_name not in standard_product:
-                json.dump({'SysCaps': syscaps_list}, f, indent=4)
-            else:
-                for syscaps in syscaps_list:
-                    if syscaps[-5:] == ".Lite":
-                        syscaps_list.remove(syscaps)
-                json.dump({'SysCaps': syscaps_list}, f, indent=4)
+            syscaps_list = adjust_syscaps_list(syscaps_list, product_name)
+            json.dump({'SysCaps': syscaps_list}, f, indent=4)
     print("end...")
 
 
