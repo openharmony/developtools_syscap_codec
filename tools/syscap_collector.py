@@ -31,12 +31,11 @@ def get_args():
     args = parser.parse_args()
     return args
 
-def adjust_syscaps_list(sys_list: str, product: str):
+
+def adjust_syscaps_list(sys_list: list, product: str):
     standard_product = ["default", "ipcamera", "pc", "tablet"]
     if product in standard_product:
-        for syscap in sys_list:
-            if syscap[-5:] == ".Lite":
-                sys_list.remove(syscap)
+        sys_list = [syscap for syscap in sys_list if not syscap.endswith(".Lite")]
     return sys_list
 
 
