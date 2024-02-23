@@ -17,6 +17,7 @@ import os
 import json
 import argparse
 import stat
+from collections import Counter
 
 
 def get_args():
@@ -33,7 +34,7 @@ def get_args():
 
 
 def adjust_syscaps_list(sys_list: list, product: str):
-    #调整syscaps_list:如果产品属于standard类，则去掉其中以.Lite结尾的syscap
+    # 调整syscaps_list:如果产品属于standard类，则去掉其中以.Lite结尾的syscap
     standard_product = ["default", "ipcamera", "pc", "tablet"]
     if product in standard_product:
         sys_list = [syscap for syscap in sys_list if not syscap.endswith(".Lite")]
@@ -51,7 +52,11 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
     flags = os.O_WRONLY | os.O_CREAT
     modes = stat.S_IWUSR | stat.S_IRUSR
     for product_name, syscaps_list in syscaps_dict.items():
-        syscaps_list = list(set(syscaps_list))
+        counts = Counter(syscaps_list)
+        duplicates = [elem for elem, count in counts.items() if count > 1]
+        if len(duplicates) > 0:
+            print("repeated syscap: " + ",".join(duplicates))
+            syscaps_list = list(set(syscaps_list))
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
             syscaps_list = adjust_syscaps_list(syscaps_list, product_name)
