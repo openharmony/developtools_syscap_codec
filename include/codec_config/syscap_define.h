@@ -340,6 +340,7 @@ typedef enum SystemCapabilityNum {
     AI_MINDSPORELITE,
     BASE,
     AI_NEURAL_NETWORK_RUNTIME,
+    RESOURCESCHEDULE_SYSTEMLOAD,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -478,6 +479,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ResourceSchedule.UsageStatistics.App", RESOURCESCHEDULE_USAGESTATISTICS_APP},
     {"SystemCapability.ResourceSchedule.UsageStatistics.AppGroup", RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP},
     {"SystemCapability.ResourceSchedule.WorkScheduler", RESOURCESCHEDULE_WORKSCHEDULER},
+    {"SystemCapability.ResourceSchedule.SystemLoad", RESOURCESCHEDULE_SYSTEMLOAD},
     {"SystemCapability.Security.AccessToken", SECURITY_ACCESSTOKEN},
     {"SystemCapability.Security.DlpPermissionService", SECURITY_DLPPERMISSIONSERVICE},
     {"SystemCapability.Security.AppVerify", SECURITY_APPVERIFY},
