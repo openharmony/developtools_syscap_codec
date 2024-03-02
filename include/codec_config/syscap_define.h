@@ -479,7 +479,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ResourceSchedule.UsageStatistics.App", RESOURCESCHEDULE_USAGESTATISTICS_APP},
     {"SystemCapability.ResourceSchedule.UsageStatistics.AppGroup", RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP},
     {"SystemCapability.ResourceSchedule.WorkScheduler", RESOURCESCHEDULE_WORKSCHEDULER},
-    {"SystemCapability.ResourceSchedule.SystemLoad",RESOURCESCHEDULE_SYSTEMLOAD},
+    {"SystemCapability.ResourceSchedule.SystemLoad", RESOURCESCHEDULE_SYSTEMLOAD},
     {"SystemCapability.Security.AccessToken", SECURITY_ACCESSTOKEN},
     {"SystemCapability.Security.DlpPermissionService", SECURITY_DLPPERMISSIONSERVICE},
     {"SystemCapability.Security.AppVerify", SECURITY_APPVERIFY},
