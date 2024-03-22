@@ -775,7 +775,7 @@ static int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapL
         }
     }
     // save as file
-    const char outputFileName[] = "PCID.txt";
+    const char outputFileName[] = "pcid.txt";
     ret = ConvertedContextSaveAsFile(freePcidInfo.outDirPathFinal, outputFileName, output, strlen(output));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n",

@@ -65,13 +65,13 @@ SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instru
 ```
 ./syscap_tool --help
 
-./syscap_tool -r/p -e/d -i filepath [-o outpath]
+./syscap_tool -R/P -e/d -i filepath [-o outpath]
 
 -h, --help : how to use
 
--r, --rpcid : encode or decode rpcid
+-R, --rpcid : encode or decode rpcid
 
--p, --pcid : encode or decode pcid
+-P, --pcid : encode or decode pcid
 
 -e, --encode : to encode
 
