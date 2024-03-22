@@ -2,17 +2,17 @@
 
 SysCap(SystemCapability) encoder and decoder tools common usage scenarios as follow：
 
-APP development: IDE collect APP required SysCap and API verssion as in RPCID encoder input. And IDE will decode PCID to device SysCap list when it imported. This tool is only for use by the IDE, developers will not be used directly.
+APP development: IDE collect APP required SysCap and API verssion as in rpcid encoder input. And IDE will decode pcid to device SysCap list when it imported. This tool is only for use by the IDE, developers will not be used directly.
 
 Main function：
 
-1. PCID Encode: Encode SysCap list to PCID.
+1. pcid Encode: Encode SysCap list to pcid.
 
-2. PCID Decode: Decode PCID to get system SysCap list.
+2. pcid Decode: Decode pcid to get system SysCap list.
 
-3. RPCID Encode: Encode APP required SysCap list to RPCID.
+3. rpcid Encode: Encode APP required SysCap list to rpcid.
 
-4. RPCID Decode: Decode RPCID to get APP required SysCap list.
+4. rpcid Decode: Decode rpcid to get APP required SysCap list.
 
 ## File Structure
 
@@ -65,13 +65,13 @@ SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instru
 ```
 ./syscap_tool --help
 
-./syscap_tool -R/P -e/d -i filepath [-o outpath]
+./syscap_tool -r/p -e/d -i filepath [-o outpath]
 
 -h, --help : how to use
 
--R, --RPCID : encode or decode RPCID
+-r, --rpcid : encode or decode rpcid
 
--P, --PCID : encode or decode PCID
+-p, --pcid : encode or decode pcid
 
 -e, --encode : to encode
 

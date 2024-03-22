@@ -137,7 +137,7 @@ group("syscap_tool_bin_linux") {
 }
 
 build_ext_component("generate_pcid") {
-  outputs = [ "$root_out_dir/PCID.sc" ]
+  outputs = [ "$root_out_dir/pcid.sc" ]
   deps = [ ":syscap_tool_bin_linux" ]
   exec_path = rebase_path(root_out_dir)
   preload_path = rebase_path(preloader_output_dir)
@@ -148,15 +148,15 @@ build_ext_component("generate_pcid") {
   }
   command = "chmod 777 $cmd"
   command +=
-      " && $cmd -P -e -i ${preload_path}/system/etc/SystemCapability.json"
+      " && $cmd -p -e -i ${preload_path}/system/etc/SystemCapability.json"
   if (defined(ohos_lite)) {
-    command += " && mkdir -p $exec_path/system/etc && cp $exec_path/PCID.sc $exec_path/system/etc/PCID.sc"
+    command += " && mkdir -p $exec_path/system/etc && cp $exec_path/pcid.sc $exec_path/system/etc/pcid.sc"
   }
 }
 
-ohos_prebuilt_etc("PCID.sc") {
+ohos_prebuilt_etc("pcid.sc") {
   deps = [ ":generate_pcid" ]
-  source = "$root_out_dir/PCID.sc"
+  source = "$root_out_dir/pcid.sc"
   subsystem_name = "developtools"
   part_name = "syscap_codec"
 }
@@ -182,7 +182,7 @@ if (syscap_codec_config_extern_path != "") {
 }
 
 group("pcid_sc") {
-  deps = [ ":PCID.sc" ]
+  deps = [ ":pcid.sc" ]
 }
 
 group("syscap_codec") {
