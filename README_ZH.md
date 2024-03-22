@@ -70,10 +70,10 @@ syscap_tool PC端可执行文件编译步骤：
 
 使用./syscap_tool -h或者./syscap_tool --help查看：
 ```shell
-syscap_tool -r/p -e/d -i filepath [-o outpath]
+syscap_tool -R/P -e/d -i filepath [-o outpath]
 -h, --help      : how to use
--r, --rpcid     : encode or decode rpcid
--p, --pcid      : encode or decode pcid
+-R, --rpcid     : encode or decode rpcid
+-P, --pcid      : encode or decode pcid
 -C, --compare   : compare pcid with rpcid string format.
         -s, --string : input string.
 -e, --encode    : encode to sc format.
@@ -89,31 +89,31 @@ syscap_tool v1.1.1
 ### 使用示例
 ```shell
 # 将 rpcid.json 编码为SC格式，文件名rpcid.sc
-syscap_tool -rei rpcid.json -o path/
+syscap_tool -Rei rpcid.json -o path/
 
 # 将 pcid.sc 编码为JSON格式，文件名rpcid.json
-syscap_tool -rdi pcid.sc -o path/
+syscap_tool -Rdi pcid.sc -o path/
 
 # 将 pcid.json 编码为SC格式，文件名pcid.sc
-syscap_tool -pei pcid.json -o path/
+syscap_tool -Pei pcid.json -o path/
 
 # 将 pcid.sc 编码为JSON格式，文件名pcid.json
-syscap_tool -pdi pcid.sc -o path/
+syscap_tool -Pdi pcid.sc -o path/
 
 # 将 pcid.sc 编码为字符串格式，文件名rpcid.txt
-syscap_tool -resi pcid.sc -o path/
+syscap_tool -Resi pcid.sc -o path/
 
 # 将 pcid.sc 编码为字符串格式，文件名pcid.txt
-syscap_tool -pesi pcid.sc -o path/
+syscap_tool -Pesi pcid.sc -o path/
 
 # 比较字符串格式的pcid和rpcid，pcid 符合条件返回成功提示，不符合则提示原因。
 syscap_tool -C pcid.txt rpcid.txt
 
-# 功能类似 -C 选项，区别为 -SC 选项为直接输入字符串。
+# 功能类似 -C选项，区别为 -sC 选项为直接输入字符串。
 syscap_tool -sC "pcidstring" "rpcidstring"
 
 # 将字符串格式的 pcid 转为 json 格式，文件名 pcid.json。
-syscap_tool -pdsi pcid.txt -o path/
+syscap_tool -Pdsi pcid.txt -o path/
 ```
 **说明：**  -o 选项指定输出目录，缺省为当前目录。  
 
