@@ -50,8 +50,8 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath);
 static struct option g_longOptions[] = {
         {"help",           no_argument,       0,  'h' },
         {"version",        no_argument,       0,  'v' },
-        {"rpcid",          no_argument,       0,  'r' },
-        {"pcid",           no_argument,       0,  'p' },
+        {"rpcid",          no_argument,       0,  'R' },
+        {"pcid",           no_argument,       0,  'P' },
         {"compare",        required_argument, 0,  'C' },
         {"encode",         no_argument,       0,  'e' },
         {"decode",         no_argument,       0,  'd' },
@@ -103,28 +103,28 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath)
 {
     int32_t ret = 0;
     switch (bitMap) {
-        case 0x109: // 0x109, -rei inputfile
+        case 0x109: // 0x109, -Rei inputfile
             ret = RPCIDEncode(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x10A: // 0x10A, -rdi inputfile
+        case 0x10A: // 0x10A, -Rdi inputfile
             ret = RPCIDDecode(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x10D: // 0x10D, -resi inputfile
+        case 0x10D: // 0x10D, -Resi inputfile
             ret = EncodeRpcidscToString(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x115: // 0x115, -pesi inputfile
+        case 0x115: // 0x115, -Pesi inputfile
             ret = EncodePcidscToString(g_customerfileinfo.inputfile, outputpath); break;
         case 0x60:  // 0x60,  -C pcid.txt rpcid.txt
             ret = ComparePcidWithRpcidString(g_customerfileinfo.pcidfile, g_customerfileinfo.rpcidfile, TYPE_FILE);
             break;
-        case 0x64:  // 0x64,  -sc "pcidstring" "rpcidstring"
+        case 0x64:  // 0x64,  -sC "pcidstring" "rpcidstring"
             ret = ComparePcidWithRpcidString(g_customerfileinfo.pcidfile, g_customerfileinfo.rpcidfile, TYPE_STRING);
             break;
-        case 0x111: // 0x111, -pei inputfile
+        case 0x111: // 0x111, -Pei inputfile
             ret = CreatePCID(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x112: // 0x112, -pdi inputfile
+        case 0x112: // 0x112, -Pdi inputfile
             ret = DecodePCID(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x116: // 0x116, -pdsi inputfile
+        case 0x116: // 0x116, -Pdsi inputfile
             ret = DecodeStringPCIDToJson(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x10E: // 0x10E, -rdsi inputfile
-            printf("-rdsi is not support currently.\n"); break;
+        case 0x10E: // 0x10E, -Rdsi inputfile
+            printf("-Rdsi is not support currently.\n"); break;
         case 0x80:  // 0x80,  -v
             (void)OutputVersion(argv[optind], optind);  break;
         default:
@@ -145,10 +145,10 @@ void SetBitMap(char *const *argv, int32_t flag, uint16_t *bitMap, char **outputp
         case 's':
             (*bitMap) |= 0x1 << STRING_DECODE;
             break;
-        case 'r':
+        case 'R':
             (*bitMap) |= 0x1 << RPCID;
             break;
-        case 'p':
+        case 'P':
             (*bitMap) |= 0x1 << PCID;
             break;
         case 'C':
@@ -186,10 +186,10 @@ void PrintVersion(void)
 
 void PrintHelp(void)
 {
-    printf("syscap_tool -r/p -e/d -i filepath [-o outpath]\n");
+    printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
     printf("-h, --help\t: how to use\n");
-    printf("-r, --rpcid\t: encode or decode rpcid\n");
-    printf("-p, --pcid\t: encode or decode pcid\n");
+    printf("-R, --rpcid\t: encode or decode rpcid\n");
+    printf("-P, --pcid\t: encode or decode pcid\n");
     printf("-C, --compare\t: compare pcid with rpcid string format.\n\t"
            "-s, --string : input string.\n");
     printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");

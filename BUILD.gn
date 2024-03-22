@@ -148,7 +148,7 @@ build_ext_component("generate_pcid") {
   }
   command = "chmod 777 $cmd"
   command +=
-      " && $cmd -p -e -i ${preload_path}/system/etc/SystemCapability.json"
+      " && $cmd -P -e -i ${preload_path}/system/etc/SystemCapability.json"
   if (defined(ohos_lite)) {
     command += " && mkdir -p $exec_path/system/etc && cp $exec_path/pcid.sc $exec_path/system/etc/pcid.sc"
   }
