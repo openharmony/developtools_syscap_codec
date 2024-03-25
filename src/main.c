@@ -145,10 +145,10 @@ void SetBitMap(char *const *argv, int32_t flag, uint16_t *bitMap, char **outputp
         case 's':
             (*bitMap) |= 0x1 << STRING_DECODE;
             break;
-        case 'R':
+        case 'r':
             (*bitMap) |= 0x1 << RPCID;
             break;
-        case 'P':
+        case 'p':
             (*bitMap) |= 0x1 << PCID;
             break;
         case 'C':
