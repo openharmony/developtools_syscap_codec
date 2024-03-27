@@ -342,6 +342,7 @@ typedef enum SystemCapabilityNum {
     AI_NEURAL_NETWORK_RUNTIME,
     RESOURCESCHEDULE_SYSTEMLOAD,
     MSDP_MULTIMODAL_AWARENESS,
+    ABILITY_APP_STARTUP,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -666,6 +667,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AudioHaptic.Core", MULTIMEDIA_MEDIA_AUDIOHAPTIC_CORE},
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
     {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
+    {"SystemCapability.Ability.AppStartup", ABILITY_APP_STARTUP},
     {"SystemCapability.Base", BASE},
 };
 
