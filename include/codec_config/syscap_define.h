@@ -343,6 +343,7 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_SYSTEMLOAD,
     MSDP_MULTIMODAL_AWARENESS,
     ABILITY_APP_STARTUP,
+    MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -596,6 +597,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
     {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
     {"SystemCapability.Multimedia.AVSession.AVCast", MULTIMEDIA_AVSESSION_AVCAST},
+    {"SystemCapability.Multimedia.AVSession.ExtendedDisplayCast", MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
