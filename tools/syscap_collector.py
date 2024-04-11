@@ -304,15 +304,6 @@ class BundlePartObj(object):
         self._build_config_file = bundle_config_file
         self._loading_config()
 
-    def _loading_config(self):
-        if not os.path.exists(self._build_config_file):
-            raise Exception("file '{}' doesn't exist.".format(
-                self._build_config_file), "2011")
-        self.bundle_info = _read_json_file(self._build_config_file)
-        if not self.bundle_info:
-            raise Exception("read file '{}' failed.".format(
-                self._build_config_file), "2011")
-
     def to_ohos_build(self):
         _component_info = self.bundle_info.get('component')
         _subsystem_name = _component_info.get('subsystem')
@@ -349,6 +340,15 @@ class BundlePartObj(object):
         _ohos_build_info['parts'] = {_part_name: _part_info}
         return _ohos_build_info
 
+    def _loading_config(self):
+        if not os.path.exists(self._build_config_file):
+            raise Exception("file '{}' doesn't exist.".format(
+                self._build_config_file), "2011")
+        self.bundle_info = _read_json_file(self._build_config_file)
+        if not self.bundle_info:
+            raise Exception("read file '{}' failed.".format(
+                self._build_config_file), "2011")
+
 
 class LoadBuildConfig(object):
     """load build config file and parse configuration info."""
@@ -368,6 +368,26 @@ class LoadBuildConfig(object):
         self._parts_module_list = {}
         self._parts_deps = {}
 
+    def parse(self):
+        """parse part info from build config file."""
+        if self._is_load:
+            return
+        subsystem_config, parts_path_dict = self._merge_build_config()
+        parts_config = subsystem_config.get('parts')
+        self._parts_module_list.update(parts_config)
+        self._parts_path_dict = parts_path_dict
+        self._is_load = True
+
+    def parts_path_info(self):
+        """parts to path info."""
+        self.parse()
+        return self._parts_path_dict
+
+    def parts_info_filter(self, save_part):
+        if save_part is None:
+            raise Exception
+        self._parts_info_dict = {
+            key: value for key, value in self._parts_info_dict.items() if key in save_part}
     def _merge_build_config(self):
         _build_files = self._build_info.get('build_files')
         is_thirdparty_subsystem = False
@@ -397,27 +417,6 @@ class LoadBuildConfig(object):
         subsystem_config['subsystem'] = subsystem_name
         subsystem_config['parts'] = parts_info
         return subsystem_config, parts_path_dict
-
-    def parse(self):
-        """parse part info from build config file."""
-        if self._is_load:
-            return
-        subsystem_config, parts_path_dict = self._merge_build_config()
-        parts_config = subsystem_config.get('parts')
-        self._parts_module_list.update(parts_config)
-        self._parts_path_dict = parts_path_dict
-        self._is_load = True
-
-    def parts_path_info(self):
-        """parts to path info."""
-        self.parse()
-        return self._parts_path_dict
-
-    def parts_info_filter(self, save_part):
-        if save_part is None:
-            raise Exception
-        self._parts_info_dict = {
-            key: value for key, value in self._parts_info_dict.items() if key in save_part}
 
 
 def get_parts_info(source_root_dir, subsystem_info, build_xts=False):
