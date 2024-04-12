@@ -344,6 +344,7 @@ typedef enum SystemCapabilityNum {
     MSDP_MULTIMODAL_AWARENESS,
     ABILITY_APP_STARTUP,
     MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST,
+    MULTIMODALINPUT_INPUT_INFRAREDEMITTER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -671,6 +672,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
     {"SystemCapability.Ability.AppStartup", ABILITY_APP_STARTUP},
     {"SystemCapability.Base", BASE},
+    {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
 };
 
 #ifdef __cplusplus
