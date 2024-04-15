@@ -345,6 +345,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_APP_STARTUP,
     MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST,
     MULTIMODALINPUT_INPUT_INFRAREDEMITTER,
+    MULTIMEDIA_MEDIA_AVTRANSCODER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -671,6 +672,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
     {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
     {"SystemCapability.Ability.AppStartup", ABILITY_APP_STARTUP},
+    {"SystemCapability.Multimedia.Media.AVTransCoder", MULTIMEDIA_MEDIA_AVTRANSCODER},
     {"SystemCapability.Base", BASE},
     {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
 };
