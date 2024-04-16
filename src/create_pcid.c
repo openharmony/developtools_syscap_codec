@@ -254,6 +254,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     cJSON *jsonSyscapObj = cJSON_GetObjectItem(jsonRootObj, "syscap");
     if (jsonSyscapObj == NULL || !cJSON_IsObject(jsonSyscapObj)) {
         PRINT_ERR("get \"syscap\" object failed\n");
+        cJSON_Delete(jsonRootObj);
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, -1);
     }
 
@@ -267,6 +268,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     uint16_t allPriSyscapStrLen = 0;
     ret = GetPriSyscapLen(privateCapSize, jsonPriSyscapObj, &allPriSyscapStrLen);
     if (ret != 0) {
+        cJSON_Delete(jsonRootObj);
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, ret);
     }
 
@@ -274,6 +276,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     PCIDMain *pcidBuffer = (PCIDMain *)malloc(pcidLength);
     if (pcidBuffer == NULL) {
         PRINT_ERR("malloc for pcid buffer failed\n");
+        cJSON_Delete(jsonRootObj);
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, -1);
     }
     (void)memset_s(pcidBuffer, pcidLength, 0, pcidLength);
@@ -305,6 +308,7 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
     errno_t nRet = memcpy_s(osSyscap, OS_SYSCAP_BYTES, (uint8_t *)pcidMain + 8, OS_SYSCAP_BYTES);
     if (nRet != EOK) {
         PRINT_ERR("memcpy_s failed.");
+        cJSON_Delete(capVectorPtr);
         return -1;
     }
 
@@ -361,10 +365,12 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
             int32_t ret = sprintf_s(fullCapStr, SINGLE_SYSCAP_LEN, "SystemCapability.%s", priSyscapStr);
             if (ret == -1) {
                 printf("sprintf_s failed\n");
+                cJSON_Delete(capVectorPtr);
                 return -1;
             }
             if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(fullCapStr))) {
                 printf("cJSON_AddItemToArray or cJSON_CreateString failed\n");
+                cJSON_Delete(capVectorPtr);
                 return -1;
             }
             tempPriSyscapStr = priSyscapStr;
@@ -643,6 +649,7 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     if (priSyscapStringLen == 0) {
         if (!cJSON_AddItemToObject(sysCapObj, "private", sysCapArray)) {
             PRINT_ERR("Add private syscap array to json failed.\n");
+            cJSON_Delete(sysCapArray);
             free(sysCapArray);
             return -1;
         }
@@ -653,6 +660,7 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     while (token != NULL) {
         if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(token))) {
             PRINT_ERR("Add private syscap string to json failed.\n");
+            cJSON_Delete(sysCapArray);
             free(sysCapArray);
             return -1;
         }
@@ -714,10 +722,11 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     }
     ret = 0;
 
-    SAVE_FAILED:
+SAVE_FAILED:
     free(jsonBuffer);
-    ADD_JSON_FAILED:
+ADD_JSON_FAILED:
     cJSON_Delete(rootObj);
+    cJSON_Delete(sysCapObj);
     PARSE_FAILED:
     free(ctx);
     return ret;
