@@ -119,6 +119,10 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
         return false;
     }
 
+    if (bufferLen < (PCID_MAIN_BYTES + 1) || bufferLen > INT32_MAX) {
+        PRINT_ERR("Parameter bufferLen out of range.");
+        return false;
+    }
     uint32_t priLen = bufferLen - PCID_MAIN_BYTES - 1;
     if ((int)priLen <= 0) {
         *outputLen = 0;
