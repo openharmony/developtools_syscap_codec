@@ -346,6 +346,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST,
     MULTIMODALINPUT_INPUT_INFRAREDEMITTER,
     MULTIMEDIA_MEDIA_AVTRANSCODER,
+    MULTIMEDIA_IMAGEEFFECT_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -675,6 +676,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Media.AVTransCoder", MULTIMEDIA_MEDIA_AVTRANSCODER},
     {"SystemCapability.Base", BASE},
     {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
+    {"SystemCapability.Multimedia.ImageEffect.Core", MULTIMEDIA_IMAGEEFFECT_CORE},
 };
 
 #ifdef __cplusplus
