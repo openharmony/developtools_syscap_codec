@@ -320,8 +320,6 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
         ret = -1;
         goto FREE_SYSCAP_OUT;
     }
-
-    return 0;
 FREE_SYSCAP_OUT:
     cJSON_Delete(sysCapJson);
     return ret;

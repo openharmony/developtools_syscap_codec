@@ -262,6 +262,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     cJSON *jsonPriSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "private");
     ret = GetOsAndPriSyscapSize(jsonOsSyscapObj, jsonPriSyscapObj, &osCapSize, &privateCapSize);
     if (ret != 0) {
+        cJSON_Delete(jsonRootObj);
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, ret);
     }
 
@@ -347,6 +348,11 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
         return -1;
     }
 
+    if (contextBufLen < 0 || contextBufLen > UINT32_MAX) {
+        PRINT_ERR("the data privateSyscapLen is out of scope.");
+        return -1;
+    }
+
     int32_t privateSyscapLen = (int32_t)(contextBufLen - sizeof(PCIDMain) - 1);
     if (privateSyscapLen < 0) {
         PRINT_ERR("parse private syscap failed.");
@@ -381,9 +387,9 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
     }
     if (!cJSON_AddItemToObject(sysCapObject, "private", capVectorPtr)) {
         PRINT_ERR("cJSON_AddItemToObject failed\n");
+        cJSON_Delete(capVectorPtr);
         return -1;
     }
-
     return 0;
 }
 
@@ -653,6 +659,7 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
             free(sysCapArray);
             return -1;
         }
+        cJSON_Delete(sysCapArray);
         return 0;
     }
 
@@ -726,8 +733,7 @@ SAVE_FAILED:
     free(jsonBuffer);
 ADD_JSON_FAILED:
     cJSON_Delete(rootObj);
-    cJSON_Delete(sysCapObj);
-    PARSE_FAILED:
+PARSE_FAILED:
     free(ctx);
     return ret;
 }
