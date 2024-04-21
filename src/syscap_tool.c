@@ -266,6 +266,7 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath)
 
 FREE_RPCID_ROOT:
     cJSON_Delete(rpcidRoot);
+    free(convertedBuffer);
 FREE_CONTEXT_OUT:
     FreeContextBuffer(contextBuffer);
     return ret;

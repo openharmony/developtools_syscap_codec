@@ -286,10 +286,12 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     ret += SetPriSyscap(pcidBuffer, jsonPriSyscapObj, privateCapSize, allPriSyscapStrLen);
     ret += SetPCIDHeader(pcidBuffer, jsonRootObj);
     if (ret != 0) {
+        cJSON_Delete(jsonRootObj);
         return FreeAfterCreatePCID(pcidBuffer, allOsSyscapObj, contextBuffer, FREE_CREATE_PCID_BUFFER_OUT, ret);
     }
 
     ret = CheckConvertedContextSaveAsFile(outDirPath, pcidBuffer, pcidLength, ret);
+    cJSON_Delete(jsonRootObj);
     return FreeAfterCreatePCID(pcidBuffer, allOsSyscapObj, contextBuffer, FREE_CREATE_PCID_BUFFER_OUT, ret);
 }
 
@@ -520,6 +522,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, outputFileName);
     }
+    free(strJson);
     return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_CONVERT_OUT, ret);
 }
 
