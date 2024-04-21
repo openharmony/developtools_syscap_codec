@@ -57,7 +57,7 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
-static const char *g_pcidPath = "/system/etc/PCID.sc";
+static const char *g_PCID_PATH = "/system/etc/PCID.sc";
 
 struct FreeAfterDecodeRpcidInfo {
     char *priSyscap;
@@ -89,7 +89,7 @@ bool EncodeOsSyscap(char *output, int len)
         return false;
     }
 
-    ret = GetFileContext(g_pcidPath, &contextBuffer, &bufferLen);
+    ret = GetFileContext(g_PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
@@ -113,7 +113,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     char *outputStr = NULL;
     uint32_t bufferLen;
 
-    ret = GetFileContext(g_pcidPath, &contextBuffer, &bufferLen);
+    ret = GetFileContext(g_PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
@@ -181,18 +181,19 @@ bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SY
 
     for (i = 0; i < countOfSyscap; i++) {
         for (j = 0; j < sizeof(g_arraySyscap) / sizeof(SyscapWithNum); j++) {
-            if (g_arraySyscap[j].num == indexOfSyscap[i]) {
-                nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, g_arraySyscap[j].str);
-                if (nRet != EOK) {
-                    printf("strcpy_s failed. error = %d\n", nRet);
-                    *outputCnt = 0;
-                    free(strSyscap);
-                    strSyscap = NULL;
-                    return false;
-                }
-                strSyscap++;
-                break;
+            if (g_arraySyscap[j].num != indexOfSyscap[i]) {
+                continue;
             }
+            nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, g_arraySyscap[j].str);
+            if (nRet != EOK) {
+                printf("strcpy_s failed. error = %d\n", nRet);
+                *outputCnt = 0;
+                free(strSyscap);
+                strSyscap = NULL;
+                return false;
+            }
+            strSyscap++;
+            break;
         }
     }
 
