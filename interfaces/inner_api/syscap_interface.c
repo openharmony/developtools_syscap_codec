@@ -57,7 +57,7 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
-static const char *g_pcidPath = "/system/etc/PCID.sc";
+static const char *PCID_PATH = "/system/etc/PCID.sc";
 
 struct FreeAfterDecodeRpcidInfo {
     char *priSyscap;
@@ -89,7 +89,7 @@ bool EncodeOsSyscap(char *output, int len)
         return false;
     }
 
-    ret = GetFileContext(g_pcidPath, &contextBuffer, &bufferLen);
+    ret = GetFileContext(PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
@@ -113,12 +113,16 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     char *outputStr = NULL;
     uint32_t bufferLen;
 
-    ret = GetFileContext(g_pcidPath, &contextBuffer, &bufferLen);
+    ret = GetFileContext(PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
     }
 
+    if (bufferLen < (PCID_MAIN_BYTES + 1) || bufferLen > INT32_MAX) {
+        PRINT_ERR("Parameter bufferLen out of range.");
+        return false;
+    }
     uint32_t priLen = bufferLen - PCID_MAIN_BYTES - 1;
     if ((int)priLen <= 0) {
         *outputLen = 0;
@@ -177,18 +181,19 @@ bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SY
 
     for (i = 0; i < countOfSyscap; i++) {
         for (j = 0; j < sizeof(g_arraySyscap) / sizeof(SyscapWithNum); j++) {
-            if (g_arraySyscap[j].num == indexOfSyscap[i]) {
-                nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, g_arraySyscap[j].str);
-                if (nRet != EOK) {
-                    printf("strcpy_s failed. error = %d\n", nRet);
-                    *outputCnt = 0;
-                    free(strSyscap);
-                    strSyscap = NULL;
-                    return false;
-                }
-                strSyscap++;
-                break;
+            if (g_arraySyscap[j].num != indexOfSyscap[i]) {
+                continue;
             }
+            nRet = strcpy_s(*strSyscap, SINGLE_SYSCAP_LEN, g_arraySyscap[j].str);
+            if (nRet != EOK) {
+                printf("strcpy_s failed. error = %d\n", nRet);
+                *outputCnt = 0;
+                free(strSyscap);
+                strSyscap = NULL;
+                return false;
+            }
+            strSyscap++;
+            break;
         }
     }
 
@@ -241,6 +246,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
             *bufferPos = '\0';
             if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
+                free(output);
                 return false;
             }
             bufferPos = buffer;
@@ -316,8 +322,6 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
         ret = -1;
         goto FREE_SYSCAP_OUT;
     }
-
-    return 0;
 FREE_SYSCAP_OUT:
     cJSON_Delete(sysCapJson);
     return ret;
@@ -326,24 +330,25 @@ FREE_SYSCAP_OUT:
 static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo,
     cJSON *sysCapArray, const char *inputFile)
 {
+    int32_t ret = -1;
     // trans to string format
     sysCapArray = cJSON_GetObjectItem(freeAfterDecodeRpcidInfo.rpcidRoot, "syscap");
     if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
         PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
-        return -1;
+        return ret;
     }
     freeAfterDecodeRpcidInfo.sysCapArraySize = cJSON_GetArraySize(sysCapArray);
     if (freeAfterDecodeRpcidInfo.sysCapArraySize < 0) {
         PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
-        return -1;
+        return ret;
     }
     // malloc for save os syscap index
     freeAfterDecodeRpcidInfo.osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t)
         * freeAfterDecodeRpcidInfo.sysCapArraySize);
     if (freeAfterDecodeRpcidInfo.osSysCapIndex == NULL) {
         PRINT_ERR("malloc failed.\n");
-        return -1;
     }
+    free(freeAfterDecodeRpcidInfo.osSysCapIndex);
     return 0;
 }
 
