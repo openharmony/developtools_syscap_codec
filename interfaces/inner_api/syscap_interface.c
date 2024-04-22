@@ -57,7 +57,7 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
-static const char *g_PCID_PATH = "/system/etc/PCID.sc";
+static const char *PCID_PATH = "/system/etc/PCID.sc";
 
 struct FreeAfterDecodeRpcidInfo {
     char *priSyscap;
@@ -89,7 +89,7 @@ bool EncodeOsSyscap(char *output, int len)
         return false;
     }
 
-    ret = GetFileContext(g_PCID_PATH, &contextBuffer, &bufferLen);
+    ret = GetFileContext(PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
@@ -113,7 +113,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
     char *outputStr = NULL;
     uint32_t bufferLen;
 
-    ret = GetFileContext(g_PCID_PATH, &contextBuffer, &bufferLen);
+    ret = GetFileContext(PCID_PATH, &contextBuffer, &bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : /system/etc/PCID.sc\n");
         return false;
