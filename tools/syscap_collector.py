@@ -33,14 +33,6 @@ def get_args():
     return args
 
 
-def adjust_syscaps_list(sys_list: list, product: str):
-    # 调整syscaps_list:如果产品属于standard类，则去掉其中以.Lite结尾的syscap
-    standard_product = ["default", "ipcamera", "pc", "tablet"]
-    if product in standard_product:
-        sys_list = [syscap for syscap in sys_list if not syscap.endswith(".Lite")]
-    return sys_list
-
-
 def dict_to_json(output_path: str, syscaps_dict: dict):
     """
     output diff product syscaps json to output path
@@ -59,7 +51,6 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
             syscaps_list = list(set(syscaps_list))
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
-            syscaps_list = adjust_syscaps_list(syscaps_list, product_name)
             json.dump({'SysCaps': syscaps_list}, f, indent=4)
     print("end...")
 
