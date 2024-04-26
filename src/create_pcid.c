@@ -345,7 +345,7 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
     return 0;
 }
 
-int32_t GetPriSyscapResult(cJSON* capVectorPtr, int32_t ret)
+static int32_t GetPriSyscapResult(cJSON* capVectorPtr, int32_t ret)
 {
     cJSON_Delete(capVectorPtr);
     return ret;
@@ -688,7 +688,8 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     return 0;
 }
 
-int32_t GetSyscapStr(char *input, char const *priSyscapStr, uint32_t* osSyscap, uint32_t *pcidHeader) {
+int32_t GetSyscapStr(char *input, char const *priSyscapStr, uint32_t* osSyscap, uint32_t *pcidHeader)
+{
     char *ctx = NULL;
     uint32_t fileContextLen;
     if (GetFileContext(input, &ctx, (uint32_t *)&fileContextLen) != 0) {
