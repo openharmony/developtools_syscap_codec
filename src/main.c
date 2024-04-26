@@ -37,6 +37,7 @@
 #define INPUT_FILE 8
 #define OUTPUT_FILE 9
 #define HELP 10
+#define INPUT_FILE_NUM 4
 
 static void PrintHelp(void);
 static void PrintVersion(void);
@@ -85,7 +86,7 @@ int main(int argc, char **argv)
             break;
         }
         if (flag == 'C') {
-            if (argc != 4 || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
+            if (argc != INPUT_FILE_NUM || optind < 0 || optind >= argc) {  // 4, argc of ./syscap_tool -C f1 f2
                 PRINT_ERR("Input file too few or too many.\n");
                 return -1;
             }
@@ -126,7 +127,12 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath)
         case 0x10E: // 0x10E, -Rdsi inputfile
             printf("-Rdsi is not support currently.\n"); break;
         case 0x80:  // 0x80,  -v
-            (void)OutputVersion(argv[optind], optind);  break;
+            if (optind < 0 || optind >= INPUT_FILE_NUM) {
+                PRINT_ERR("Input file too few or too many.\n");
+                return -1;
+            } else {
+                (void)OutputVersion(argv[optind], optind);  break;
+            }
         default:
             (void)OutputHelp();
     }

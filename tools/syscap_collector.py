@@ -33,14 +33,6 @@ def get_args():
     return args
 
 
-def adjust_syscaps_list(sys_list: list, product: str):
-    # 调整syscaps_list:如果产品属于standard类，则去掉其中以.Lite结尾的syscap
-    standard_product = ["default", "ipcamera", "pc", "tablet"]
-    if product in standard_product:
-        sys_list = [syscap for syscap in sys_list if not syscap.endswith(".Lite")]
-    return sys_list
-
-
 def dict_to_json(output_path: str, syscaps_dict: dict):
     """
     output diff product syscaps json to output path
@@ -59,7 +51,6 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
             syscaps_list = list(set(syscaps_list))
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
-            syscaps_list = adjust_syscaps_list(syscaps_list, product_name)
             json.dump({'SysCaps': syscaps_list}, f, indent=4)
     print("end...")
 
@@ -304,15 +295,6 @@ class BundlePartObj(object):
         self._build_config_file = bundle_config_file
         self._loading_config()
 
-    def _loading_config(self):
-        if not os.path.exists(self._build_config_file):
-            raise Exception("file '{}' doesn't exist.".format(
-                self._build_config_file), "2011")
-        self.bundle_info = _read_json_file(self._build_config_file)
-        if not self.bundle_info:
-            raise Exception("read file '{}' failed.".format(
-                self._build_config_file), "2011")
-
     def to_ohos_build(self):
         _component_info = self.bundle_info.get('component')
         _subsystem_name = _component_info.get('subsystem')
@@ -349,6 +331,15 @@ class BundlePartObj(object):
         _ohos_build_info['parts'] = {_part_name: _part_info}
         return _ohos_build_info
 
+    def _loading_config(self):
+        if not os.path.exists(self._build_config_file):
+            raise Exception("file '{}' doesn't exist.".format(
+                self._build_config_file), "2011")
+        self.bundle_info = _read_json_file(self._build_config_file)
+        if not self.bundle_info:
+            raise Exception("read file '{}' failed.".format(
+                self._build_config_file), "2011")
+
 
 class LoadBuildConfig(object):
     """load build config file and parse configuration info."""
@@ -368,6 +359,26 @@ class LoadBuildConfig(object):
         self._parts_module_list = {}
         self._parts_deps = {}
 
+    def parse(self):
+        """parse part info from build config file."""
+        if self._is_load:
+            return
+        subsystem_config, parts_path_dict = self._merge_build_config()
+        parts_config = subsystem_config.get('parts')
+        self._parts_module_list.update(parts_config)
+        self._parts_path_dict = parts_path_dict
+        self._is_load = True
+
+    def parts_path_info(self):
+        """parts to path info."""
+        self.parse()
+        return self._parts_path_dict
+
+    def parts_info_filter(self, save_part):
+        if save_part is None:
+            raise Exception
+        self._parts_info_dict = {
+            key: value for key, value in self._parts_info_dict.items() if key in save_part}
     def _merge_build_config(self):
         _build_files = self._build_info.get('build_files')
         is_thirdparty_subsystem = False
@@ -397,27 +408,6 @@ class LoadBuildConfig(object):
         subsystem_config['subsystem'] = subsystem_name
         subsystem_config['parts'] = parts_info
         return subsystem_config, parts_path_dict
-
-    def parse(self):
-        """parse part info from build config file."""
-        if self._is_load:
-            return
-        subsystem_config, parts_path_dict = self._merge_build_config()
-        parts_config = subsystem_config.get('parts')
-        self._parts_module_list.update(parts_config)
-        self._parts_path_dict = parts_path_dict
-        self._is_load = True
-
-    def parts_path_info(self):
-        """parts to path info."""
-        self.parse()
-        return self._parts_path_dict
-
-    def parts_info_filter(self, save_part):
-        if save_part is None:
-            raise Exception
-        self._parts_info_dict = {
-            key: value for key, value in self._parts_info_dict.items() if key in save_part}
 
 
 def get_parts_info(source_root_dir, subsystem_info, build_xts=False):
