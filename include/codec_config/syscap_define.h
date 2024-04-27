@@ -287,7 +287,6 @@ typedef enum SystemCapabilityNum {
     REQUEST_FILETRANSFERAGENT,
     DRIVER_HID_EXTENSION,
     DRIVER_USB_EXTENSION,
-    DRIVER_DDK_EXTENSION,
     HIVIEWDFX_HIVIEW_LOGLIBRARY,
     SECURITY_HUKS_CORE,
     SECURITY_HUKS_EXTENSION,
@@ -348,6 +347,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALINPUT_INPUT_INFRAREDEMITTER,
     MULTIMEDIA_MEDIA_AVTRANSCODER,
     MULTIMEDIA_IMAGEEFFECT_CORE,
+    DRIVER_DDK_EXTENSION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -638,7 +638,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Request.FileTransferAgent", REQUEST_FILETRANSFERAGENT},
     {"SystemCapability.Driver.HID.Extension", DRIVER_HID_EXTENSION},
     {"SystemCapability.Driver.USB.Extension", DRIVER_USB_EXTENSION},
-    {"SystemCapability.Driver.DDK.Extension", DRIVER_DDK_EXTENSION},
     {"SystemCapability.Security.Huks.Core", SECURITY_HUKS_CORE},
     {"SystemCapability.Security.Huks.Extension", SECURITY_HUKS_EXTENSION},
     {"SystemCapability.Sensors.MiscDevice.Lite", SENSORS_MISCDEVICE_LITE},
@@ -679,6 +678,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Base", BASE},
     {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
     {"SystemCapability.Multimedia.ImageEffect.Core", MULTIMEDIA_IMAGEEFFECT_CORE},
+    {"SystemCapability.Driver.DDK.Extension", DRIVER_DDK_EXTENSION},
 };
 
 #ifdef __cplusplus
