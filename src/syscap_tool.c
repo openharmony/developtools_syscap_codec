@@ -261,8 +261,10 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath)
     ret = ConvertedContextSaveAsFile(outputPath, "rpcid.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.json\n", outputPath);
+        free(convertedBuffer);
         goto FREE_RPCID_ROOT;
     }
+    free(convertedBuffer);
 
 FREE_RPCID_ROOT:
     cJSON_Delete(rpcidRoot);

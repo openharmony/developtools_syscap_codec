@@ -343,6 +343,11 @@ typedef enum SystemCapabilityNum {
     RESOURCESCHEDULE_SYSTEMLOAD,
     MSDP_MULTIMODAL_AWARENESS,
     ABILITY_APP_STARTUP,
+    MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST,
+    MULTIMODALINPUT_INPUT_INFRAREDEMITTER,
+    MULTIMEDIA_MEDIA_AVTRANSCODER,
+    MULTIMEDIA_IMAGEEFFECT_CORE,
+    DRIVER_DDK_EXTENSION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -596,6 +601,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AVSession.Core", MULTIMEDIA_AVSESSION_CORE},
     {"SystemCapability.Multimedia.AVSession.Manager", MULTIMEDIA_AVSESSION_MANAGER},
     {"SystemCapability.Multimedia.AVSession.AVCast", MULTIMEDIA_AVSESSION_AVCAST},
+    {"SystemCapability.Multimedia.AVSession.ExtendedDisplayCast", MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
@@ -668,7 +674,11 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
     {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
     {"SystemCapability.Ability.AppStartup", ABILITY_APP_STARTUP},
+    {"SystemCapability.Multimedia.Media.AVTransCoder", MULTIMEDIA_MEDIA_AVTRANSCODER},
     {"SystemCapability.Base", BASE},
+    {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
+    {"SystemCapability.Multimedia.ImageEffect.Core", MULTIMEDIA_IMAGEEFFECT_CORE},
+    {"SystemCapability.Driver.DDK.Extension", DRIVER_DDK_EXTENSION},
 };
 
 #ifdef __cplusplus
