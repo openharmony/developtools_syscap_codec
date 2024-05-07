@@ -18,6 +18,7 @@
 1. 扩展syscap头文件的枚举定义，须在开始位置标记最小值，且必须大于等于500。
 '''
 import argparse
+import os
 
 LICENCE = '''/*
  * Copyright (c) 2023 Huawei Device Co., Ltd.
@@ -151,6 +152,6 @@ if __name__ == '__main__':
     output_file = args.output
     
     full = assemble_header_file(base_file, extern_file)
-    with open(output_file, 'w') as out:
+    with os.fdopen(os.open(output_file, os.O_WRONLY | os.O_CREAT, mode=0o640), 'w') as out:
         out.writelines(full)
 
