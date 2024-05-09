@@ -131,7 +131,8 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath)
                 PRINT_ERR("Input file too few or too many.\n");
                 return -1;
             } else {
-                (void)OutputVersion(argv[optind], optind);  break;
+                (void)OutputVersion(argv[optind], optind);
+                break;
             }
         default:
             (void)OutputHelp();
