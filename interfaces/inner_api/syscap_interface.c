@@ -57,7 +57,7 @@ typedef struct ProductCompatibilityID {
     uint8_t osSyscap[OS_SYSCAP_BYTES];
 } PCIDMain;
 
-static const char *g_pcidPath = "/system/etc/pcid.sc";
+static const char *PCID_PATH = "/system/etc/pcid.sc";
 
 struct FreeAfterDecodeRpcidInfo {
     char *priSyscap;
@@ -246,7 +246,6 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
             *bufferPos = '\0';
             if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
-                free(output);
                 return false;
             }
             bufferPos = buffer;
@@ -330,23 +329,23 @@ FREE_SYSCAP_OUT:
 static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo freeAfterDecodeRpcidInfo,
     cJSON *sysCapArray, const char *inputFile)
 {
-    int32_t ret = -1;
     // trans to string format
     sysCapArray = cJSON_GetObjectItem(freeAfterDecodeRpcidInfo.rpcidRoot, "syscap");
     if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
         PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
-        return ret;
+        return -1;
     }
     freeAfterDecodeRpcidInfo.sysCapArraySize = cJSON_GetArraySize(sysCapArray);
     if (freeAfterDecodeRpcidInfo.sysCapArraySize < 0) {
         PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
-        return ret;
+        return -1;
     }
     // malloc for save os syscap index
     freeAfterDecodeRpcidInfo.osSysCapIndex = (uint16_t *)malloc(sizeof(uint16_t)
         * freeAfterDecodeRpcidInfo.sysCapArraySize);
     if (freeAfterDecodeRpcidInfo.osSysCapIndex == NULL) {
         PRINT_ERR("malloc failed.\n");
+        return -1;
     }
     free(freeAfterDecodeRpcidInfo.osSysCapIndex);
     return 0;
@@ -525,6 +524,9 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo *pcidPriSyscapInfo, cons
         if (g_arraySyscap[t].num == pos) {
             break;
         }
+    }
+    if(t == allSyscapNum){
+        return -1;
     }
     pcidPriSyscapInfo->ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
     // 2, header of pcid & rpcid
