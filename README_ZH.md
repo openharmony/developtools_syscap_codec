@@ -2,21 +2,21 @@
 
 系统能力(SystemCapability, 本文中使用SysCap缩写)编解码工具应用场景如下：
 
-应用开发时，IDE会根据应用配置的SysCap和API版本生成描述RPCID(Required Product Compatibility ID)的json文件，并调用编解码工具syscap_tool将该json文件编码成RPCID。另一方面，IDE拿到开发者导入PCID(Product Compatibility ID)，使用该工具解码出设备的SysCap集合。该工具仅供IDE使用，对用户不可见。
+应用开发时，IDE会根据应用配置的SysCap和API版本生成描述rpcid(Required Product Compatibility ID)的json文件，并调用编解码工具syscap_tool将该json文件编码成rpcid。另一方面，IDE拿到开发者导入pcid(Product Compatibility ID)，使用该工具解码出设备的SysCap集合。该工具仅供IDE使用，对用户不可见。
 
 提供的主要功能：
 
-1. PCID编码：对描述SysCap集合的文件编码生成PCID。  
+1. pcid编码：对描述SysCap集合的文件编码生成pcid。  
 
-2. PCID解码：对编码后的PCID文件解码获取SysCap集合。
+2. pcid解码：对编码后的pcid文件解码获取SysCap集合。
 
-3. RPCID编码：对描述应用所需的SysCap集合的文件编码生成RPCID。
+3. rpcid编码：对描述应用所需的SysCap集合的文件编码生成rpcid。
 
-4. RPCID解码：对编码后的RPCID文件解码获取应用所需的SysCap集合。
+4. rpcid解码：对编码后的rpcid文件解码获取应用所需的SysCap集合。
 
-5. 编码字符串：将sc后缀形式的PCID/RPCID编码为字符串形式。
+5. 编码字符串：将sc后缀形式的pcid/rpcid编码为字符串形式。
 
-6. PCID与RPCID比较：查询PCID是否满足RPCID的要求，并输出不满足的地方。
+6. pcid与rpcid比较：查询pcid是否满足rpcid的要求，并输出不满足的地方。
 
 ## 代码目录
 ```
@@ -72,8 +72,8 @@ syscap_tool PC端可执行文件编译步骤：
 ```shell
 syscap_tool -R/P -e/d -i filepath [-o outpath]
 -h, --help      : how to use
--R, --RPCID     : encode or decode RPCID
--P, --PCID      : encode or decode PCID
+-R, --rpcid     : encode or decode rpcid
+-P, --pcid      : encode or decode pcid
 -C, --compare   : compare pcid with rpcid string format.
         -s, --string : input string.
 -e, --encode    : encode to sc format.
@@ -88,31 +88,31 @@ syscap_tool v1.1.1
 ```
 ### 使用示例
 ```shell
-# 将 RPCID.json 编码为SC格式，文件名RPCID.sc
-syscap_tool -Rei RPCID.json -o path/
+# 将 rpcid.json 编码为SC格式，文件名rpcid.sc
+syscap_tool -Rei rpcid.json -o path/
 
-# 将 RPCID.sc 编码为JSON格式，文件名RPCID.json
-syscap_tool -Rdi RPCID.sc -o path/
+# 将 pcid.sc 编码为JSON格式，文件名rpcid.json
+syscap_tool -Rdi pcid.sc -o path/
 
-# 将 PCID.json 编码为SC格式，文件名PCID.sc
-syscap_tool -Pei PCID.json -o path/
+# 将 pcid.json 编码为SC格式，文件名pcid.sc
+syscap_tool -Pei pcid.json -o path/
 
-# 将 PCID.sc 编码为JSON格式，文件名PCID.json
-syscap_tool -Pdi PCID.sc -o path/
+# 将 pcid.sc 编码为JSON格式，文件名pcid.json
+syscap_tool -Pdi pcid.sc -o path/
 
-# 将 RPCID.sc 编码为字符串格式，文件名RPCID.txt
-syscap_tool -Resi RPCID.sc -o path/
+# 将 pcid.sc 编码为字符串格式，文件名rpcid.txt
+syscap_tool -Resi pcid.sc -o path/
 
-# 将 PCID.sc 编码为字符串格式，文件名PCID.txt
-syscap_tool -Pesi PCID.sc -o path/
+# 将 pcid.sc 编码为字符串格式，文件名pcid.txt
+syscap_tool -Pesi pcid.sc -o path/
 
-# 比较字符串格式的PCID和RPCID，pcid 符合条件返回成功提示，不符合则提示原因。
+# 比较字符串格式的pcid和rpcid，pcid 符合条件返回成功提示，不符合则提示原因。
 syscap_tool -C pcid.txt rpcid.txt
 
-# 功能类似 -C 选项，区别为 -SC 选项为直接输入字符串。
+# 功能类似 -C选项，区别为 -sC 选项为直接输入字符串。
 syscap_tool -sC "pcidstring" "rpcidstring"
 
-# 将字符串格式的 pcid 转为 json 格式，文件名 PCID.json。
+# 将字符串格式的 pcid 转为 json 格式，文件名 pcid.json。
 syscap_tool -Pdsi pcid.txt -o path/
 ```
 **说明：**  -o 选项指定输出目录，缺省为当前目录。  
