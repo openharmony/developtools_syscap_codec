@@ -51,8 +51,8 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath);
 static struct option g_longOptions[] = {
         {"help",           no_argument,       0,  'h' },
         {"version",        no_argument,       0,  'v' },
-        {"RPCID",          no_argument,       0,  'R' },
-        {"PCID",           no_argument,       0,  'P' },
+        {"rpcid",          no_argument,       0,  'R' },
+        {"pcid",           no_argument,       0,  'P' },
         {"compare",        required_argument, 0,  'C' },
         {"encode",         no_argument,       0,  'e' },
         {"decode",         no_argument,       0,  'd' },
@@ -112,7 +112,7 @@ int32_t OperateByBitMap(char *const *argv, uint16_t bitMap, char *outputpath)
             ret = EncodeRpcidscToString(g_customerfileinfo.inputfile, outputpath); break;
         case 0x115: // 0x115, -Pesi inputfile
             ret = EncodePcidscToString(g_customerfileinfo.inputfile, outputpath); break;
-        case 0x60:  // 0x60,  -C PCID.txt RPCID.txt
+        case 0x60:  // 0x60,  -C pcid.txt rpcid.txt
             ret = ComparePcidWithRpcidString(g_customerfileinfo.pcidfile, g_customerfileinfo.rpcidfile, TYPE_FILE);
             break;
         case 0x64:  // 0x64,  -sC "pcidstring" "rpcidstring"
@@ -195,8 +195,8 @@ void PrintHelp(void)
 {
     printf("syscap_tool -R/P -e/d -i filepath [-o outpath]\n");
     printf("-h, --help\t: how to use\n");
-    printf("-R, --RPCID\t: encode or decode RPCID\n");
-    printf("-P, --PCID\t: encode or decode PCID\n");
+    printf("-R, --rpcid\t: encode or decode rpcid\n");
+    printf("-P, --pcid\t: encode or decode pcid\n");
     printf("-C, --compare\t: compare pcid with rpcid string format.\n\t"
            "-s, --string : input string.\n");
     printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
