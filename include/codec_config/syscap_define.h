@@ -348,7 +348,6 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_MEDIA_AVTRANSCODER,
     MULTIMEDIA_IMAGEEFFECT_CORE,
     DRIVER_DDK_EXTENSION,
-    FILEMANAGEMENT_SCREENLOCKFILEMANAGER,
     SECURITY_SCREENLOCKFILEMANAGER,
     COMMUNICATION_NETMANAGER_NETFIREWALL,
     // Add before here
@@ -682,7 +681,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
     {"SystemCapability.Multimedia.ImageEffect.Core", MULTIMEDIA_IMAGEEFFECT_CORE},
     {"SystemCapability.Driver.DDK.Extension", DRIVER_DDK_EXTENSION},
-    {"SystemCapability.FileManagement.ScreenLockFileManager", FILEMANAGEMENT_SCREENLOCKFILEMANAGER},
     {"SystemCapability.Security.ScreenLockFileManager", SECURITY_SCREENLOCKFILEMANAGER},
     {"SystemCapability.Communication.NetManager.Netfirewall", COMMUNICATION_NETMANAGER_NETFIREWALL},
 };
