@@ -45,7 +45,7 @@ ohos_shared_library("systemcapability") {
   deps = [ ":query_syscap_js" ]
   external_deps = [
     "bounds_checking_function:libsec_static",
-    "napi:ace_napi"
+    "napi:ace_napi",
   ]
 
   if (syscap_codec_config_extern_path != "") {
@@ -54,7 +54,6 @@ ohos_shared_library("systemcapability") {
     include_dirs += [ "${root_build_dir}" ]
     cflags = [ "-DSYSCAP_DEFINE_EXTERN_ENABLE" ]
   }
-
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
