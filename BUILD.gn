@@ -53,12 +53,12 @@ ohos_executable("syscap_tool_bin") {
   sources = [ "./src/main.c" ]
   sources += sources_platform_common
 
-  deps += [ "//third_party/bounds_checking_function:libsec_static" ]
+  external_deps = [ "bounds_checking_function:libsec_static" ]
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
   } else {
-    deps += [ "//third_party/cJSON:cjson_static" ]
+    external_deps += [ "cJSON:cjson_static" ]
   }
 
   subsystem_name = "developtools"
@@ -122,9 +122,9 @@ if (defined(ohos_lite)) {
       "./src/endian_internal.c",
       "./src/syscap_tool.c",
     ]
-    deps += [
-      "//third_party/bounds_checking_function:libsec_static",
-      "//third_party/cJSON:cjson_static",
+    external_deps = [
+      "bounds_checking_function:libsec_static",
+      "cJSON:cjson_static",
     ]
 
     subsystem_name = "developtools"
