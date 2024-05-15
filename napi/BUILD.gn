@@ -55,7 +55,6 @@ ohos_shared_library("systemcapability") {
     cflags = [ "-DSYSCAP_DEFINE_EXTERN_ENABLE" ]
   }
 
-  external_deps = [ "napi:ace_napi" ]
 
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
