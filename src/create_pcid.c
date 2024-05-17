@@ -899,6 +899,7 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     }
     (void)memset_s(freePcidInfo.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
                    0, priSyscapCount * SINGLE_SYSCAP_LEN);
+    freePcidInfo.priSyscapFull = NULL;
 
     ret = CheckPrivateSyCap(freePcidInfo, privateSyscapLen, privateSyscap, ret);
     if (ret == -1) {
