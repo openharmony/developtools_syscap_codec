@@ -22,12 +22,11 @@
     "ram": "0",
     "deps": {
       "components": [
-        "napi"
-      ],
-      "third_party": [
+        "napi",
         "bounds_checking_function",
         "cJSON"
-      ]
+      ],
+      "third_party": []
     },
     "build": {
       "sub_component": [

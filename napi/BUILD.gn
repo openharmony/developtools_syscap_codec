@@ -42,9 +42,10 @@ ohos_shared_library("systemcapability") {
   sources = [ "napi_query_syscap.cpp" ]
   sources += sources_platform_common
 
-  deps = [
-    ":query_syscap_js",
-    "//third_party/bounds_checking_function:libsec_static",
+  deps = [ ":query_syscap_js" ]
+  external_deps = [
+    "bounds_checking_function:libsec_static",
+    "napi:ace_napi",
   ]
 
   if (syscap_codec_config_extern_path != "") {
@@ -54,12 +55,10 @@ ohos_shared_library("systemcapability") {
     cflags = [ "-DSYSCAP_DEFINE_EXTERN_ENABLE" ]
   }
 
-  external_deps = [ "napi:ace_napi" ]
-
   if (defined(ohos_lite)) {
     deps += [ "//build/lite/config/component/cJSON:cjson_static" ]
   } else {
-    deps += [ "//third_party/cJSON:cjson_static" ]
+    external_deps += [ "cJSON:cjson_static" ]
   }
 
   relative_install_dir = "module"
