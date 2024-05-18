@@ -149,16 +149,9 @@ FREE_PRIOUTPUT:
     return allSyscapBuffer;
 }
 
-napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
+void HandleNapiValueType()
 {
-    GET_PARAMS(env, info, 1);
-    NAPI_ASSERT(env, argc <= 1, "too many parameters");
-    napi_value result = nullptr;
-
-    SystemCapabilityAsyncContext* asyncContext = new SystemCapabilityAsyncContext();
-
     asyncContext->env = env;
-
     napi_valuetype valueType = napi_undefined;
     if (argc == 1) {
         napi_typeof(env, argv[0], &valueType);
@@ -172,7 +165,16 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     } else {
         napi_get_undefined(env, &result);
     }
+}
 
+napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
+{
+    GET_PARAMS(env, info, 1);
+    NAPI_ASSERT(env, argc <= 1, "too many parameters");
+    napi_value result = nullptr;
+
+    SystemCapabilityAsyncContext* asyncContext = new SystemCapabilityAsyncContext();
+    HandleNapiValueType();
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "napi_value QuerySystemCapability", NAPI_AUTO_LENGTH, &resource);
 
