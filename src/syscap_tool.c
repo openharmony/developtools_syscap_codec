@@ -507,7 +507,7 @@ char *CopyInputString(const char *inputString)
         PRINT_ERR("inputString is empty.\n");
         inputString == NULL;
         return NULL;
-    }}
+    }
     size_t inputLen = strlen(inputString);
     if (inputLen > STRING_FORMAT_LEN_MAX) {
         PRINT_ERR("input string too long(%zu).\n", inputLen);
