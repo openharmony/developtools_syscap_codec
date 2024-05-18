@@ -499,10 +499,15 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 
 char *CopyInputString(const char *inputString)
 {
-    if (inputString == NULL || *inputString == '\0') {
-        PRINT_ERR("inputString is null or empty.\n");
+    if (inputString == NULL) {
+        PRINT_ERR("inputString is null.\n");
         return NULL;
     }
+    if (*inputString == '\0') {
+        PRINT_ERR("inputString is empty.\n");
+        inputString == NULL;
+        return NULL;
+    }}
     size_t inputLen = strlen(inputString);
     if (inputLen > STRING_FORMAT_LEN_MAX) {
         PRINT_ERR("input string too long(%zu).\n", inputLen);
