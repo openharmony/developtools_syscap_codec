@@ -487,7 +487,6 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     if (sysCapArraySize < 0) {
         PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
         sysCapArray = NULL;
-        sysCapArraySize = NULL;
         return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
     }
     // malloc for save os syscap index
