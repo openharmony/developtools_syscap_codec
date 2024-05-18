@@ -504,6 +504,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.sysCapObj = cJSON_CreateObject();
     ret = CheckSysCapObj(freePcidJsonInfo, pcidMain, contextBufLen, ret);
     if (freePcidJsonInfo.flag == -1) {
+        freePcidJsonInfo.sysCapObj = NULL;
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_CONTEXT_OUT, ret);
     }
 
