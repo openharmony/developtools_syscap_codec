@@ -505,7 +505,7 @@ char *CopyInputString(const char *inputString)
     }
     if (*inputString == '\0') {
         PRINT_ERR("inputString is empty.\n");
-        inputString == NULL;
+        inputString = NULL;
         return NULL;
     }
     size_t inputLen = strlen(inputString);
