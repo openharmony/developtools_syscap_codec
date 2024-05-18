@@ -149,7 +149,7 @@ FREE_PRIOUTPUT:
     return allSyscapBuffer;
 }
 
-void HandleNapiValueType()
+void HandleNapiValueType(SystemCapabilityAsyncContext* asyncContext)
 {
     asyncContext->env = env;
     napi_valuetype valueType = napi_undefined;
