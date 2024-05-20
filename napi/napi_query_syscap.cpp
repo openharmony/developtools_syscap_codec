@@ -149,7 +149,11 @@ FREE_PRIOUTPUT:
     return allSyscapBuffer;
 }
 
-napi_value HandleNapiValueType(SystemCapabilityAsyncContext* asyncContext, napi_env env, size_t argc)
+napi_value HandleNapiValueType(SystemCapabilityAsyncContext* asyncContext, 
+                                napi_env env, 
+                                size_t argc, 
+                                napi_value argv[argc],
+                                napi_value result)
 {
     asyncContext->env = env;
     napi_valuetype valueType = napi_undefined;
@@ -174,7 +178,7 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     napi_value result = nullptr;
 
     SystemCapabilityAsyncContext* asyncContext = new SystemCapabilityAsyncContext();
-    HandleNapiValueType(asyncContext, env, argc);
+    HandleNapiValueType(asyncContext, env, argc, argv[argc], result);
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "napi_value QuerySystemCapability", NAPI_AUTO_LENGTH, &resource);
 
