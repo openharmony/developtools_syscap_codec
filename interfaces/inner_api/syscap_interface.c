@@ -527,7 +527,7 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo *pcidPriSyscapInfo, cons
             break;
         }
     }
-    if(t == allSyscapNum){
+    if (t == allSyscapNum) {
         return -1;
     }
     pcidPriSyscapInfo->ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
