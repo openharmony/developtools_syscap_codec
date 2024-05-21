@@ -398,7 +398,6 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
         PRINT_ERR("cJSON_AddItemToObject failed\n");
         return GetPriSyscapResult(capVectorPtr, -1);
     }
-    capVectorPtr = NULL;
     return 0;
 }
 
