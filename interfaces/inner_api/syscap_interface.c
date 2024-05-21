@@ -246,7 +246,6 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
             *bufferPos = '\0';
             if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
-                outputArray = NULL;
                 return false;
             }
             bufferPos = buffer;
