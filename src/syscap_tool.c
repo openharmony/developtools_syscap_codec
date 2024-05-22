@@ -474,19 +474,13 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     // trans to string format
     freeAfterEncodeRpcidscInfo.sysCapDefine =  CreateWholeSyscapJsonObj();
     sysCapArray = cJSON_GetObjectItem(freeAfterEncodeRpcidscInfo.rpcidRoot, "syscap");
-    if (sysCapArray == NULL) {
-        PRINT_ERR("syscap array is null. Input file: %s\n", inputFile);
-        return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
-    }
-    if (!cJSON_IsArray(sysCapArray)) {
+    if (sysCapArray == NULL || !cJSON_IsArray(sysCapArray)) {
         PRINT_ERR("Get syscap failed. Input file: %s\n", inputFile);
-        sysCapArray = NULL;
         return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
     }
     sysCapArraySize = cJSON_GetArraySize(sysCapArray);
     if (sysCapArraySize < 0) {
         PRINT_ERR("Get syscap size failed. Input file: %s\n", inputFile);
-        sysCapArray = NULL;
         return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_WHOLE_SYSCAP_AFTER_RPCIDSC, ret);
     }
     // malloc for save os syscap index
@@ -498,7 +492,6 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 
     ret = OutputSetMemAndPrintToFile(freeAfterEncodeRpcidscInfo, sysCapArraySize, sysCapArray, outDirPath);
     if (freeAfterEncodeRpcidscInfo.flag == 1) {
-        freeAfterEncodeRpcidscInfo.osSysCapIndex = NULL;
         return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, freeAfterEncodeRpcidscInfo.type, ret);
     }
     return FreeAfterEncodeRpcidsc(freeAfterEncodeRpcidscInfo, FREE_OUTBUFFER_AFTER_RPCIDSC, ret);
@@ -506,13 +499,8 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
 
 char *CopyInputString(const char *inputString)
 {
-    if (inputString == NULL) {
-        PRINT_ERR("inputString is null.\n");
-        return NULL;
-    }
-    if (*inputString == '\0') {
-        PRINT_ERR("inputString is empty.\n");
-        inputString = NULL;
+    if (inputString == NULL || *inputString == '\0') {
+        PRINT_ERR("inputString is null or empty.\n");
         return NULL;
     }
     size_t inputLen = strlen(inputString);
