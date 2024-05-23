@@ -504,7 +504,6 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.sysCapObj = cJSON_CreateObject();
     ret = CheckSysCapObj(freePcidJsonInfo, pcidMain, contextBufLen, ret);
     if (freePcidJsonInfo.flag == -1) {
-        freePcidJsonInfo.sysCapObj = NULL;
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_CONTEXT_OUT, ret);
     }
 
@@ -900,7 +899,7 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     }
     (void)memset_s(freePcidInfo.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
                    0, priSyscapCount * SINGLE_SYSCAP_LEN);
-    freePcidInfo.priSyscapFull = NULL;
+    // freePcidInfo.priSyscapFull = NULL;
 
     ret = CheckPrivateSyCap(freePcidInfo, privateSyscapLen, privateSyscap, ret);
     if (ret == -1) {
