@@ -172,7 +172,6 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     } else {
         napi_get_undefined(env, &result);
     }
-
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "napi_value QuerySystemCapability", NAPI_AUTO_LENGTH, &resource);
 

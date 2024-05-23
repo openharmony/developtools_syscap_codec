@@ -332,6 +332,7 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
             }
             if (!cJSON_AddItemToArray(capVectorPtr, cJSON_CreateString(g_arraySyscap[j].str))) {
                 printf("cJSON_AddItemToArray or cJSON_CreateString failed\n");
+                cJSON_Delete(capVectorPtr);
                 return -1;
             }
         }
@@ -339,9 +340,11 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
 
     if (!cJSON_AddItemToObject(sysCapObject, "os", capVectorPtr)) {
         PRINT_ERR("cJSON_AddItemToObject failed\n");
+        cJSON_Delete(capVectorPtr);
         return -1;
     }
 
+    cJSON_Delete(capVectorPtr);
     return 0;
 }
 
