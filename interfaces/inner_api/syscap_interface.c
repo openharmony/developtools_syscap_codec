@@ -121,17 +121,20 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
 
     if (bufferLen < (PCID_MAIN_BYTES + 1) || bufferLen > INT32_MAX) {
         PRINT_ERR("Parameter bufferLen out of range.");
+        FreeContextBuffer(contextBuffer);
         return false;
     }
     uint32_t priLen = bufferLen - PCID_MAIN_BYTES - 1;
     if ((int)priLen <= 0) {
         *outputLen = 0;
+        FreeContextBuffer(contextBuffer);
         return false;
     }
     outputStr = (char *)calloc(priLen, sizeof(char));
     if (outputStr == NULL) {
         PRINT_ERR("malloc buffer failed, size = %u, errno = %d\n", priLen, errno);
         *outputLen = 0;
+        FreeContextBuffer(contextBuffer);
         return false;
     }
 
@@ -246,6 +249,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
             *bufferPos = '\0';
             if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
+                outputArray = NULL;
                 return false;
             }
             bufferPos = buffer;
@@ -512,6 +516,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
     }
 
     PartSysCapAndOutBuffer(freeAfterDecodeRpcidInfo, outBuffer, priSyscapArray, sysCapArray);
+    priSyscapArray = NULL;
     return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID, outBuffer);
 }
 
@@ -525,7 +530,7 @@ static int32_t CopySyscopToRet(struct PcidPriSyscapInfo *pcidPriSyscapInfo, cons
             break;
         }
     }
-    if(t == allSyscapNum){
+    if (t == allSyscapNum) {
         return -1;
     }
     pcidPriSyscapInfo->ret = strcpy_s(tempSyscap, sizeof(char) * SINGLE_SYSCAP_LEN, g_arraySyscap[t].str);
