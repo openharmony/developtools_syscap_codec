@@ -513,7 +513,6 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
         return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_MALLOC_OSSYSCAP_AFTER_DECODE_RPCID,
                 outBuffer);
     }
-    priSyscapArray = NULL;
 
     PartSysCapAndOutBuffer(freeAfterDecodeRpcidInfo, outBuffer, priSyscapArray, sysCapArray);
     priSyscapArray = NULL;
