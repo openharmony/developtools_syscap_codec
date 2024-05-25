@@ -362,7 +362,7 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
         return -1;
     }
 
-    if (contextBufLen < 0 || contextBufLen > UINT32_MAX) {
+    if (contextBufLen > UINT32_MAX) {
         PRINT_ERR("the data privateSyscapLen is out of scope.");
         return GetPriSyscapResult(capVectorPtr, -1);
     }
