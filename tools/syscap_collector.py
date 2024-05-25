@@ -109,7 +109,15 @@ def path_component_to_bundle(path: str) -> str:
     return bundle_json_path
 
 
-def handle_bundle_json_file(component_path_dict: dict):
+def find_false_syscap(syscap_l: list):
+    res = []
+    for syscap in syscap_l:
+        if not check_syscap(syscap):
+            res.append(syscap.split('=')[0].strip())
+    return res
+
+
+def handle_bundle_json_file(component_path_dict: dict, product_define_dict: dict):
     """
     from product required part bundle.json to all products parts list
     :param component_path_dict:
@@ -118,11 +126,15 @@ def handle_bundle_json_file(component_path_dict: dict):
     print("start collect syscap path...")
     syscap_dict = dict()
     errors_list = list()
-    for product_name, path_list in component_path_dict.items():
+    for product_name, path_dict in component_path_dict.items():
         bundles_list = list()
-        for path in path_list:
+        for component in path_dict.keys():
+            path = path_dict.get(component)
             bundle_json_path = path_component_to_bundle(path)
             bundle_syscap_list, error_list = read_json_file(bundle_json_path)
+            if product_define_dict.get(product_name).get(component):
+                false_syscap = find_false_syscap(product_define_dict.get(product_name).get(component))
+                bundle_syscap_list = [syscap for syscap in bundle_syscap_list if syscap not in false_syscap]
             bundles_list.extend(bundle_syscap_list)
             errors_list.extend(error_list)
         syscap_dict.update({product_name: bundles_list})
@@ -139,13 +151,13 @@ def format_component_path(component_path: str):
 def traversal_path(parts_path_info: dict, project_path: str, product_define_dict):
     component_path_dict = dict()
     for product_name, component_name_list in product_define_dict.items():
-        component_paths = list()
-        for component_name in component_name_list:
+        component_paths = dict()
+        for component_name in component_name_list.keys():
             component_relpath = parts_path_info.get(component_name)
             if component_relpath:
                 component_path = os.path.join(project_path, component_relpath)
                 component_path = format_component_path(component_path)
-                component_paths.append(component_path)
+                component_paths[component_name] = component_path
             else:
                 logging.error(f'can\'t find component_name : {component_name}')
         component_path_dict.update({product_name: component_paths})
@@ -163,7 +175,7 @@ def collect_all_product_component_syscap_dict(parts_path_info: dict, project_pat
     if parts_path_info:
         print("start collect component path...")
         component_path_dict = traversal_path(parts_path_info, project_path, product_define_dict)
-        syscap_dict, errors_list = handle_bundle_json_file(component_path_dict)
+        syscap_dict, errors_list = handle_bundle_json_file(component_path_dict, product_define_dict)
         return syscap_dict, errors_list
     else:
         return 0, 0
@@ -456,24 +468,24 @@ def get_product_define_path(source_root_dir):
 
 
 def components_list_handler(product_file_json):
-    components_list = list()
+    components_dict = dict()
     for subsystems in product_file_json.get('subsystems'):
         for components in subsystems.get('components'):
-            components_list.append(components.get('component'))
+            components_dict[components.get('component')] = components.get('syscap')
 
-    return components_list
+    return components_dict
 
 
 def product_component_handler(product_file, product_file_path):
     all_components_dict = dict()
-    components_list = list()
+    components_dict = dict()
     try:
         with open(product_file_path, 'r', encoding='utf-8') as f:
             product_file_json = json.load(f)
-            components_list = components_list_handler(product_file_json)
+            components_dict = components_list_handler(product_file_json)
     except FileNotFoundError:
         print(f"read file {product_file_path} failed.")
-    all_components_dict.update({product_file.split('.')[0]: components_list})
+    all_components_dict.update({product_file.split('.')[0]: components_dict})
     return all_components_dict
 
 
