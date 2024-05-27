@@ -164,7 +164,8 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     ret = cJSON_GetArraySize(gJsonObjectSysCap.sysCapPtr);
     if (ret < 0) {
         PRINT_ERR("get \"syscap\" array size failed\n");
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot,
+                                    convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
     sysCapSize = (uint32_t)ret;
     // 2, to save SysCaptype & SysCapLength
@@ -180,7 +181,8 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
 
     ret = FillOsCapLength(convertedBuffer, contextBuffer, gJsonObjectSysCap,  sysCapSize, ret);
     if (ret == -1) {
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot,
+                                    convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
     }
     ret = ConvertedContextSaveAsFile(outputPath, "rpcid.sc", convertedBuffer, convertedBufLen);
     if (ret != 0) {
