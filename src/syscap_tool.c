@@ -122,7 +122,7 @@ static int32_t FillOsCapLength(char *convertedBuffer, char *contextBuffer, struc
 }
 
 static int32_t FreeAfterRPCIDEncode(
-        cJSON *cjsonObjectRoot, char *convertedBuffer, char *contextBuffer, int32_t type, int32_t ret)
+    cJSON *cjsonObjectRoot, char *convertedBuffer, char *contextBuffer, int32_t type, int32_t ret)
 {
     if (type == FREE_CONVERT_OUT_RPCID_ENCODE) {
         free(convertedBuffer);
@@ -173,7 +173,8 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     convertedBuffer = (char *)malloc(convertedBufLen);
     if (convertedBuffer == NULL) {
         PRINT_ERR("malloc failed\n");
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot,
+                                    convertedBuffer, contextBuffer, FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
     (void)memset_s(convertedBuffer, convertedBufLen, 0, convertedBufLen);
 
@@ -185,7 +186,8 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.sc\n", outputPath);
     }
-    return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
+    return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot,
+                                convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
 }
 
 static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson)

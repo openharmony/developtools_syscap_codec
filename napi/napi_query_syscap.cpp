@@ -150,7 +150,7 @@ FREE_PRIOUTPUT:
 }
 
 napi_value PreHandleSystemCapability(
-            napi_env env, napi_callback_info info, SystemCapabilityAsyncContext *asyncContext)
+    napi_env env, napi_callback_info info, SystemCapabilityAsyncContext *asyncContext)
 {
     GET_PARAMS(env, info, 1);
     NAPI_ASSERT(env, argc <= 1, "too many parameters");
