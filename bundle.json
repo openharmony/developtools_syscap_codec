@@ -16,7 +16,10 @@
     "name": "syscap_codec",
     "subsystem": "developtools",
     "syscap": [ "SystemCapability.Developtools.Syscap" ],
-    "feature": [ "syscap_codec_config_path" ],
+    "feature": [
+      "syscap_codec_config_path",
+      "syscap_codec_config_extern_path"
+    ],
     "adapted_system_type": [ "small", "standard" ],
     "rom": "0",
     "ram": "0",
