@@ -112,7 +112,7 @@ static char* GetSystemCapability()
     bool retBool;
     int retError, priOutputLen, priCapArrayCnt;
     char osOutput[SINGLE_SYSCAP_LEN] = {};
-    
+
     uint32_t *osCapU32 = nullptr;
     char *priOutput = nullptr;
 
@@ -149,13 +149,12 @@ FREE_PRIOUTPUT:
     return allSyscapBuffer;
 }
 
-napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
+napi_value PreHandleSystemCapability(
+            napi_env env, napi_callback_info info, SystemCapabilityAsyncContext *asyncContext)
 {
     GET_PARAMS(env, info, 1);
     NAPI_ASSERT(env, argc <= 1, "too many parameters");
     napi_value result = nullptr;
-
-    SystemCapabilityAsyncContext* asyncContext = new SystemCapabilityAsyncContext();
 
     asyncContext->env = env;
 
@@ -172,6 +171,13 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
     } else {
         napi_get_undefined(env, &result);
     }
+    return result;
+}
+
+napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
+{
+    SystemCapabilityAsyncContext *asyncContext = new SystemCapabilityAsyncContext();
+    napi_value result = PreHandleSystemCapability(env, info, asyncContext);
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "napi_value QuerySystemCapability", NAPI_AUTO_LENGTH, &resource);
 
