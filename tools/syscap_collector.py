@@ -134,7 +134,7 @@ def handle_bundle_json_file(component_path_dict: dict, product_define_dict: dict
             bundle_syscap_list, error_list = read_json_file(bundle_json_path)
             if product_define_dict.get(product_name).get(component):
                 false_syscap = find_false_syscap(product_define_dict.get(product_name).get(component))
-                bundle_syscap_list = [syscap for syscap in bundle_syscap_list if syscap not in false_syscap]
+                bundle_syscap_list = [sc for sc in bundle_syscap_list if sc not in false_syscap]
             bundles_list.extend(bundle_syscap_list)
             errors_list.extend(error_list)
         syscap_dict.update({product_name: bundles_list})
