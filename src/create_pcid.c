@@ -344,7 +344,6 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
         return -1;
     }
 
-    cJSON_Delete(capVectorPtr);
     return 0;
 }
 
@@ -362,7 +361,7 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
         return -1;
     }
 
-    if (contextBufLen < 0 || contextBufLen > UINT32_MAX) {
+    if (contextBufLen > UINT32_MAX) {
         PRINT_ERR("the data privateSyscapLen is out of scope.");
         return GetPriSyscapResult(capVectorPtr, -1);
     }
@@ -898,7 +897,7 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     freePcidInfo.priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_SYSCAP_LEN);
     if (freePcidInfo.priSyscapFull == NULL) {
         PRINT_ERR("malloc failed\n");
-        return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_PRISYSCAP_FULL_OUT, ret);
+        return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_CONTEXT_OUT, ret);
     }
     (void)memset_s(freePcidInfo.priSyscapFull, priSyscapCount * SINGLE_SYSCAP_LEN,
                    0, priSyscapCount * SINGLE_SYSCAP_LEN);
