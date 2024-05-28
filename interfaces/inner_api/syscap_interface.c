@@ -249,6 +249,7 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
             *bufferPos = '\0';
             if (sprintf_s(*outputArray, SINGLE_SYSCAP_LEN, "SystemCapability.%s", buffer) == -1) {
                 free(outputArray);
+                outputArray = NULL;
                 return false;
             }
             bufferPos = buffer;
@@ -515,7 +516,10 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
     }
 
     PartSysCapAndOutBuffer(freeAfterDecodeRpcidInfo, outBuffer, priSyscapArray, sysCapArray);
+
+    free(priSyscapArray);
     priSyscapArray = NULL;
+
     return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID, outBuffer);
 }
 
