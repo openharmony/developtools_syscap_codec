@@ -36,6 +36,7 @@
 
 #define SYSCAP_PREFIX_LEN 17
 #define SINGLE_FEAT_LEN (SINGLE_SYSCAP_LEN - SYSCAP_PREFIX_LEN)
+#define DOUBLE_SPACE 2
 #define UINT8_BIT 8
 #define INT_BIT 32
 #define RPCID_OUT_BUFFER 32
@@ -132,7 +133,8 @@ static int32_t FreeAfterRPCIDEncode(
     return ret;
 }
 
-int32_t RPCIDEncode(char *inputFile, char *outputPath) {
+static int32_t RPCIDEncode(char *inputFile, char *outputPath)
+{
     char *contextBuffer = NULL;
     uint32_t bufferLen, sysCapSize;
     struct JsonObjectSysCap gJsonObjectSysCap;
@@ -168,7 +170,7 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath) {
     // 2, to save SysCaptype & SysCapLength
     sysCapSize = (uint32_t) ret;
     uint32_t convertedBufLen = sizeof(RPCIDHead);
-    convertedBufLen += (2 * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LEN);
+    convertedBufLen += (DOUBLE_SPACE * sizeof(uint16_t) + sysCapSize * SINGLE_FEAT_LEN);
     char *convertedBuffer = (char *) malloc(convertedBufLen);
     if (convertedBuffer == NULL) {
         PRINT_ERR("malloc failed\n");
