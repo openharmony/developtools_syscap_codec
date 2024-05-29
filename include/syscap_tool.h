@@ -32,7 +32,7 @@ int32_t PCIDEncode(char *inputFile, char *outputPath);
 /* in: inputFile, file name format: <product>.sc, out: outputPath/<product>.json */
 int32_t PCIDDecode(char *inputFile, char *outputPath);
 /* in: inputFile, out: outputPath/rpcid.sc */
-static int32_t RPCIDEncode(char *inputFile, char *outputPath);
+int32_t RPCIDEncode(char *inputFile, char *outputPath);
 /* in: inputFile, out: outputPath/rpcid.json */
 int32_t RPCIDDecode(char *inputFile, char *outputPath);
 /* in: inputFile, out: outputPath/rpcid.json */
