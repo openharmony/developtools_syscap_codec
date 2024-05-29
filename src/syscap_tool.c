@@ -133,7 +133,7 @@ static int32_t FreeAfterRPCIDEncode(
     return ret;
 }
 
-static int32_t RPCIDEncode(char *inputFile, char *outputPath)
+int32_t RPCIDEncode(char *inputFile, char *outputPath)
 {
     char *contextBuffer = NULL;
     uint32_t bufferLen, sysCapSize;
