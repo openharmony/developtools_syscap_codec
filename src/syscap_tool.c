@@ -182,7 +182,7 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
 
     if (FillOsCapLength(convertedBuffer, contextBuffer, gJsonObjectSysCap, sysCapSize, ret) == -1) {
         return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, convertedBuffer, contextBuffer,
-                                    FREE_CONVERT_OUT_RPCID_ENCODE, ret);
+                                    FREE_CONVERT_OUT_RPCID_ENCODE, -1);
     }
     if (ConvertedContextSaveAsFile(outputPath, "rpcid.sc", convertedBuffer, convertedBufLen) != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.sc\n", outputPath);
