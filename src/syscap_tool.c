@@ -150,20 +150,20 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     gJsonObjectSysCap.cjsonObjectRoot = cJSON_ParseWithLength(contextBuffer, bufferLen);
     if (gJsonObjectSysCap.cjsonObjectRoot == NULL) {
         PRINT_ERR("cJSON_Parse failed, context buffer is:\n%s\n", contextBuffer);
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, null, contextBuffer,
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, NULL, contextBuffer,
                                     FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
 
     gJsonObjectSysCap.sysCapPtr = cJSON_GetObjectItem(gJsonObjectSysCap.cjsonObjectRoot, "syscap");
     if (gJsonObjectSysCap.sysCapPtr == NULL || !cJSON_IsArray(gJsonObjectSysCap.sysCapPtr)) {
         PRINT_ERR("get \"syscap\" object failed.\n");
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, null, contextBuffer,
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, NULL, contextBuffer,
                                     FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
 
     if (cJSON_GetArraySize(gJsonObjectSysCap.sysCapPtr) < 0) {
         PRINT_ERR("get \"syscap\" array size failed\n");
-        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, null, contextBuffer,
+        return FreeAfterRPCIDEncode(gJsonObjectSysCap.cjsonObjectRoot, NULL, contextBuffer,
                                     FREE_CONTEXT_OUT_RPCID_ENCODE, -1);
     }
 
