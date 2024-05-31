@@ -684,6 +684,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Driver.DDK.Extension", DRIVER_DDK_EXTENSION},
     {"SystemCapability.Security.ScreenLockFileManager", SECURITY_SCREENLOCKFILEMANAGER},
     {"SystemCapability.Communication.NetManager.Netfirewall", COMMUNICATION_NETMANAGER_NETFIREWALL},
+    {"SystemCapability.Customization.CustomConfig", CUSTOMIZATION_CUSTOMCONFIG},
 };
 
 #ifdef __cplusplus
