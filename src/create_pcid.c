@@ -213,7 +213,7 @@ int32_t GetPriSyscapLen(uint32_t privateCapSize, cJSON *jsonPriSyscapObj, uint16
 
 static int32_t CheckConvertedContextSaveAsFile(char *outDirPath, PCIDMain *pcidBuffer, uint16_t pcidLength, int32_t ret)
 {
-    const char pcidFileName[] = "PCID.sc";
+    const char pcidFileName[] = "pcid.sc";
     ret = ConvertedContextSaveAsFile(outDirPath, pcidFileName, (char *)pcidBuffer, pcidLength);
     if (ret != 0) {
         PRINT_ERR("Save as file failed, outDirPath:%s, filename:%s\n", outDirPath, pcidFileName);
@@ -525,7 +525,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.sysCapObj = NULL; // avoid being released repeatedly.
 
     char *strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
-    const char outputFileName[] = "PCID.json";
+    const char outputFileName[] = "pcid.json";
     ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, strJson, strlen(strJson));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, outputFileName);
@@ -746,7 +746,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         PRINT_ERR("json buffer is null.\n");
         goto ADD_JSON_FAILED;
     }
-    const char outputFileName[] = "PCID.json";
+    const char outputFileName[] = "pcid.json";
     if (ConvertedContextSaveAsFile(outDirPath, outputFileName,
                                    jsonBuffer, strlen(jsonBuffer)) != 0) {
         PRINT_ERR("Save as json file failed.\n");
@@ -817,7 +817,7 @@ static int32_t GetEncodePCIDOut(uint16_t priSyscapCount, uint32_t privateSyscapL
         }
     }
     // save as file
-    const char outputFileName[] = "PCID.txt";
+    const char outputFileName[] = "pcid.txt";
     ret = ConvertedContextSaveAsFile(freePcidInfo.outDirPathFinal, outputFileName, output, strlen(output));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n",
