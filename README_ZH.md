@@ -109,7 +109,7 @@ syscap_tool -Pesi pcid.sc -o path/
 # 比较字符串格式的pcid和rpcid，pcid 符合条件返回成功提示，不符合则提示原因。
 syscap_tool -C pcid.txt rpcid.txt
 
-# 功能类似 -C 选项，区别为 -SC 选项为直接输入字符串。
+# 功能类似 -C 选项，区别为 -sC 选项为直接输入字符串。
 syscap_tool -sC "pcidstring" "rpcidstring"
 
 # 将字符串格式的 pcid 转为 json 格式，文件名 pcid.json。
