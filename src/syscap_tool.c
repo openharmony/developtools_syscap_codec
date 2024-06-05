@@ -179,7 +179,7 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     if (ret == -1) {
         return FreeAfterRPCIDEncode(convertedBuffer, contextBuffer, FREE_CONVERT_OUT_RPCID_ENCODE, ret);
     }
-    ret = ConvertedContextSaveAsFile(outputPath, "RPCID.sc", convertedBuffer, convertedBufLen);
+    ret = ConvertedContextSaveAsFile(outputPath, "rpcid.sc", convertedBuffer, convertedBufLen);
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.sc\n", outputPath);
     }
@@ -258,7 +258,7 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath)
 
     // save to json file
     convertedBuffer = cJSON_Print(rpcidRoot);
-    ret = ConvertedContextSaveAsFile(outputPath, "RPCID.json", convertedBuffer, strlen(convertedBuffer));
+    ret = ConvertedContextSaveAsFile(outputPath, "rpcid.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.json\n", outputPath);
         free(convertedBuffer);
@@ -335,7 +335,7 @@ static int32_t PrintOutputToFile(struct FreeAfterEncodeRpcidscInfo freeAfterEnco
         }
     }
 
-    const char outputFilename[] = "RPCID.txt";
+    const char outputFilename[] = "rpcid.txt";
     ret = ConvertedContextSaveAsFile(outDirPath, outputFilename, freeAfterEncodeRpcidscInfo.outBuffer,
             strlen(freeAfterEncodeRpcidscInfo.outBuffer));
     if (ret != 0) {
