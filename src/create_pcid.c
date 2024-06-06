@@ -344,7 +344,6 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
         return -1;
     }
     
-    cJSON_Delete(capVectorPtr);
     return 0;
 }
 
