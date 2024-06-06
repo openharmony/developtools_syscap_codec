@@ -223,7 +223,6 @@ napi_value QuerySystemCapability(napi_env env, napi_callback_info info)
         },
         (void*)asyncContext, &asyncContext->work);
     napi_queue_async_work(env, asyncContext->work);
-    delete asyncContext;
 
     return result;
 }
