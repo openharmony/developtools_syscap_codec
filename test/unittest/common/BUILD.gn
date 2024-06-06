@@ -85,10 +85,10 @@ if (defined(ohos_lite)) {
       "syscap_codec_test.cpp",
     ]
 
-    deps = [
-      "//third_party/bounds_checking_function:libsec_static",
-      "//third_party/cJSON:cjson_static",
-      "//third_party/googletest:gtest_main",
+    external_deps = [
+      "bounds_checking_function:libsec_static",
+      "cJSON:cjson_static",
+      "googletest:gtest_main",
     ]
   }
 
