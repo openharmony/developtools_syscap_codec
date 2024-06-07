@@ -27,7 +27,8 @@
       "components": [
         "napi",
         "bounds_checking_function",
-        "cJSON"
+        "cJSON",
+        "googletest"
       ],
       "third_party": []
     },
