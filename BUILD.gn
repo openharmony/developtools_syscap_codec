@@ -133,7 +133,7 @@ if (defined(ohos_lite)) {
 }
 
 group("syscap_tool_bin_linux") {
-  deps = [ ":syscap_tool_bin(//build/toolchain/linux:clang_x64)" ]
+  deps = [ ":syscap_tool_bin(//build/toolchain/linux:clang_${host_cpu})" ]
 }
 
 build_ext_component("generate_pcid") {
@@ -142,9 +142,9 @@ build_ext_component("generate_pcid") {
   exec_path = rebase_path(root_out_dir)
   preload_path = rebase_path(preloader_output_dir)
   if (defined(ohos_lite)) {
-    cmd = "${exec_path}/clang_x64/syscap_tool"
+    cmd = "${exec_path}/clang_${host_cpu}/syscap_tool"
   } else {
-    cmd = "${exec_path}/clang_x64/developtools/syscap_codec/syscap_tool"
+    cmd = "${exec_path}/clang_${host_cpu}/developtools/syscap_codec/syscap_tool"
   }
   command = "chmod 777 $cmd"
   command +=
