@@ -16,7 +16,7 @@
     "name": "syscap_codec",
     "subsystem": "developtools",
     "syscap": [ "SystemCapability.Developtools.Syscap" ],
-    "feature": [
+    "features": [
       "syscap_codec_config_path",
       "syscap_codec_config_extern_path"
     ],
