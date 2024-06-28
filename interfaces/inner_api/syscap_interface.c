@@ -242,6 +242,11 @@ bool DecodePrivateSyscap(char *input, char (**output)[SINGLE_SYSCAP_LEN], int *o
 
     *output = outputArray;
     inputPos = input;
+
+    if (inputPos == NULL) {
+        return false;
+    }
+
     char buffer[SINGLE_FEAT_LEN] = {0};
     char *bufferPos = buffer;
     while (*inputPos != '\0') {
