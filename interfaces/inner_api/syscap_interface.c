@@ -618,6 +618,7 @@ static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapIn
             if (pcidPriSyscapInfo.ret != EOK) {
                 FreeCompareError(result);
                 PRINT_ERR("strcpy_s failed.\n");
+                free(temp);
                 return -1;
             }
             result->syscap[pcidPriSyscapInfo.ossyscapFlag + prisyscapFlag] = temp;
