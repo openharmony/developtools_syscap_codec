@@ -611,7 +611,6 @@ static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapIn
             if (temp == NULL) {
                 PRINT_ERR("malloc failed.\n");
                 FreeCompareError(result);
-                free(temp);
                 return -1;
             }
             pcidPriSyscapInfo.ret = strcpy_s(temp, sizeof(char) * SINGLE_SYSCAP_LEN,
