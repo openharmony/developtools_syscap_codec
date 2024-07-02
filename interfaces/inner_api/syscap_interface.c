@@ -556,6 +556,7 @@ static int32_t CheckPcidEachBit(struct PcidPriSyscapInfo *pcidPriSyscapInfo, Com
             if (ret != EOK) {
                 PRINT_ERR("strcpy_s failed.\n");
                 FreeCompareError(result);
+                free(tempSyscap);
                 return -1;
             }
             result->syscap[pcidPriSyscapInfo->ossyscapFlag++] = tempSyscap;
@@ -612,6 +613,7 @@ static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapIn
             if (pcidPriSyscapInfo.ret != EOK) {
                 FreeCompareError(result);
                 PRINT_ERR("strcpy_s failed.\n");
+                free(temp);
                 return -1;
             }
             result->syscap[pcidPriSyscapInfo.ossyscapFlag + prisyscapFlag] = temp;
