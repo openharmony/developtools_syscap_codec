@@ -351,6 +351,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_SCREENLOCKFILEMANAGER,
     COMMUNICATION_NETMANAGER_NETFIREWALL,
     CUSTOMIZATION_CUSTOMCONFIG,
+    ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -685,6 +686,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.ScreenLockFileManager", SECURITY_SCREENLOCKFILEMANAGER},
     {"SystemCapability.Communication.NetManager.Netfirewall", COMMUNICATION_NETMANAGER_NETFIREWALL},
     {"SystemCapability.Customization.CustomConfig", CUSTOMIZATION_CUSTOMCONFIG},
+    {"SystemCapability.Ability.AppExtension.PhotoEditorExtension", ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION},
 };
 
 #ifdef __cplusplus
