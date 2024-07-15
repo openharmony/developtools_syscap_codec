@@ -47,7 +47,7 @@ def dict_to_json(output_path: str, syscaps_dict: dict):
         counts = Counter(syscaps_list)
         duplicates = [elem for elem, count in counts.items() if count > 1]
         if len(duplicates) > 0:
-            print("repeated syscap: " + ",".join(duplicates))
+            print("[Warning] repeated syscap: {}".format(",".join(duplicates)))
             syscaps_list = list(set(syscaps_list))
         filename = os.path.join(output_path, f'{product_name}.json')
         with os.fdopen(os.open(filename, flags, modes), 'w') as f:
