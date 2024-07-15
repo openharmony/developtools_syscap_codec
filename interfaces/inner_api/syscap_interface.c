@@ -130,7 +130,7 @@ bool EncodePrivateSyscap(char **output, int *outputLen)
         FreeContextBuffer(contextBuffer);
         return false;
     }
-    outputStr = (char *)calloc(priLen, sizeof(char));
+    outputStr = (char *)malloc(priLen * sizeof(char));
     if (outputStr == NULL) {
         PRINT_ERR("malloc buffer failed, size = %u, errno = %d\n", priLen, errno);
         *outputLen = 0;
