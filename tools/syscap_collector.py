@@ -393,6 +393,7 @@ class LoadBuildConfig(object):
             raise Exception
         self._parts_info_dict = {
             key: value for key, value in self._parts_info_dict.items() if key in save_part}
+
     def _merge_build_config(self):
         _build_files = self._build_info.get('build_files')
         is_thirdparty_subsystem = False
