@@ -202,7 +202,7 @@ int32_t GetPriSyscapLen(uint32_t privateCapSize, cJSON *jsonPriSyscapObj, uint16
             return -1;
         }
         *len += (uint16_t)strlen(strchr(jsonArrayItem->valuestring, '.') + 1);
-        (*len)++;  // for separator ','
+        (*len)++; // for separator ','
     }
     if ((*len + 1) > PRIVATE_SYSCAP_SIZE) {
         PRINT_ERR("context of \"pri\" array is too many.\n");
@@ -347,7 +347,7 @@ int32_t GetOsSyscap(PCIDMain *pcidMain, cJSON *sysCapObject)
     return 0;
 }
 
-static int32_t GetPriSyscapResult(cJSON* capVectorPtr, int32_t ret)
+static int32_t GetPriSyscapResult(cJSON *capVectorPtr, int32_t ret)
 {
     cJSON_Delete(capVectorPtr);
     return ret;
