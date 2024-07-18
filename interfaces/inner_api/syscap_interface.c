@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -178,8 +178,7 @@ bool DecodeOsSyscap(const char input[PCID_MAIN_BYTES], char (**output)[SINGLE_SY
         *outputCnt = 0;
         return false;
     }
-    (void)memset_s(strSyscap, countOfSyscap * SINGLE_SYSCAP_LEN, \
-                   0, countOfSyscap * SINGLE_SYSCAP_LEN);
+    (void)memset_s(strSyscap, countOfSyscap * SINGLE_SYSCAP_LEN, 0, countOfSyscap * SINGLE_SYSCAP_LEN);
     *output = strSyscap;
 
     for (i = 0; i < countOfSyscap; i++) {
@@ -279,7 +278,7 @@ static int SetOsSysCapBitMap(uint8_t *out, uint16_t outLen, const uint16_t *inde
             PRINT_ERR("Syscap num(%u) out of range(120).\n", sector);
             return -1;
         }
-        out[sector] |=  (1 << pos);
+        out[sector] |= (1 << pos);
     }
     return 0;
 }
@@ -411,7 +410,7 @@ static void PartSysCapAndOutBuffer(struct FreeAfterDecodeRpcidInfo freeAfterDeco
     uint16_t indexPri = 0;
     cJSON *cJsonTemp = NULL;
 
-    freeAfterDecodeRpcidInfo.sysCapDefine =  CreateWholeSyscapJsonObj();
+    freeAfterDecodeRpcidInfo.sysCapDefine = CreateWholeSyscapJsonObj();
     (void)memset_s(priSyscapArray, freeAfterDecodeRpcidInfo.sysCapArraySize * SINGLE_SYSCAP_LEN,
                    0, freeAfterDecodeRpcidInfo.sysCapArraySize * SINGLE_SYSCAP_LEN);
     freeAfterDecodeRpcidInfo.priSyscap = priSyscapArray;
@@ -647,7 +646,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
     const size_t allSyscapNum = sizeof(g_arraySyscap) / sizeof(SyscapWithNum);
 
-    pcidPriSyscapInfo.ret =  SeparateSyscapFromString(pcidString, pcidOsAarry, PCID_OUT_BUFFER,
+    pcidPriSyscapInfo.ret = SeparateSyscapFromString(pcidString, pcidOsAarry, PCID_OUT_BUFFER,
         &pcidPriSyscapInfo.pcidPriSyscap, &pcidPriSyscapInfo.pcidPriSyscapLen);
     pcidPriSyscapInfo.ret += SeparateSyscapFromString(rpcidString, rpcidOsAarry, RPCID_OUT_BUFFER,
         &pcidPriSyscapInfo.rpcidPriSyscap, &pcidPriSyscapInfo.rpcidPriSyscapLen);
