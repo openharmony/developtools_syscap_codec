@@ -68,7 +68,6 @@ static struct {
     char *rpcidfile;
 } g_customerfileinfo;
 
-
 int main(int argc, char **argv)
 {
     int32_t optIndex;
@@ -176,7 +175,7 @@ void SetBitMap(char *const *argv, int32_t flag, uint16_t *bitMap, char **outputp
             break;
         case 'h':
         default:
-            (*bitMap) |= 0x1 << HELP;;
+            (*bitMap) |= 0x1 << HELP;
     }
 }
 
