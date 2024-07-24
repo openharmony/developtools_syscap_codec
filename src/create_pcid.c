@@ -735,6 +735,12 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         PRINT_ERR("Add os syscap json object failed.\n");
         goto ADD_JSON_FAILED;
     }
+
+    if (priSyscapStr == null){
+        PRINT_ERR("priSyscapStr is null.\n");
+        goto ADD_JSON_FAILED;
+    }
+
     if (AddPriSyscapToJsonObj(priSyscapStr, (uint32_t)strlen(priSyscapStr), sysCapObj) != 0) {
         PRINT_ERR("Add private syscap json object failed.\n");
         goto ADD_JSON_FAILED;

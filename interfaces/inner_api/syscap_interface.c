@@ -652,6 +652,7 @@ int32_t ComparePcidString(const char *pcidString, const char *rpcidString, Compa
         &pcidPriSyscapInfo.rpcidPriSyscap, &pcidPriSyscapInfo.rpcidPriSyscapLen);
     if (pcidPriSyscapInfo.ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", pcidPriSyscapInfo.ret);
+        free(pcidPriSyscapInfo.rpcidPriSyscap);
         return -1;
     }
     result->missSyscapNum = 0;
