@@ -705,6 +705,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
                                     &rpcidPriSyscap, &rpcidPriSyscapLen);
     if (ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
+        free(pcidContent);
         return -1;
     }
 
