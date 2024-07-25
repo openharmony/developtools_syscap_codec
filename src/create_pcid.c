@@ -705,7 +705,6 @@ static int32_t GetSyscapStr(char *input, char const *priSyscapStr, uint32_t* osS
         return -1;
     }
     priSyscapStr = ctx;
-    free(ctx);
     return 0;
 }
 
@@ -733,11 +732,6 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     }
     if (AddOsSyscapToJsonObj(osSyscap, OS_SYSCAP_NUM, sysCapObj) != 0) {
         PRINT_ERR("Add os syscap json object failed.\n");
-        goto ADD_JSON_FAILED;
-    }
-
-    if (priSyscapStr == null){
-        PRINT_ERR("priSyscapStr is null.\n");
         goto ADD_JSON_FAILED;
     }
 
