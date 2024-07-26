@@ -658,7 +658,7 @@ int32_t ComparePriSyscap(char *pcid, char *rpcid, uint32_t pcidLen, uint32_t rpc
     return prisyscapFlag;
 }
 
-int32_t CompoareVersion(uint32_t *pcidOsArray, uint32_t *rpcidOsAarry)
+int32_t CompareVersion(uint32_t *pcidOsArray, uint32_t *rpcidOsAarry)
 {
     int32_t versionFlag = 0;
     uint16_t pcidVersion = NtohsInter(((PCIDMain *)pcidOsArray)->apiVersion);
@@ -712,7 +712,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         return -1;
     }
 
-    int32_t versionFlag = CompoareVersion(pcidOsArray, rpcidOsAarry);
+    int32_t versionFlag = CompareVersion(pcidOsArray, rpcidOsAarry);
     int32_t ossyscapFlag = CompareOsSyscap(pcidOsArray, rpcidOsAarry);
     int32_t prisyscapFlag = ComparePriSyscap(pcidPriSyscap, rpcidPriSyscap, pcidPriSyscapLen, rpcidPriSyscapLen);
     if (!versionFlag && !ossyscapFlag && !prisyscapFlag) {
