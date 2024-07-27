@@ -352,6 +352,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_NETFIREWALL,
     CUSTOMIZATION_CUSTOMCONFIG,
     ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION,
+    HIVIEWDFX_HICOLLIE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -433,6 +434,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.HiviewDFX.Hiview.FaultLogger", HIVIEWDFX_HIVIEW_FAULTLOGGER},
     {"SystemCapability.HiviewDFX.Hiview.LogLibrary", HIVIEWDFX_HIVIEW_LOGLIBRARY},
     {"SystemCapability.HiviewDFX.HiviewLite", HIVIEWDFX_HIVIEWLITE},
+    {"SystemCapability.HiviewDFX.HiCollie", HIVIEWDFX_HICOLLIE},
     {"SystemCapability.Global.I18n", GLOBAL_I18N},
     {"SystemCapability.Kernel.Linux", KERNEL_LINUX},
     {"SystemCapability.Kernel.liteos-a", KERNEL_LITEOS_A},
