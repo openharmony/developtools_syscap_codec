@@ -155,11 +155,13 @@ int32_t CheckRpcidFormat(const char *inputFile, char **buffer, uint32_t *len)
     }
     if (bufferLen < (2 * sizeof(uint32_t))) { // 2, header of rpcid.sc
         PRINT_ERR("Parse file failed(format is invalid), input file : %s\n", inputFile);
+        free(contextBuffer);
         return -1;
     }
     rpcidHeader = (RPCIDHead *)contextBuffer;
     if (rpcidHeader->apiVersionType != 1) {
         PRINT_ERR("Parse file failed(apiVersionType != 1), input file : %s\n", inputFile);
+        free(contextBuffer);
         return -1;
     }
     sysCaptype = NtohsInter(*(uint16_t *)(rpcidHeader + 1));
