@@ -353,6 +353,7 @@ typedef enum SystemCapabilityNum {
     CUSTOMIZATION_CUSTOMCONFIG,
     ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION,
     HIVIEWDFX_HICOLLIE,
+    BUNDLEMANAGER_APPDOMAINVERIFY,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -689,6 +690,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.Netfirewall", COMMUNICATION_NETMANAGER_NETFIREWALL},
     {"SystemCapability.Customization.CustomConfig", CUSTOMIZATION_CUSTOMCONFIG},
     {"SystemCapability.Ability.AppExtension.PhotoEditorExtension", ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION},
+    {"SystemCapability.BundleManager.AppDomainVerify", BUNDLEMANAGER_APPDOMAINVERIFY},
 };
 
 #ifdef __cplusplus
