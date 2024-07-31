@@ -78,6 +78,10 @@ int main(int argc, char **argv)
     g_customerfileinfo.pcidfile = NULL;
     g_customerfileinfo.rpcidfile = NULL;
     char *outputpath = getcwd(curpath, sizeof(curpath));
+    if (outputpath == NULL) {
+        PRINT_ERR("Get outputpath failed.\n");
+        return -1;
+    }
 
     while (1) {
         int32_t flag = getopt_long(argc, argv, "hvRPC:edsi:o:", g_longOptions, &optIndex);
