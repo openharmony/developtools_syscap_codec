@@ -112,7 +112,12 @@ int32_t SetPriSyscap(PCIDMain *pcidBuffer, cJSON *jsonPriSyscapObj,
             PRINT_ERR("get jsonArrayItem failed!");
             return -1;
         }
-        priSyscapStr = strchr(jsonArrayItem->valuestring, '.') + 1;
+        priSyscapStr = strchr(jsonArrayItem->valuestring, '.');
+        if (priSyscapStr == NULL) {
+            PRINT_ERR("get priSyscapStr failed!");
+            return -1;
+        }
+        priSyscapStr += 1;
         errno_t nRet = strcat_s(priSyscapHead, allPriSyscapStrLen + 1, priSyscapStr);
         nRet += strcat_s(priSyscapHead, allPriSyscapStrLen + 1, ",");
         if (nRet != EOK) {
