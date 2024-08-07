@@ -26,6 +26,7 @@
 #include "endian_internal.h"
 #include "syscap_interface.h"
 #include "context_tool.h"
+#include "common_method.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -292,6 +293,10 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
     char *sysCapBegin = input + sizeof(RPCIDHead) + sizeof(uint32_t);
     RPCIDHead *rpcidHeader = (RPCIDHead *)input;
     cJSON *sysCapJson = cJSON_CreateArray();
+    if (sysCapJson == NULL) {
+        PRINT_ERR("Get sysCapJson failed, sysCapJson is empty.\n");
+        ret = -1;
+    }
     for (i = 0; i < sysCapCount; i++) {
         char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
         if (strlen(temp) >= SINGLE_FEAT_LEN) {
@@ -443,7 +448,7 @@ static char *FreeAfterDecodeRpcidToString(struct FreeAfterDecodeRpcidInfo freeAf
 {
     switch (type) {
         case FREE_MALLOC_PRISYSCAP_AFTER_DECODE_RPCID:
-            free(freeAfterDecodeRpcidInfo.priSyscap);
+            SafeFree(freeAfterDecodeRpcidInfo.priSyscap);
             free(freeAfterDecodeRpcidInfo.osSysCapIndex);
             cJSON_Delete(freeAfterDecodeRpcidInfo.sysCapDefine);
             cJSON_Delete(freeAfterDecodeRpcidInfo.rpcidRoot);
@@ -495,6 +500,11 @@ char *DecodeRpcidToStringFormat(const char *inputFile)
 
     // parse rpcid to json
     freeAfterDecodeRpcidInfo.rpcidRoot = cJSON_CreateObject();
+    if (freeAfterDecodeRpcidInfo.rpcidRoot == NULL) {
+        PRINT_ERR("Failed to create cJSON object for rpcidRoot\n");
+        return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_CONTEXT_OUT_AFTER_DECODE_RPCID, outBuffer);
+    }
+
     if (ParseRpcidToJson(freeAfterDecodeRpcidInfo.contextBuffer, bufferLen, freeAfterDecodeRpcidInfo.rpcidRoot)) {
         PRINT_ERR("Prase rpcid to json failed. Input file: %s\n", inputFile);
         return FreeAfterDecodeRpcidToString(freeAfterDecodeRpcidInfo, FREE_RPCID_ROOT_AFTER_DECODE_RPCID, outBuffer);
