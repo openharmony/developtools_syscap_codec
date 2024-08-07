@@ -355,6 +355,7 @@ typedef enum SystemCapabilityNum {
     HIVIEWDFX_HICOLLIE,
     BUNDLEMANAGER_APPDOMAINVERIFY,
     COMMUNICATION_NETMANAGER_BTPROXY,
+    NOTIFICATION_NOTIFICATIONSETTINGS,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -693,6 +694,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AppExtension.PhotoEditorExtension", ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION},
     {"SystemCapability.BundleManager.AppDomainVerify", BUNDLEMANAGER_APPDOMAINVERIFY},
     {"SystemCapability.Communication.NetManager.Btproxy", COMMUNICATION_NETMANAGER_BTPROXY},
+    {"SystemCapability.Notification.NotificationSettings", NOTIFICATION_NOTIFICATIONSETTINGS},
 };
 
 #ifdef __cplusplus
