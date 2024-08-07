@@ -528,10 +528,6 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     }
 
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
-    if (freePcidJsonInfo.strJson == NULL) {
-        PRINT_ERR("cJSON_Print failed to generate JSON string\n");
-        return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, -1);
-    }
 
     const char outputFileName[] = "pcid.json";
     ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, freePcidJsonInfo.strJson,
