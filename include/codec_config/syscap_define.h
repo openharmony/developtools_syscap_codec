@@ -354,7 +354,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION,
     HIVIEWDFX_HICOLLIE,
     BUNDLEMANAGER_APPDOMAINVERIFY,
-    COMMUNICATION_NETMANAGER_BTPROXY,
+    COMMUNICATION_NETMANAGER_BLUETOOTH,
     NOTIFICATION_NOTIFICATIONSETTINGS,
     MULTIMEDIA_VIDEOPROCESSINGENGINE,
     // Add before here
@@ -694,7 +694,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Customization.CustomConfig", CUSTOMIZATION_CUSTOMCONFIG},
     {"SystemCapability.Ability.AppExtension.PhotoEditorExtension", ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION},
     {"SystemCapability.BundleManager.AppDomainVerify", BUNDLEMANAGER_APPDOMAINVERIFY},
-    {"SystemCapability.Communication.NetManager.Btproxy", COMMUNICATION_NETMANAGER_BTPROXY},
+    {"SystemCapability.Communication.NetManager.Bluetooth", COMMUNICATION_NETMANAGER_BLUETOOTH},
     {"SystemCapability.Notification.NotificationSettings", NOTIFICATION_NOTIFICATIONSETTINGS},
     {"SystemCapability.Multimedia.VideoProcessingEngine", MULTIMEDIA_VIDEOPROCESSINGENGINE},
 };
