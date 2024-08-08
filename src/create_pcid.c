@@ -358,7 +358,7 @@ static int32_t GetPriSyscapResult(cJSON *capVectorPtr, int32_t ret)
     return ret;
 }
 
-int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, int32_t contextBufLen)
+static int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, int32_t contextBufLen)
 {
     cJSON *capVectorPtr = cJSON_CreateArray();
     if (capVectorPtr == NULL) {
