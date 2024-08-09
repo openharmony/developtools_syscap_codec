@@ -522,6 +522,8 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
 
+    freePcidJsonInfo.sysCapObj = NULL; // avoid being released repeatedly.
+
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
 
     const char outputFileName[] = "pcid.json";
