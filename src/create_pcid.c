@@ -450,7 +450,6 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
         case FREE_DECODE_PCID_CONVERT_OUT:
             free(freePcidJsonInfo.strJson);
             cJSON_Delete(freePcidJsonInfo.jsonRootObj);
-            cJSON_Delete(freePcidJsonInfo.sysCapObj);
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
             break;
         case FREE_DECODE_PCID_ROOT_OUT:
@@ -463,6 +462,7 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
             break;
         case FREE_DECODE_PCID_CONTEXT_OUT:
+            cJSON_Delete(freePcidJsonInfo.sysCapObj);
         default:
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
     }
@@ -521,8 +521,6 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     if (ret == -1) {
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
-
-    freePcidJsonInfo.sysCapObj = NULL; // avoid being released repeatedly.
 
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
 
