@@ -357,6 +357,16 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_BLUETOOTH,
     NOTIFICATION_NOTIFICATIONSETTINGS,
     MULTIMEDIA_VIDEOPROCESSINGENGINE,
+    SECURITY_CRYPTOFRAMEWORK_KEY,
+    SECURITY_CRYPTOFRAMEWORK_KEY_SYMKEY,
+    SECURITY_CRYPTOFRAMEWORK_KEY_ASYMKEY,
+    SECURITY_CRYPTOFRAMEWORK_SIGNATURE,
+    SECURITY_CRYPTOFRAMEWORK_CIPHER,
+    SECURITY_CRYPTOFRAMEWORK_KEYAGREEMENT,
+    SECURITY_CRYPTOFRAMEWORK_MESSAGEDIGEST,
+    SECURITY_CRYPTOFRAMEWORK_MAC,
+    SECURITY_CRYPTOFRAMEWORK_KDF,
+    SECURITY_CRYPTOFRAMEWORK_RAND,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -697,6 +707,16 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.Bluetooth", COMMUNICATION_NETMANAGER_BLUETOOTH},
     {"SystemCapability.Notification.NotificationSettings", NOTIFICATION_NOTIFICATIONSETTINGS},
     {"SystemCapability.Multimedia.VideoProcessingEngine", MULTIMEDIA_VIDEOPROCESSINGENGINE},
+    {"SystemCapability.Security.CryptoFramework.Key", SECURITY_CRYPTOFRAMEWORK_KEY},
+    {"SystemCapability.Security.CryptoFramework.Key.SymKey", SECURITY_CRYPTOFRAMEWORK_KEY_SYMKEY},
+    {"SystemCapability.Security.CryptoFramework.Key.AsymKey", SECURITY_CRYPTOFRAMEWORK_KEY_ASYMKEY},
+    {"SystemCapability.Security.CryptoFramework.Signature", SECURITY_CRYPTOFRAMEWORK_SIGNATURE},
+    {"SystemCapability.Security.CryptoFramework.Cipher", SECURITY_CRYPTOFRAMEWORK_CIPHER},
+    {"SystemCapability.Security.CryptoFramework.KeyAgreement", SECURITY_CRYPTOFRAMEWORK_KEYAGREEMENT},
+    {"SystemCapability.Security.CryptoFramework.MessageDigest", SECURITY_CRYPTOFRAMEWORK_MESSAGEDIGEST},
+    {"SystemCapability.Security.CryptoFramework.Mac", SECURITY_CRYPTOFRAMEWORK_MAC},
+    {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
+    {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
 };
 
 #ifdef __cplusplus
