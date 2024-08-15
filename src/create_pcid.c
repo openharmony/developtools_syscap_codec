@@ -448,7 +448,7 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
 {
     switch (type) {
         case FREE_DECODE_PCID_CONVERT_OUT:
-            free(freePcidJsonInfo.strJson);
+            cJSON_free(freePcidJsonInfo.strJson);
             cJSON_Delete(freePcidJsonInfo.jsonRootObj);
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
             break;
