@@ -760,7 +760,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
 
 FAILED:
     if (jsonBuffer != NULL) {
-        cJSON_free(jsonBuffer)
+        cJSON_free(jsonBuffer);
     }
     SafeFree(priSyscapStr);
     cJSON_Delete(sysCapObj);
