@@ -26,7 +26,7 @@
 #define PCID_MAIN_BYTES 128
 #define PCID_MAIN_INTS  32
 
-#define E_EORROR (-1)
+#define E_ERROR (-1)
 #define E_OK 0
 #define E_APIVERSION 1
 #define E_SYSCAP 2
@@ -54,7 +54,7 @@ char *DecodeRpcidToStringFormat(const char *inputFile);
  *      rpcidString, input string format rpcid.
  *      result, output comparison results.
  * retval:
- *      E_EORROR, compare failed.
+ *      E_ERROR, compare failed.
  *      E_OK, compare successful and meet the requirements.
  *      E_APIVERSION, compare successful but api version too low.
  *      E_SYSCAP, compare successful but missing some syscaps.
