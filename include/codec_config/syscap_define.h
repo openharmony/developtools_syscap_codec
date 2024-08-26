@@ -364,6 +364,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK_MAC,
     SECURITY_CRYPTOFRAMEWORK_KDF,
     SECURITY_CRYPTOFRAMEWORK_RAND,
+    MULTIMEDIA_VIDEOPROCESSINGENGINE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -711,6 +712,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework.Mac", SECURITY_CRYPTOFRAMEWORK_MAC},
     {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
     {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
+    {"SystemCapability.Multimedia.VideoProcessingEngine", MULTIMEDIA_VIDEOPROCESSINGENGINE},
 };
 
 #ifdef __cplusplus
