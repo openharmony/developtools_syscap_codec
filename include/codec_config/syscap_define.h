@@ -366,7 +366,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK_MAC,
     SECURITY_CRYPTOFRAMEWORK_KDF,
     SECURITY_CRYPTOFRAMEWORK_RAND,
-    COMMUNICATION_NETMANAGER_SA_WEARABLE_DISTRIBUTED_NET_SERVICE,
+    COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET_SERVICE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -716,8 +716,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework.Mac", SECURITY_CRYPTOFRAMEWORK_MAC},
     {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
     {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
-    {"SystemCapability.Communication.NetManager.SaWearableDistributedNetService",
-        COMMUNICATION_NETMANAGER_SA_WEARABLE_DISTRIBUTED_NET_SERVICE},
+    {"SystemCapability.Communication.NetManager.WearableDistributedNetService",
+        COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET_SERVICE},
 };
 
 #ifdef __cplusplus
