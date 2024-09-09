@@ -354,6 +354,9 @@ typedef enum SystemCapabilityNum {
     ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION,
     HIVIEWDFX_HICOLLIE,
     BUNDLEMANAGER_APPDOMAINVERIFY,
+    COMMUNICATION_NETMANAGER_BLUETOOTH,
+    NOTIFICATION_NOTIFICATIONSETTINGS,
+    MULTIMEDIA_VIDEOPROCESSINGENGINE,
     SECURITY_CRYPTOFRAMEWORK_KEY,
     SECURITY_CRYPTOFRAMEWORK_KEY_SYMKEY,
     SECURITY_CRYPTOFRAMEWORK_KEY_ASYMKEY,
@@ -364,7 +367,6 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK_MAC,
     SECURITY_CRYPTOFRAMEWORK_KDF,
     SECURITY_CRYPTOFRAMEWORK_RAND,
-    MULTIMEDIA_VIDEOPROCESSINGENGINE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -702,6 +704,9 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Customization.CustomConfig", CUSTOMIZATION_CUSTOMCONFIG},
     {"SystemCapability.Ability.AppExtension.PhotoEditorExtension", ABILITY_APPEXTENSION_PHOTOEDITOREXTENSION},
     {"SystemCapability.BundleManager.AppDomainVerify", BUNDLEMANAGER_APPDOMAINVERIFY},
+    {"SystemCapability.Communication.NetManager.Bluetooth", COMMUNICATION_NETMANAGER_BLUETOOTH},
+    {"SystemCapability.Notification.NotificationSettings", NOTIFICATION_NOTIFICATIONSETTINGS},
+    {"SystemCapability.Multimedia.VideoProcessingEngine", MULTIMEDIA_VIDEOPROCESSINGENGINE},
     {"SystemCapability.Security.CryptoFramework.Key", SECURITY_CRYPTOFRAMEWORK_KEY},
     {"SystemCapability.Security.CryptoFramework.Key.SymKey", SECURITY_CRYPTOFRAMEWORK_KEY_SYMKEY},
     {"SystemCapability.Security.CryptoFramework.Key.AsymKey", SECURITY_CRYPTOFRAMEWORK_KEY_ASYMKEY},
@@ -712,7 +717,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework.Mac", SECURITY_CRYPTOFRAMEWORK_MAC},
     {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
     {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
-    {"SystemCapability.Multimedia.VideoProcessingEngine", MULTIMEDIA_VIDEOPROCESSINGENGINE},
 };
 
 #ifdef __cplusplus

@@ -29,6 +29,7 @@ sources_platform_common = [
   "./src/create_pcid.c",
   "./src/endian_internal.c",
   "./src/context_tool.c",
+  "./src/common_method.c",
 ]
 
 ohos_executable("syscap_tool_bin") {
@@ -97,6 +98,7 @@ if (defined(ohos_lite)) {
         "./src/context_tool.c",
         "./src/endian_internal.c",
         "./src/syscap_tool.c",
+        "./src/common_method.c",
       ]
 
       deps += [
@@ -122,6 +124,7 @@ if (defined(ohos_lite)) {
       "./src/context_tool.c",
       "./src/endian_internal.c",
       "./src/syscap_tool.c",
+      "./src/common_method.c",
     ]
     external_deps = [
       "bounds_checking_function:libsec_static",

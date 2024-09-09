@@ -27,6 +27,7 @@
 #include "create_pcid.h"
 #include "syscap_tool.h"
 #include "context_tool.h"
+#include "common_method.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -70,6 +71,14 @@ struct FreeAfterEncodeRpcidscInfo {
     int32_t type;
     int16_t flag;
 };
+
+static void FreePointerMemory(char *pcidContent, char *rpcidContent, char *pcidPriSyscap, char *rpcidPriSyscap)
+{
+    SafeFree(pcidContent);
+    SafeFree(rpcidPriSyscap);
+    SafeFree(rpcidContent);
+    SafeFree(pcidPriSyscap);
+}
 
 static int32_t FillOsCapLength(char *convertedBuffer, char *contextBuffer, struct JsonObjectSysCap gJsonObjectSysCap,
         uint32_t sysCapSize, int32_t ret)
@@ -204,6 +213,11 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
     char *sysCapBegin = input + sizeof(RPCIDHead) + sizeof(uint32_t);
     RPCIDHead *rpcidHeader = (RPCIDHead *)input;
     cJSON *sysCapJson = cJSON_CreateArray();
+    if (sysCapJson == NULL) {
+        PRINT_ERR("Failed to create sysCapJson array\n");
+        return -1;
+    }
+
     for (i = 0; i < sysCapCount; i++) {
         char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
         if (strlen(temp) >= SINGLE_FEAT_LEN || strlen(temp) == 0) {
@@ -263,14 +277,18 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath)
 
     // save to json file
     convertedBuffer = cJSON_Print(rpcidRoot);
+    if (convertedBuffer == NULL) {
+        PRINT_ERR("cJSON_Print failed to create JSON string\n");
+        goto FREE_RPCID_ROOT;
+    }
+
     ret = ConvertedContextSaveAsFile(outputPath, "rpcid.json", convertedBuffer, strlen(convertedBuffer));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outputPath:%s, filename:rpcid.json\n", outputPath);
-        free(convertedBuffer);
+        cJSON_free(convertedBuffer);
         goto FREE_RPCID_ROOT;
     }
-    free(convertedBuffer);
-
+    cJSON_free(convertedBuffer);
 FREE_RPCID_ROOT:
     cJSON_Delete(rpcidRoot);
 FREE_CONTEXT_OUT:
@@ -705,10 +723,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
                                     &rpcidPriSyscap, &rpcidPriSyscapLen);
     if (ret != 0) {
         PRINT_ERR("Separate syscap from string failed. ret = %d\n", ret);
-        free(pcidContent);
-        free(rpcidContent);
-        free(pcidPriSyscap);
-        free(rpcidPriSyscap);
+        FreePointerMemory(pcidContent, rpcidContent, pcidPriSyscap, rpcidPriSyscap);
         return -1;
     }
 
@@ -720,5 +735,6 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
     } else {
         printf("Fail! The pcid does not meet the rpcid\n");
     }
+
     return 0;
 }
