@@ -25,6 +25,7 @@
 #include "endian_internal.h"
 #include "create_pcid.h"
 #include "context_tool.h"
+#include "common_method.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -57,7 +58,6 @@ struct FreeEncodePcidInfo {
     char *contextBuffer;
     char *outDirPathFinal;
 };
-
 
 struct FreeDecodePcidJsonInfo {
     char *strJson;
@@ -271,6 +271,7 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
 
     cJSON *jsonOsSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "os");
     cJSON *jsonPriSyscapObj = cJSON_GetObjectItem(jsonSyscapObj, "private");
+
     ret = GetOsAndPriSyscapSize(jsonOsSyscapObj, jsonPriSyscapObj, &osCapSize, &privateCapSize);
     if (ret != 0) {
         return PreFreeAfterCreatePCID(NULL, allOsSyscapObj, jsonRootObj, contextBuffer, 0);
@@ -358,7 +359,7 @@ static int32_t GetPriSyscapResult(cJSON *capVectorPtr, int32_t ret)
     return ret;
 }
 
-int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufLen)
+static int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, int32_t contextBufLen)
 {
     cJSON *capVectorPtr = cJSON_CreateArray();
     if (capVectorPtr == NULL) {
@@ -366,12 +367,7 @@ int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, size_t contextBufL
         return -1;
     }
 
-    if (contextBufLen > UINT32_MAX) {
-        PRINT_ERR("the data privateSyscapLen is out of scope.");
-        return GetPriSyscapResult(capVectorPtr, -1);
-    }
-
-    int32_t privateSyscapLen = (int32_t)(contextBufLen - sizeof(PCIDMain) - 1);
+    int32_t privateSyscapLen = contextBufLen - sizeof(PCIDMain) - 1;
     if (privateSyscapLen < 0 || privateSyscapLen > INT32_MAX) {
         PRINT_ERR("parse private syscap failed.");
         return GetPriSyscapResult(capVectorPtr, -1);
@@ -452,9 +448,8 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
 {
     switch (type) {
         case FREE_DECODE_PCID_CONVERT_OUT:
-            free(freePcidJsonInfo.strJson);
+            cJSON_free(freePcidJsonInfo.strJson);
             cJSON_Delete(freePcidJsonInfo.jsonRootObj);
-            cJSON_Delete(freePcidJsonInfo.sysCapObj);
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
             break;
         case FREE_DECODE_PCID_ROOT_OUT:
@@ -467,6 +462,9 @@ static int32_t FreeAfterDecodePCID(struct FreeDecodePcidJsonInfo freePcidJsonInf
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
             break;
         case FREE_DECODE_PCID_CONTEXT_OUT:
+            cJSON_Delete(freePcidJsonInfo.sysCapObj);
+            FreeContextBuffer(freePcidJsonInfo.contextBuffer);
+            break;
         default:
             FreeContextBuffer(freePcidJsonInfo.contextBuffer);
     }
@@ -526,15 +524,14 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
 
-    freePcidJsonInfo.sysCapObj = NULL; // avoid being released repeatedly.
+    freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
 
-    char *strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
     const char outputFileName[] = "pcid.json";
-    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, strJson, strlen(strJson));
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, freePcidJsonInfo.strJson,
+                                     strlen(freePcidJsonInfo.strJson));
     if (ret != 0) {
         PRINT_ERR("ConvertedContextSaveAsFile failed, outDirPath:%s, filename:%s\n", outDirPath, outputFileName);
     }
-    free(strJson);
     return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_CONVERT_OUT, ret);
 }
 
@@ -665,7 +662,6 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
     cJSON *sysCapArray = cJSON_CreateArray();
     if (sysCapArray == NULL) {
         PRINT_ERR("Create cJSON array failed.\n");
-        free(sysCapArray);
         return -1;
     }
     if (priSyscapStringLen == 0) {
@@ -701,7 +697,6 @@ static int32_t GetSyscapStr(char *input, char const *priSyscapStr, uint32_t* osS
     uint32_t fileContextLen;
     if (GetFileContext(input, &ctx, (uint32_t *)&fileContextLen) != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", input);
-        free(ctx);
         return -1;
     }
     if (ParseStringSyscap(ctx, osSyscap, OS_SYSCAP_NUM, pcidHeader, PCID_HEADER) != 0) {
@@ -719,6 +714,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     uint32_t osSyscap[OS_SYSCAP_NUM] = {0};
     uint32_t pcidHeader[PCID_HEADER];
     char *priSyscapStr = NULL;
+    char *jsonBuffer = NULL;
     ret = GetSyscapStr(input, priSyscapStr, osSyscap, pcidHeader);
     if (ret == -1) {
         return ret;
@@ -727,40 +723,44 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     // add to json object
     cJSON *sysCapObj = cJSON_CreateObject();
     cJSON *rootObj = cJSON_CreateObject();
+    if (sysCapObj == NULL || rootObj == NULL) {
+        PRINT_ERR("Failed to create cJSON objects.\n");
+        goto FAILED;
+    }
+
     if (!cJSON_AddItemToObject(rootObj, "syscap", sysCapObj)) {
         PRINT_ERR("Add syscap to json failed.\n");
-        goto ADD_JSON_FAILED;
+        goto FAILED;
     }
     if (AddHeaderToJsonObj(pcidHeader, PCID_HEADER, rootObj) != 0) {
         PRINT_ERR("Add header to json object failed.\n");
-        goto ADD_JSON_FAILED;
+        goto FAILED;
     }
     if (AddOsSyscapToJsonObj(osSyscap, OS_SYSCAP_NUM, sysCapObj) != 0) {
         PRINT_ERR("Add os syscap json object failed.\n");
-        goto ADD_JSON_FAILED;
+        goto FAILED;
     }
 
-    if (AddPriSyscapToJsonObj(priSyscapStr, (uint32_t)strlen(priSyscapStr), sysCapObj) != 0) {
+    if (AddPriSyscapToJsonObj(priSyscapStr, (uint32_t) strlen(priSyscapStr), sysCapObj) != 0) {
         PRINT_ERR("Add private syscap json object failed.\n");
-        goto ADD_JSON_FAILED;
+        goto FAILED;
     }
     // save as json file
-    char *jsonBuffer = cJSON_Print(rootObj);
+    jsonBuffer = cJSON_Print(rootObj);
     if (jsonBuffer == NULL) {
         PRINT_ERR("json buffer is null.\n");
-        goto ADD_JSON_FAILED;
+        goto FAILED;
     }
     const char outputFileName[] = "pcid.json";
-    if (ConvertedContextSaveAsFile(outDirPath, outputFileName,
-                                   jsonBuffer, strlen(jsonBuffer)) != 0) {
+    if (ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0) {
         PRINT_ERR("Save as json file failed.\n");
-        goto SAVE_FAILED;
+        goto FAILED;
     }
     ret = 0;
 
-SAVE_FAILED:
-    free(jsonBuffer);
-ADD_JSON_FAILED:
+FAILED:
+    cJSON_free(jsonBuffer);
+    SafeFree(priSyscapStr);
     cJSON_Delete(sysCapObj);
     cJSON_Delete(rootObj);
     return ret;
