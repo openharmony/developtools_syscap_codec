@@ -109,6 +109,7 @@ if (defined(ohos_lite)) {
   }
 } else {
   ohos_shared_library("syscap_interface_shared") {
+    branch_protector_ret = "pac_ret"
     deps = []
     if (syscap_codec_config_extern_path != "") {
       deps += [ ":gen_syscap_define_custom" ]
