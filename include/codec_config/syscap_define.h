@@ -716,8 +716,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework.Mac", SECURITY_CRYPTOFRAMEWORK_MAC},
     {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
     {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
-    {"SystemCapability.Communication.NetManager.WearableDistributedNetService",
-        COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET_SERVICE},
+    {"SystemCapability.Communication.NetManager.WearableDistributedNet",
+        COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},
 };
 
 #ifdef __cplusplus
