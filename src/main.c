@@ -74,9 +74,9 @@ int main(int argc, char **argv)
     int32_t ret;
     uint16_t bitMap = 0x0;
     char curpath[PATH_MAX] = {0};
-    g_customerfileinfo.inputfile = NULL;
-    g_customerfileinfo.pcidfile = NULL;
-    g_customerfileinfo.rpcidfile = NULL;
+    g_customerfileinfo.inputfile = "";
+    g_customerfileinfo.pcidfile = "";
+    g_customerfileinfo.rpcidfile = "";
     char *outputpath = getcwd(curpath, sizeof(curpath));
     if (outputpath == NULL) {
         PRINT_ERR("Get outputpath failed.\n");
