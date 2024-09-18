@@ -249,8 +249,13 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     uint32_t privateCapSize, osCapSize;
     uint32_t contextBufLen;
     char *contextBuffer = NULL;
-    cJSON *allOsSyscapObj = CreateWholeSyscapJsonObj();
 
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
+
+    cJSON *allOsSyscapObj = CreateWholeSyscapJsonObj();
     int32_t ret = GetFileContext(inputFile, &contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
@@ -482,6 +487,11 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.sysCapObj = NULL;
     freePcidJsonInfo.flag = 0;
 
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
+	
     ret = GetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
@@ -693,6 +703,10 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
 
 static int32_t GetSyscapStr(char *input, char const *priSyscapStr, uint32_t* osSyscap, uint32_t *pcidHeader)
 {
+    if (input == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
     char *ctx = NULL;
     uint32_t fileContextLen;
     if (GetFileContext(input, &ctx, (uint32_t *)&fileContextLen) != 0) {
@@ -715,6 +729,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     uint32_t pcidHeader[PCID_HEADER];
     char *priSyscapStr = NULL;
     char *jsonBuffer = NULL;
+
     ret = GetSyscapStr(input, priSyscapStr, osSyscap, pcidHeader);
     if (ret == -1) {
         return ret;
@@ -871,6 +886,11 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     freePcidInfo.output = NULL;
     freePcidInfo.outDirPathFinal = outDirPath;
     PCIDMain *pcidMain = NULL;
+
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
 
     ret = GetFileContext(inputFile, &freePcidInfo.contextBuffer, (uint32_t *)&bufferLen);
     if (ret != 0) {
