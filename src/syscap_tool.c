@@ -150,6 +150,11 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     gJsonObjectSysCap.cjsonObjectRoot = NULL;
     gJsonObjectSysCap.sysCapPtr = NULL;
 
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
+
     if (GetFileContext(inputFile, &contextBuffer, &bufferLen) != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         return -1;
@@ -261,6 +266,11 @@ int32_t RPCIDDecode(char *inputFile, char *outputPath)
     char *contextBuffer = NULL;
     char *convertedBuffer = NULL;
     uint32_t bufferLen;
+
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
 
     // check rpcid.sc
     if (CheckRpcidFormat(inputFile, &contextBuffer, &bufferLen)) {
@@ -480,6 +490,11 @@ int32_t EncodeRpcidscToString(char *inputFile, char *outDirPath)
     freeAfterEncodeRpcidscInfo.type = 0;
     freeAfterEncodeRpcidscInfo.flag = 0;
 
+    if (inputFile == NULL) {
+        PRINT_ERR("inputFile is null.\n");
+        return -1;
+    }
+
     // check rpcid.sc
     if (CheckRpcidFormat(inputFile, &freeAfterEncodeRpcidscInfo.contextBuffer, &bufferLen) != 0) {
         PRINT_ERR("Check rpcid.sc format failed. Input file: %s\n", inputFile);
@@ -698,6 +713,11 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
     uint32_t pcidContentLen, rpcidContentLen, pcidPriSyscapLen, rpcidPriSyscapLen;
     uint32_t pcidOsArray[PCID_OUT_BUFFER] = {0};
     uint32_t rpcidOsAarry[PCID_OUT_BUFFER] = {0};
+
+    if (pcidFile == NULL || rpcidFile == NULL) {
+        PRINT_ERR("pcidFile or rpcidFile is null.\n");
+        return -1;
+    }
 
     if (type == TYPE_FILE) {
         if (GetFileContext(pcidFile, &pcidContent, &pcidContentLen)) {
