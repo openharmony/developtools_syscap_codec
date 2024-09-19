@@ -92,6 +92,19 @@ int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bu
     return 0;
 }
 
+int32_t CheckFileAndGetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
+{
+    if (inputFile == NULL) {
+        PRINT_ERR("input file is NULL.\n");
+        return -1;
+    }
+    uint32_t ret = GetFileContext(inputFile, contextBufPtr, bufferLen);
+    if (ret != 0) {
+        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
+    }
+    return ret;
+}
+
 int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename, char *convertedBuffer, size_t contextBufLen)
 {
     int32_t ret;

@@ -625,6 +625,12 @@ static int32_t ComparePcidWithPriSyscap(struct PcidPriSyscapInfo pcidPriSyscapIn
                 free(temp);
                 return -1;
             }
+            if (pcidPriSyscapInfo.ossyscapFlag + prisyscapFlag >= MAX_MISS_SYSCAP) {
+                FreeCompareError(result);
+                PRINT_ERR("array index out of bounds.\n");
+                free(temp);
+                return -1;
+            }
             result->syscap[pcidPriSyscapInfo.ossyscapFlag + prisyscapFlag] = temp;
             ++prisyscapFlag;
         }
