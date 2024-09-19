@@ -150,13 +150,7 @@ int32_t RPCIDEncode(char *inputFile, char *outputPath)
     gJsonObjectSysCap.cjsonObjectRoot = NULL;
     gJsonObjectSysCap.sysCapPtr = NULL;
 
-    if (inputFile == NULL) {
-        PRINT_ERR("inputFile is null.\n");
-        return -1;
-    }
-
-    if (GetFileContext(inputFile, &contextBuffer, &bufferLen) != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
+    if (CheckFileAndGetFileContext(inputFile, &contextBuffer, &bufferLen) != 0) {
         return -1;
     }
 

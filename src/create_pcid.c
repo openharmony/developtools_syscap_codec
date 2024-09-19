@@ -250,15 +250,9 @@ int32_t CreatePCID(char *inputFile, char *outDirPath)
     uint32_t contextBufLen;
     char *contextBuffer = NULL;
 
-    if (inputFile == NULL) {
-        PRINT_ERR("inputFile is null.\n");
-        return -1;
-    }
-
     cJSON *allOsSyscapObj = CreateWholeSyscapJsonObj();
-    int32_t ret = GetFileContext(inputFile, &contextBuffer, (uint32_t *)&contextBufLen);
+    int32_t ret = CheckFileAndGetFileContext(inputFile, &contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         return FreeAfterCreatePCID(NULL, allOsSyscapObj, contextBuffer, 0, -1);
     }
 
@@ -486,15 +480,9 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.jsonRootObj = NULL;
     freePcidJsonInfo.sysCapObj = NULL;
     freePcidJsonInfo.flag = 0;
-
-    if (inputFile == NULL) {
-        PRINT_ERR("inputFile is null.\n");
-        return -1;
-    }
 	
-    ret = GetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
+    ret = CheckFileAndGetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
-        PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
         return -1;
     }
 
@@ -887,14 +875,8 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     freePcidInfo.outDirPathFinal = outDirPath;
     PCIDMain *pcidMain = NULL;
 
-    if (inputFile == NULL) {
-        PRINT_ERR("inputFile is null.\n");
-        return -1;
-    }
-
-    ret = GetFileContext(inputFile, &freePcidInfo.contextBuffer, (uint32_t *)&bufferLen);
+    ret = CheckFileAndGetFileContext(inputFile, &freePcidInfo.contextBuffer, (uint32_t *)&bufferLen);
     if (ret != 0) {
-        PRINT_ERR("Get pcid file failed, pcid file path: %s\n", inputFile);
         return -1;
     }
 
