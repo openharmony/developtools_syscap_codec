@@ -98,7 +98,7 @@ int32_t CheckFileAndGetFileContext(const char *inputFile, char **contextBufPtr, 
         PRINT_ERR("input file is NULL.\n");
         return -1;
     }
-    uint32_t ret = GetFileContext(inputFile, contextBufPtr, bufferLen);
+    int32_t ret = GetFileContext(inputFile, contextBufPtr, bufferLen);
     if (ret != 0) {
         PRINT_ERR("GetFileContext failed, input file : %s\n", inputFile);
     }
