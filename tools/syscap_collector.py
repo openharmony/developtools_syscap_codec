@@ -208,7 +208,7 @@ def _check_path_prefix(paths):
 
 def traversal_files(subsystem_path, _files):
     for item in os.scandir(subsystem_path):
-        if is_symlik(item.path):
+        if is_symlink(item.path):
             continue
         elif item.is_file() and item.name == 'ohos.build':
             _files.append(item.path)
@@ -230,7 +230,7 @@ def get_file_type(file_path):
         return 'unknown'
 
 
-def is_symlik(file_path):
+def is_symlink(file_path):
     file_type = get_file_type(file_path)
     if file_type == 'symlink':
         link_target = os.readlink(file_path)
