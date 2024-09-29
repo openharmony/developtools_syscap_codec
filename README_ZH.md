@@ -19,56 +19,71 @@
 6. pcid与rpcid比较：查询pcid是否满足rpcid的要求，并输出不满足的地方。
 
 ## 代码目录
+
 ```
 /developtools
 ├── syscap_codec                 # syscap codec代码目录
-│   ├── include                  # syscap_tool_shared对外接口定义
-│   │   ├── syscap_define.h
-│   │   └── syscap_tool.h         
+│   ├── include  
+│   │   ├──code_config           # syscap_tool_shared对外接口定义
+│   │   │  └──syscap_define.h
+│   │   ├── context_tool.h     
+│   │   ├── create_pcid.h    
+│   │   └── syscap_tool.h
 │   ├── interfaces/inner_api     # 提供部件之间的接口
 │   │   ├── syscap_interface.c
 │   │   └── syscap_interface.h 
 │   ├── napi                     # napi 接口实现
 │   │   ├── BUILD.gn
 │   │   ├── napi_query_syscap.cpp
-│   │   └── syscap_interface.h 
+│   │   └── query_syscap.js 
 │   ├── src
-│   │   ├── endian_internel.h    # 内部实现的大小端转换接口定义(便于win、mac、linux平台通用)
-│   │   ├── endian_internel.c    # 大小端转换实现
+│   │   ├── common_method.c
+│   │   ├── common_method.h
+│   │   ├── context_tool.c
+│   │   ├── create_pcid.c
+│   │   ├── endian_internal.h    # 内部实现的大小端转换接口定义(便于win、mac、linux平台通用)
+│   │   ├── endian_internal.c    # 大小端转换实现
 │   │   ├── main.c               # syscap_tool命令行工具代码实现 
 │   │   └── syscap_tool.c        # syscap_tool编解码接口的实现
 │   └── test 
-│   │   ├── unittest/common      # inner 接口测试代码实现
-│   │   │   ├── BUILD.gn
-│   │   │   ├── include
-│   │   │   │   └── syscap_codec_test.h
-│   │   │   └── syscap_codec_test.cpp
-│   │   └── syscap_tool_test.c   # syscap_tool功能测试代码实现
+│   │   └── unittest/common      # inner 接口测试代码实现
+│   │       ├── BUILD.gn
+│   │       ├── include
+│   │       │   └── syscap_codec_test.h
+│   │       └── syscap_codec_test.cpp    # syscap_tool功能测试代码实现    
 |   |—— tools
-|   │   │
-|   │   └── syscap_check.py      # syscap一致性检查脚本
+|   │   ├── requirements.txt
+│   │   ├── syscap_check.py      # syscap一致性检查脚本
+│   │   ├── syscap_collector.py
+|   │   └── syscap_config_merge.py
 ```
 
 ## API
+
 PC端工具，不对外提供API。
 
-## PC端编译说明  
+## PC端编译说明
+
 syscap_tool PC端可执行文件编译步骤：
+
 1. 编译命令：参考[编译构建](https://gitee.com/openharmony/build/blob/master/README_zh.md)文档，执行其指定的sdk编译命令来编译整个sdk，syscap_tool会被编译打包到里面。
 2. 编译：在目标开发机上运行上面调整好的sdk编译命令，正常编译syscap_tool会输出到sdk平台相关目录下。
 
 注意：ubuntu环境下只能编译windows/linux版本工具，mac版需要在macos开发机上编译。
 
 ## PC端获取说明
+
 1. 下载sdk获取(建议)  
-    通过访问本社区门禁[每日构建](http://ci.openharmony.cn/dailys/dailybuilds)网站，下载最新的ohos-sdk压缩包，并从相应平台的toolchains压缩包中提取syscap_tool。  
+    通过访问本社区门禁[每日构建](https://ci.openharmony.cn/workbench/cicd/dailybuild/dailylist)网站，下载最新的ohos-sdk压缩包，并从相应平台的toolchains压缩包中提取syscap_tool。  
 2. 支持运行环境  
     Windows x86_64/Linux x86_64/Darwin x86_64
 
-## 命令帮助  
+## 命令帮助
+
 本工具一般被IDE、应用市场和包管理器集成，手工调试时可参考以下说明。
 
 使用./syscap_tool -h或者./syscap_tool --help查看：
+
 ```shell
 syscap_tool -R/P -e/d -i filepath [-o outpath]
 -h, --help      : how to use
@@ -86,22 +101,24 @@ syscap_tool -R/P -e/d -i filepath [-o outpath]
 
 syscap_tool v1.1.1
 ```
+
 ### 使用示例
+
 ```shell
 # 将 rpcid.json 编码为SC格式，文件名rpcid.sc
 syscap_tool -Rei rpcid.json -o path/
 
-# 将 pcid.sc 编码为JSON格式，文件名rpcid.json
-syscap_tool -Rdi pcid.sc -o path/
+# 将 rpcid.sc 解码为JSON格式，文件名rpcid.json
+syscap_tool -Rdi rpcid.sc -o path/
 
 # 将 pcid.json 编码为SC格式，文件名pcid.sc
 syscap_tool -Pei pcid.json -o path/
 
-# 将 pcid.sc 编码为JSON格式，文件名pcid.json
+# 将 pcid.sc 解码为JSON格式，文件名pcid.json
 syscap_tool -Pdi pcid.sc -o path/
 
-# 将 pcid.sc 编码为字符串格式，文件名rpcid.txt
-syscap_tool -Resi pcid.sc -o path/
+# 将 rpcid.sc 编码为字符串格式，文件名rpcid.txt
+syscap_tool -Resi rpcid.sc -o path/
 
 # 将 pcid.sc 编码为字符串格式，文件名pcid.txt
 syscap_tool -Pesi pcid.sc -o path/
@@ -115,6 +132,7 @@ syscap_tool -sC "pcidstring" "rpcidstring"
 # 将字符串格式的 pcid 转为 json 格式，文件名 pcid.json。
 syscap_tool -Pdsi pcid.txt -o path/
 ```
+
 **说明：**  -o 选项指定输出目录，缺省为当前目录。  
 
 ## syscap一致性检查工具
@@ -137,7 +155,7 @@ requirements：
 prettytable==3.3.0
 ```
 
-使用python3 syscap-check.py -h或python3 syscap-check.py --help查看用法：
+使用python3 syscap_check.py -h或python3 syscap_check.py --help查看用法：
 
 ```shell
 usage: syscap_check.py [-h] [-p PROJECT_PATH] -t {component_codec,component_sdk,sdk_codec}
@@ -171,12 +189,13 @@ python3 syscap_check.py -p path_of_openarmony -t sdk_codec
 ```
 
 ## syscap_define.h 文件规则
+
 - 每一个 SyscapNum 枚举值都唯一对应于一个 syscap 字符串。
 - 如果弃用某个 syscap，在对应的枚举值后面注释 "// abandoned" 即可，请勿删除和修改。对应的 syscap 字符串也不需要修改。
 - 添加 syscap，请在 SyscapNum 和 g_arraySyscap 末尾添加相应数据。
 - 数组 g_arraySyscap 按照 SyscapNum 枚举值从小到大排序。
 
-
 ## Release Note
+
 v1.1.0 2022-6-17 添加转字符串格式以及比较功能。  
 v1.0.0 2022-3-8 首版本，提供Windows/Linux/Mac平台的系统能力编解码。
