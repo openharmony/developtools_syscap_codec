@@ -1,0 +1,57 @@
+卷 软件 的文件夹 PATH 列表
+卷序列号为 1DD4-5ADE
+D:.
+│  BUILD.gn
+│  bundle.json
+│  config.gni
+│  libsyscap_interface_shared.versionscript
+│  LICENSE
+│  OAT.xml
+│  README.md
+│  README_ZH.md
+│  RELEASE-NOTE.txt
+│  tree.txt
+│  
+├─include
+│  │  context_tool.h
+│  │  create_pcid.h
+│  │  syscap_tool.h
+│  │  
+│  └─codec_config
+│          syscap_define.h
+│          
+├─interfaces
+│  └─inner_api
+│          syscap_interface.c
+│          syscap_interface.h
+│          
+├─napi
+│      BUILD.gn
+│      napi_query_syscap.cpp
+│      query_syscap.js
+│      
+├─src
+│      common_method.c
+│      common_method.h
+│      context_tool.c
+│      create_pcid.c
+│      endian_internal.c
+│      endian_internal.h
+│      main.c
+│      syscap_tool.c
+│      
+├─test
+│  └─unittest
+│      └─common
+│          │  BUILD.gn
+│          │  syscap_codec_test.cpp
+│          │  
+│          └─include
+│                  syscap_codec_test.h
+│                  
+└─tools
+        requirements.txt
+        syscap_check.py
+        syscap_collector.py
+        syscap_config_merge.py
+        

@@ -18,19 +18,40 @@ Main function：
 
 ```
 /developtools
-├── syscap_codec                 # root directory
-│   ├── include
-│   │   └── syscap_tool.h        # interfaces
-│   └── src
-│   │   ├── endian_internel.h    # internal big/little endian conversion headers(common for win、mac、linux)
-│   │   ├── endian_internel.c    # big/little endian conversion implement
-│   │   ├── main.c               # command line implement
-│   │   └── syscap_tool.c        # codec implement
+├── syscap_codec                 # syscap codec代码目录
+│   ├── include  
+│   │   ├──code_config           # syscap_tool_shared对外接口定义
+│   │   │  └──syscap_define.h
+│   │   ├── context_tool.h     
+│   │   ├── create_pcid.h    
+│   │   └── syscap_tool.h
+│   ├── interfaces/inner_api     # 提供部件之间的接口
+│   │   ├── syscap_interface.c
+│   │   └── syscap_interface.h 
+│   ├── napi                     # napi 接口实现
+│   │   ├── BUILD.gn
+│   │   ├── napi_query_syscap.cpp
+│   │   └── query_syscap.js 
+│   ├── src
+│   │   ├── common_method.c
+│   │   ├── common_method.h
+│   │   ├── context_tool.c
+│   │   ├── create_pcid.c
+│   │   ├── endian_internal.h    # 内部实现的大小端转换接口定义(便于win、mac、linux平台通用)
+│   │   ├── endian_internal.c    # 大小端转换实现
+│   │   ├── main.c               # syscap_tool命令行工具代码实现 
+│   │   └── syscap_tool.c        # syscap_tool编解码接口的实现
 │   └── test 
-│   |   └── syscap_tool_test.c   # syscap_tool test codec implement
+│   │   └── unittest/common      # inner 接口测试代码实现
+│   │       ├── BUILD.gn
+│   │       ├── include
+│   │       │   └── syscap_codec_test.h
+│   │       └── syscap_codec_test.cpp    # syscap_tool功能测试代码实现    
 |   |—— tools
-|   │   │
-|   │   └── syscap_check.py      # syscap一致性检查脚本
+|   │   ├── requirements.txt
+│   │   ├── syscap_check.py      # syscap一致性检查脚本
+│   │   ├── syscap_collector.py
+|   │   └── syscap_config_merge.py
 ```
 
 ### API
@@ -51,7 +72,7 @@ Note: Ubuntu host only avaiable for windows/linux building, MacOs binary should 
 
 1. Downlaod SDK(recommonded)
 
-Download daily builds(http://ci.openharmony.cn/dailybuilds) which included SDK.
+Download daily builds( https://ci.openharmony.cn/workbench/cicd/dailybuild/dailylist ) which included SDK.
 
 2. Supported Host
 
@@ -62,6 +83,7 @@ Windows x86_64/Linux x86_64/Darwin x86_64
 SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instructions for debugging manually:
 
 ./syscap_tool -h or ./syscap_tool --help：
+
 ```
 ./syscap_tool --help
 
