@@ -40,6 +40,7 @@ typedef struct RequiredProductCompatibilityIDHead {
 
 void FreeContextBuffer(char *contextBuffer);
 int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bufferLen);
+int32_t CheckFileAndGetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bufferLen);
 int32_t ConvertedContextSaveAsFile(char *outDirPath, const char *filename, char *convertedBuffer, size_t contextBufLen);
 int32_t CheckRpcidFormat(const char *inputFile, char **buffer, uint32_t *len);
 cJSON *CreateWholeSyscapJsonObj(void);
