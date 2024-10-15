@@ -114,8 +114,7 @@ def collect_syscap_from_codec(filepath: str, pattern: str = r'{"(.*)"') -> tuple
 def collect_syscap_from_component(project_path: str,
                                   black_dirs: tuple,
                                   key_heirarchy: tuple,
-                                  bundles: list = None,
-                                  ) -> tuple:
+                                  bundles: list = None) -> tuple:
     """
     从部件的bundle.json中收集syscap
     :param project_path: 项目根路径
@@ -136,6 +135,7 @@ def collect_syscap_from_component(project_path: str,
             for line in output:
                 line = line.strip()
                 read_value_from_json(line, key_heirarchy, result_dict, post_handler=bundle_syscap_post_handler)
+            output.close()
     else:
         for bundle in bundles:
             read_value_from_json(bundle, key_heirarchy, result_dict, post_handler=bundle_syscap_post_handler)
