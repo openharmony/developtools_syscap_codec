@@ -368,6 +368,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK_RAND,
     COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET,
     GLOBAL_FONTMANAGER,
+    TELEPHONY_CORESERVICE_ESIM,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -720,6 +721,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.WearableDistributedNet",
         COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},
     {"SystemCapability.Global.FontManager", GLOBAL_FONTMANAGER},
+    {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
 };
 
 #ifdef __cplusplus
