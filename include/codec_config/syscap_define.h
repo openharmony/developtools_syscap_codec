@@ -164,7 +164,6 @@ typedef enum SystemCapabilityNum {
     TELEPHONY_CELLULARCALL,
     TELEPHONY_CELLULARDATA,
     TELEPHONY_CORESERVICE,
-    TELEPHONY_CORESERVICE_ESIM,
     TELEPHONY_DATASTORAGE,
     TELEPHONY_DCALL,
     TELEPHONY_SMSMMS,
@@ -371,6 +370,7 @@ typedef enum SystemCapabilityNum {
     GLOBAL_FONTMANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
+    TELEPHONY_CORESERVICE_ESIM,
 } SyscapNum;
 
 
@@ -525,7 +525,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Telephony.CellularCall", TELEPHONY_CELLULARCALL},
     {"SystemCapability.Telephony.CellularData", TELEPHONY_CELLULARDATA},
     {"SystemCapability.Telephony.CoreService", TELEPHONY_CORESERVICE},
-    {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
     {"SystemCapability.Telephony.DataStorage", TELEPHONY_DATASTORAGE},
     {"SystemCapability.Telephony.DCall", TELEPHONY_DCALL},
     {"SystemCapability.Telephony.SmsMms", TELEPHONY_SMSMMS},
@@ -722,6 +721,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.WearableDistributedNet",
         COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},
     {"SystemCapability.Global.FontManager", GLOBAL_FONTMANAGER},
+    {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
 };
 
 #ifdef __cplusplus
