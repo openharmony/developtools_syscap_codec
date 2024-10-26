@@ -696,7 +696,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Resourceschedule.Ffrt.Core", RESOURCESCHEDULE_FFRT_CORE},
     {"SystemCapability.AI.MindSporeLite", AI_MINDSPORELITE},
     {"SystemCapability.Ability.AppStartup", ABILITY_APP_STARTUP},
-    {"SystemCapability.Multimedia.Media.AVTransCoder", MULTIMEDIA_MEDIA_AVTRANSCODER},
+    {"SystemCapability.Multimedia.Media.AVTranscoder", MULTIMEDIA_MEDIA_AVTRANSCODER},
     {"SystemCapability.Base", BASE},
     {"SystemCapability.MultimodalInput.Input.InfraredEmitter", MULTIMODALINPUT_INPUT_INFRAREDEMITTER},
     {"SystemCapability.Multimedia.ImageEffect.Core", MULTIMEDIA_IMAGEEFFECT_CORE},
