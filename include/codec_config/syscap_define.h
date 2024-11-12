@@ -369,6 +369,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET,
     GLOBAL_FONTMANAGER,
     TELEPHONY_CORESERVICE_ESIM,
+    SECURITY_CERTIFICATE_MANAGER_DIALOG,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -542,6 +543,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
+    {"SystemCapability.Security.CertificateManagerDialog", SECURITY_CERTIFICATE_MANAGER_DIALOG},
     {"SystemCapability.Graphic.Vulkan", GRAPHIC_VULKAN},
     {"SystemCapability.Location.Location.Core", LOCATION_LOCATION_CORE},
     {"SystemCapability.Location.Location.Gnss", LOCATION_LOCATION_GNSS},
