@@ -64,7 +64,6 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_KVSTORE_LITE,
     DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE,
     DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE,
-    DISTRIBUTEDDATAMANAGER_AIP_CORE,
     DISTRIBUTEDHARDWARE_DEVICEMANAGER,
     DISTRIBUTEDHARDWARE_DISTRIBUTEDCAMERA,
     DISTRIBUTEDHARDWARE_DISTRIBUTEDAUDIO,
@@ -370,6 +369,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET,
     GLOBAL_FONTMANAGER,
     TELEPHONY_CORESERVICE_ESIM,
+    DISTRIBUTEDDATAMANAGER_AIP_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -410,7 +410,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.Preferences.Core", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE},
     {"SystemCapability.DistributedDataManager.Preferences.Core.Lite", DISTRIBUTEDDATAMANAGER_PREFERENCES_CORE_LITE},
     {"SystemCapability.DistributedDataManager.RelationalStore.Core", DISTRIBUTEDDATAMANAGER_RELATIONALSTORE_CORE},
-    {"SystemCapability.DistributedDataManager.AIP.Core", DISTRIBUTEDDATAMANAGER_AIP_CORE},
     {"SystemCapability.DistributedDataManager.CloudSync.Client", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CLIENT},
     {"SystemCapability.DistributedDataManager.CloudSync.Server", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_SERVER},
     {"SystemCapability.DistributedDataManager.CloudSync.Config", DISTRIBUTEDDATAMANAGER_CLOUDSYNC_CONFIG},
@@ -724,6 +723,7 @@ const static SyscapWithNum g_arraySyscap[] = {
         COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},
     {"SystemCapability.Global.FontManager", GLOBAL_FONTMANAGER},
     {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
+    {"SystemCapability.DistributedDataManager.AIP.Core", DISTRIBUTEDDATAMANAGER_AIP_CORE},
 };
 
 #ifdef __cplusplus
