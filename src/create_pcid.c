@@ -523,6 +523,10 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     }
 
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
+    if (freePcidJsonInfo.strJson  == NULL) {
+        PRINT_ERR("cJSON_Print failed\n");
+        return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, -1);
+    }
 
     const char outputFileName[] = "pcid.json";
     ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, freePcidJsonInfo.strJson,
@@ -615,7 +619,7 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
 
     if (osSyscapArrayLen != OS_SYSCAP_NUM) {
         PRINT_ERR("Input os syscap array len error.\n");
-        free(sysCapArray);
+        cJSON_Delete(sysCapArray);
         return -1;
     }
     uint8_t *osSysCapArrayUint8 = (uint8_t *)osSyscapArray;
@@ -638,7 +642,7 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
             }
             if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(g_arraySyscap[j].str))) {
                 PRINT_ERR("Add os syscap string to json failed.\n");
-                free(sysCapArray);
+                cJSON_Delete(sysCapArray);
                 return -1;
             }
             break;
@@ -647,7 +651,7 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
 
     if (!cJSON_AddItemToObject(sysCapObj, "os", sysCapArray)) {
         PRINT_ERR("Add os syscap item to json object failed.\n");
-        free(sysCapArray);
+        cJSON_Delete(sysCapArray);
         return -1;
     }
     return 0;
