@@ -480,7 +480,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     freePcidJsonInfo.jsonRootObj = NULL;
     freePcidJsonInfo.sysCapObj = NULL;
     freePcidJsonInfo.flag = 0;
-	
+
     ret = CheckFileAndGetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
         return -1;
@@ -495,8 +495,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
     }
 
     /* system type */
-    char *systemType = pcidMain->systemType == 0b001 ? "mini" :
-                       (pcidMain->systemType == 0b010 ? "small" :
+    char *systemType = pcidMain->systemType == 0b001 ? "mini" :(pcidMain->systemType == 0b010 ? "small" :
                         (pcidMain->systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
         PRINT_ERR("prase file failed, systemType is invaild, %u\n", pcidMain->systemType);
@@ -524,7 +523,6 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
 
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
     if (freePcidJsonInfo.strJson  == NULL) {
-        PRINT_ERR("cJSON_Print failed\n");
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, -1);
     }
 
