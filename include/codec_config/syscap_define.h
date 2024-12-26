@@ -371,6 +371,8 @@ typedef enum SystemCapabilityNum {
     TELEPHONY_CORESERVICE_ESIM,
     DISTRIBUTEDDATAMANAGER_AIP_CORE,
     SECURITY_CERTIFICATE_MANAGER_DIALOG,
+    DRIVER_USBSERIAL_EXTENSION,
+    DRIVER_SCSI_EXTENSION，
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -726,6 +728,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Global.FontManager", GLOBAL_FONTMANAGER},
     {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
     {"SystemCapability.DistributedDataManager.AIP.Core", DISTRIBUTEDDATAMANAGER_AIP_CORE},
+    {"SystemCapability.Driver.UsbSerial.Extension", DRIVER_USBSERIAL_EXTENSION},
+    {"SystemCapability.Driver.SCSI.Extension", DRIVER_SCSI_EXTENSION},
 };
 
 #ifdef __cplusplus
