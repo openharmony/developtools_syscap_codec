@@ -373,6 +373,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_CERTIFICATE_MANAGER_DIALOG,
     DRIVER_USBSERIAL_EXTENSION,
     DRIVER_SCSI_EXTENSION,
+    ARKUI_ARKUI_CIRCLE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -730,6 +731,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedDataManager.AIP.Core", DISTRIBUTEDDATAMANAGER_AIP_CORE},
     {"SystemCapability.Driver.UsbSerial.Extension", DRIVER_USBSERIAL_EXTENSION},
     {"SystemCapability.Driver.SCSI.Extension", DRIVER_SCSI_EXTENSION},
+    {"SystemCapability.ArkUI.ArkUI.Circle", ARKUI_ARKUI_CIRCLE},
 };
 
 #ifdef __cplusplus
