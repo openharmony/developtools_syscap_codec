@@ -375,6 +375,7 @@ typedef enum SystemCapabilityNum {
     DRIVER_SCSI_EXTENSION,
     ARKUI_ARKUI_CIRCLE,
     RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER,
+    MULTIMODALAWARENESS_MOTION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -734,6 +735,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Driver.SCSI.Extension", DRIVER_SCSI_EXTENSION},
     {"SystemCapability.ArkUI.ArkUI.Circle", ARKUI_ARKUI_CIRCLE},
     {"SystemCapability.Resourceschedule.BackgroundProcessManager", RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER},
+    {"SystemCapability.MultimodalAwarness.Motion", MULTIMODALAWARENESS_MOTION},
 };
 
 #ifdef __cplusplus
