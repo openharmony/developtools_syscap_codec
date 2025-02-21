@@ -376,6 +376,7 @@ typedef enum SystemCapabilityNum {
     ARKUI_ARKUI_CIRCLE,
     RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER,
     MULTIMODALAWARENESS_MOTION,
+    DISTRIBUTEDSCHED_APPCOLLABORATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -736,6 +737,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.ArkUI.ArkUI.Circle", ARKUI_ARKUI_CIRCLE},
     {"SystemCapability.Resourceschedule.BackgroundProcessManager", RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER},
     {"SystemCapability.MultimodalAwarness.Motion", MULTIMODALAWARENESS_MOTION},
+    {"SystemCapability.DistributedSched.AppCollaboration", DISTRIBUTEDSCHED_APPCOLLABORATION},
 };
 
 #ifdef __cplusplus
