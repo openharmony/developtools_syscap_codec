@@ -378,6 +378,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALAWARENESS_MOTION,
     DISTRIBUTEDSCHED_APPCOLLABORATION,
     MULTIMEDIA_AVSESSION_AVINPUTCAST,
+    GAME_GAMECONTROLLER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -740,6 +741,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Resourceschedule.BackgroundProcessManager", RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER},
     {"SystemCapability.MultimodalAwarness.Motion", MULTIMODALAWARENESS_MOTION},
     {"SystemCapability.DistributedSched.AppCollaboration", DISTRIBUTEDSCHED_APPCOLLABORATION},
+    {"SystemCapability.Game.GameController", GAME_GAMECONTROLLER},
 };
 
 #ifdef __cplusplus
