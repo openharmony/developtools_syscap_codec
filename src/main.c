@@ -212,7 +212,6 @@ void PrintHelp(void)
 void OutputVersion(const char *arg, int opt)
 {
     if (arg != NULL && opt > 1) {
-        printf("syscap_tool: extra operand \"%s\"\n", arg);
         printf("Try 'syscap_tool --help' for more information.\n");
     } else {
         (void)PrintVersion();
