@@ -381,7 +381,7 @@ static int32_t GetPriSyscap(PCIDMain *pcidMain, cJSON *sysCapObject, int32_t con
     while (*ptrPrivateSyscap != '\0') {
         size_t currentLen = tempPriSyscapStr - priSyscapStr;
         if (currentLen >= SINGLE_SYSCAP_LEN - 1) {
-            PRINT_ERR("Syscap name exceeds maximum length\n");
+            printf("Syscap name exceeds maximum length\n");
             return GetPriSyscapResult(capVectorPtr, -1);
         }
         if (*ptrPrivateSyscap == ',') {
