@@ -64,7 +64,7 @@ if (defined(ohos_lite)) {
   import("//build/ohos.gni")
   import("//build/test.gni")
 
-  module_output_path = "developtools/syscap_codec"
+  module_output_path = "syscap_codec/syscap_codec"
 
   ohos_unittest("syscap_codec_test") {
     module_out_path = module_output_path
