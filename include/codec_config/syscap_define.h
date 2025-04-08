@@ -381,6 +381,7 @@ typedef enum SystemCapabilityNum {
     GAME_GAMECONTROLLER,
     DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE,
     MULTIMODALAWARENESS_DEVICESTATUS,
+    USB_USBMANAGER_SERIAL,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -548,6 +549,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Updater.Raw", UPDATER_RAW},
     {"SystemCapability.Update.UpdateService", UPDATE_UPDATESERVICE},
     {"SystemCapability.USB.USBManager", USB_USBMANAGER},
+    {"SystemCapability.USB.USBManager.Serial", USB_USBMANAGER_SERIAL},
     {"SystemCapability.UserIAM.UserAuth.Core", USERIAM_USERAUTH_CORE},
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
