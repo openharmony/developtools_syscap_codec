@@ -452,7 +452,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.Wms", GRAPHIC_WMS},
     {"SystemCapability.HiviewDFX.HiAppEvent", HIVIEWDFX_HIAPPEVENT},
     {"SystemCapability.HiviewDFX.HiChecker", HIVIEWDFX_HICHECKER},
-    {"SystemCapability.HiviewDFX.HiDumper", HIVIEWDFX_HIDUMPER},
+    {"SystemCapability.HiviewDFX.HiDumper", HIVIEWDFX_HIDUMPER}, // abandoned
     {"SystemCapability.HiviewDFX.HiEventLite", HIEVENTKLITE},
     {"SystemCapability.HiviewDFX.HiLog", HIVIEWDFX_HILOG},
     {"SystemCapability.HiviewDFX.HiLogLite", HIVIEWDFX_HILOGLITE},
