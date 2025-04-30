@@ -160,7 +160,8 @@ typedef enum SystemCapabilityNum {
     SENSORS_MISCDEVICE,
     SENSORS_SENSOR,
     SENSORS_SENSOR_LITE,
-    TELEPHONY_CALLMANAGER,
+    TELEPHONY_CALLMANAGER, // abandoned
+    TELEPHONY_CELLULARCALL,
     TELEPHONY_CELLULARDATA,
     TELEPHONY_CORESERVICE,
     TELEPHONY_DATASTORAGE,
@@ -534,6 +535,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Sensors.Sensor", SENSORS_SENSOR},
     {"SystemCapability.Sensors.Sensor.Lite", SENSORS_SENSOR_LITE},
     {"SystemCapability.Telephony.CallManager", TELEPHONY_CALLMANAGER},
+    {"SystemCapability.Telephony.CellularCall", TELEPHONY_CELLULARCALL},
     {"SystemCapability.Telephony.CellularData", TELEPHONY_CELLULARDATA},
     {"SystemCapability.Telephony.CoreService", TELEPHONY_CORESERVICE},
     {"SystemCapability.Telephony.DataStorage", TELEPHONY_DATASTORAGE},
