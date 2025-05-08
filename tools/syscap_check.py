@@ -285,7 +285,8 @@ def main():
     project_path = args.project_path
     check_target = args.check_target
     bundles = args.bundles
-    syscap_define_path = os.path.join(project_path, "developtools", "syscap_codec", "include", "syscap_define.h")
+    syscap_define_path = os.path.join(project_path, "developtools", "syscap_codec", "include",
+                                      "codec_config", "syscap_define.h")
     ts_path = os.path.join(project_path, "interface", "sdk-js", "api")
     component_black_dirs = ("out",)
     bundle_syscap_heirarchy = ("component", "syscap")
