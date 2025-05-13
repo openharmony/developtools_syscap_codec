@@ -382,6 +382,7 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE,
     MULTIMODALAWARENESS_DEVICESTATUS,
     USB_USBMANAGER_SERIAL,
+    GRAPHIC_GRAPHIC2D_GL4,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -438,6 +439,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Graphic.Graphic2D.EGL", GRAPHIC_GRAPHIC2D_EGL},
     {"SystemCapability.Graphic.Graphic2D.GLES2", GRAPHIC_GRAPHIC2D_GLES2},
     {"SystemCapability.Graphic.Graphic2D.GLES3", GRAPHIC_GRAPHIC2D_GLES3},
+    {"SystemCapability.Graphic.Graphic2D.GL4", GRAPHIC_GRAPHIC2D_GL4},
     {"SystemCapability.Graphic.Graphic2D.HyperGraphicManager", GRAPHIC_GRAPHIC2D_HYPERGRAPHICMANAGER},
     {"SystemCapability.Graphic.Graphic2D.NativeBuffer", GRAPHIC_GRAPHIC2D_NATIVEBUFFER},
     {"SystemCapability.Graphic.Graphic2D.NativeImage", GRAPHIC_GRAPHIC2D_NATIVEIMAGE},
