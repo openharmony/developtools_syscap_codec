@@ -383,6 +383,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALAWARENESS_DEVICESTATUS,
     USB_USBMANAGER_SERIAL,
     GRAPHIC_GRAPHIC2D_GL4,
+    TEST_PERFTEST,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -750,6 +751,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Game.GameController", GAME_GAMECONTROLLER},
     {"SystemCapability.DistributedDataManager.DataIntelligence.Core", DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE},
     {"SystemCapability.MultimodalAwareness.DeviceStatus", MULTIMODALAWARENESS_DEVICESTATUS},
+    {"SystemCapability.Test.PerfTest", TEST_PERFTEST},
 };
 
 #ifdef __cplusplus
