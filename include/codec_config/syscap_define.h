@@ -384,6 +384,7 @@ typedef enum SystemCapabilityNum {
     USB_USBMANAGER_SERIAL,
     GRAPHIC_GRAPHIC2D_GL4,
     TEST_PERFTEST,
+    MULTIMODALAWARENESS_METADATABINDING,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -746,12 +747,13 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Driver.SCSI.Extension", DRIVER_SCSI_EXTENSION},
     {"SystemCapability.ArkUI.ArkUI.Circle", ARKUI_ARKUI_CIRCLE},
     {"SystemCapability.Resourceschedule.BackgroundProcessManager", RESOURCESCHEDULE_BACKGROUND_PROCESS_MANAGER},
-    {"SystemCapability.MultimodalAwarness.Motion", MULTIMODALAWARENESS_MOTION},
+    {"SystemCapability.MultimodalAwareness.Motion", MULTIMODALAWARENESS_MOTION},
     {"SystemCapability.DistributedSched.AppCollaboration", DISTRIBUTEDSCHED_APPCOLLABORATION},
     {"SystemCapability.Game.GameController", GAME_GAMECONTROLLER},
     {"SystemCapability.DistributedDataManager.DataIntelligence.Core", DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE},
     {"SystemCapability.MultimodalAwareness.DeviceStatus", MULTIMODALAWARENESS_DEVICESTATUS},
     {"SystemCapability.Test.PerfTest", TEST_PERFTEST},
+    {"SystemCapability.MultimodalAwareness.MetadataBinding", MULTIMODALAWARENESS_METADATABINDING},
 };
 
 #ifdef __cplusplus
