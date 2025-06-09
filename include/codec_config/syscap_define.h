@@ -388,6 +388,7 @@ typedef enum SystemCapabilityNum {
     MECHANIC_CORE,
     SELECTIONINPUT_SELECTION,
     MULTIMEDIA_MEDIA_LOWPOWERAVSINK,
+    ARKCOMPILER_ANI,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -760,6 +761,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Mechanic.Core", MECHANIC_CORE},
     {"SystemCapability.SelectionInput.Selection", SELECTIONINPUT_SELECTION},
     {"SystemCapability.Multimedia.Media.LowPowerAVSink", MULTIMEDIA_MEDIA_LOWPOWERAVSINK},
+    {"SystemCapability.ArkCompiler.ANI", ARKCOMPILER_ANI},
 };
 
 #ifdef __cplusplus
