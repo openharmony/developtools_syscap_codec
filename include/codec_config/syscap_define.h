@@ -391,6 +391,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NETMANAGER_EAP,
     RESOURCESCHEDULE_QOS_CORE,
     MULTIMODALAWARENESS_USERSTATUS,
+    ARKCOMPILER_ANI,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -766,6 +767,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NetManager.Eap", COMMUNICATION_NETMANAGER_EAP},
     {"SystemCapability.Resourceschedule.QoS.Core", RESOURCESCHEDULE_QOS_CORE},
     {"SystemCapability.MultimodalAwareness.UserStatus", MULTIMODALAWARENESS_USERSTATUS},
+    {"SystemCapability.ArkCompiler.ANI", ARKCOMPILER_ANI},
 };
 
 #ifdef __cplusplus
