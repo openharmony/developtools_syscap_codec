@@ -70,7 +70,6 @@ typedef enum SystemCapabilityNum {
     DISTRIBUTEDHARDWARE_DISTRIBUTEDHARDWAREFWK,
     DISTRIBUTEDHARDWARE_DISTRIBUTEDSCREEN,
     DISTRIBUTEDHARDWARE_DISTRIBUTEDINPUT,
-    DISTRIBUTEDHARDWARE_MECHBODY_MECHMANAGER,
     FILEMANAGEMENT_FILEMANAGERSERVICE,
     FILEMANAGEMENT_REMOTEFILESHARE,
     FILEMANAGEMENT_STORAGESERVICE_BACKUP,
@@ -386,6 +385,7 @@ typedef enum SystemCapabilityNum {
     GRAPHIC_GRAPHIC2D_GL4,
     TEST_PERFTEST,
     MULTIMODALAWARENESS_METADATABINDING,
+    MECHBODY_MECHMANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -436,7 +436,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedHardware.DistributedScreen", DISTRIBUTEDHARDWARE_DISTRIBUTEDSCREEN},
     {"SystemCapability.DistributedHardware.DistributedInput", DISTRIBUTEDHARDWARE_DISTRIBUTEDINPUT},
     {"SystemCapability.FileManagement.FileManagerService", FILEMANAGEMENT_FILEMANAGERSERVICE},
-    {"SystemCapability.MechBody.MechManager", DISTRIBUTEDHARDWARE_MECHBODY_MECHMANAGER},
     {"SystemCapability.FileManagement.RemoteFileShare", FILEMANAGEMENT_REMOTEFILESHARE},
     {"SystemCapability.FileManagement.StorageService.Backup", FILEMANAGEMENT_STORAGESERVICE_BACKUP},
     {"SystemCapability.Global.ResourceManager", GLOBAL_RESOURCEMANAGER},
@@ -756,6 +755,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalAwareness.DeviceStatus", MULTIMODALAWARENESS_DEVICESTATUS},
     {"SystemCapability.Test.PerfTest", TEST_PERFTEST},
     {"SystemCapability.MultimodalAwareness.MetadataBinding", MULTIMODALAWARENESS_METADATABINDING},
+    {"SystemCapability.MechBody.MechManager", MECHBODY_MECHMANAGER},
 };
 
 #ifdef __cplusplus
