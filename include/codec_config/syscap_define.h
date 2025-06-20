@@ -386,6 +386,7 @@ typedef enum SystemCapabilityNum {
     TEST_PERFTEST,
     MULTIMODALAWARENESS_METADATABINDING,
     MECHANIC_CORE,
+    SELECTIONINPUT_SELECTION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -756,6 +757,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Test.PerfTest", TEST_PERFTEST},
     {"SystemCapability.MultimodalAwareness.MetadataBinding", MULTIMODALAWARENESS_METADATABINDING},
     {"SystemCapability.Mechanic.Core", MECHANIC_CORE},
+    {"SystemCapability.SelectionInput.Selection", SELECTIONINPUT_SELECTION},
 };
 
 #ifdef __cplusplus
