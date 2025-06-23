@@ -380,6 +380,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AVSESSION_AVINPUTCAST,
     GAME_GAMECONTROLLER,
     DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE,
+    MULTIMODALAWARENESS_ROOMLOCATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -744,6 +745,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.DistributedSched.AppCollaboration", DISTRIBUTEDSCHED_APPCOLLABORATION},
     {"SystemCapability.Game.GameController", GAME_GAMECONTROLLER},
     {"SystemCapability.DistributedDataManager.DataIntelligence.Core", DISTRIBUTEDDATAMANAGER_DATAINTELLIGENCE_CORE},
+    {"SystemCapability.MultimodalAwareness.RoomLocation", MULTIMODALAWARENESS_ROOMLOCATION},
 };
 
 #ifdef __cplusplus
