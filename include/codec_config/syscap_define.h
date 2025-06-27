@@ -387,6 +387,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALAWARENESS_METADATABINDING,
     MECHANIC_CORE,
     SELECTIONINPUT_SELECTION,
+    MULTIMEDIA_MEDIA_LOWPOWERAVSINK,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -758,6 +759,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalAwareness.MetadataBinding", MULTIMODALAWARENESS_METADATABINDING},
     {"SystemCapability.Mechanic.Core", MECHANIC_CORE},
     {"SystemCapability.SelectionInput.Selection", SELECTIONINPUT_SELECTION},
+    {"SystemCapability.Multimedia.Media.LowPowerAVSink", MULTIMEDIA_MEDIA_LOWPOWERAVSINK},
 };
 
 #ifdef __cplusplus
