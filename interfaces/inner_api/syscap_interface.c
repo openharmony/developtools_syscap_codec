@@ -355,7 +355,6 @@ static int32_t TransStringFormatAndSaveSyscap(struct FreeAfterDecodeRpcidInfo fr
         PRINT_ERR("malloc failed.\n");
         return -1;
     }
-    free(freeAfterDecodeRpcidInfo.osSysCapIndex);
     return 0;
 }
 
