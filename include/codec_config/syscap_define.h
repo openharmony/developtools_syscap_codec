@@ -389,6 +389,7 @@ typedef enum SystemCapabilityNum {
     SELECTIONINPUT_SELECTION,
     MULTIMEDIA_MEDIA_LOWPOWERAVSINK,
     COMMUNICATION_NETMANAGER_EAP,
+    RESOURCESCHEDULE_QOS_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -762,6 +763,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.SelectionInput.Selection", SELECTIONINPUT_SELECTION},
     {"SystemCapability.Multimedia.Media.LowPowerAVSink", MULTIMEDIA_MEDIA_LOWPOWERAVSINK},
     {"SystemCapability.Communication.NetManager.Eap", COMMUNICATION_NETMANAGER_EAP},
+    {"SystemCapability.Resourceschedule.QoS.Core", RESOURCESCHEDULE_QOS_CORE},
 };
 
 #ifdef __cplusplus
