@@ -27,13 +27,15 @@
       "components": [
         "napi",
         "bounds_checking_function",
-        "cJSON"
+        "cJSON",
+        "runtime_core"
       ],
       "third_party": []
     },
     "build": {
       "sub_component": [
-        "//developtools/syscap_codec:syscap_codec"
+        "//developtools/syscap_codec:syscap_codec",
+        "//developtools/syscap_codec/taihe:taihe_group"
       ],
       "inner_kits": [
         {
