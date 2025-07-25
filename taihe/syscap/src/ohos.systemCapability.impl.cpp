@@ -157,6 +157,7 @@ string querySystemCapabilitie()
     } else {
         taihe::set_business_error(-1, "key does not exist");
     }
+    delete asyncContext;
     return value;
 }
 }  // namespace
