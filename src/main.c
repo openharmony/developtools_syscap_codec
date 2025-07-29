@@ -205,7 +205,7 @@ void PrintHelp(void)
     printf("-e, --encode\t: encode to sc format.\n\t-s, --string : encode to string format.\n");
     printf("-d, --decode\t: decode to json format.\n\t-s, --string : decode string format.\n");
     printf("-i filepath, --input filepath\t: input file\n");
-    printf("-o outpath, --input outpath\t: output path\n");
+    printf("-o outpath, --output outpath\t: output path\n");
     printf("-v, --version\t: print syscap_tool version information.\n");
 }
 

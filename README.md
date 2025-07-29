@@ -101,7 +101,7 @@ SysCap tools usually integrate to IDE, APP store and bundle tools. Follow instru
 
 -i filepath, --input filepath : input file
 
--o outpath, --input outpath : output path
+-o outpath, --output outpath : output path
 ```
 
 ## Syscap consistency check tool

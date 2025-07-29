@@ -96,7 +96,7 @@ syscap_tool -R/P -e/d -i filepath [-o outpath]
 -d, --decode    : decode to json format.
         -s, --string : decode string format.
 -i filepath, --input filepath   : input file
--o outpath, --input outpath     : output path
+-o outpath, --output outpath     : output path
 -v, --version   : print syscap_tool version information.
 
 syscap_tool v1.1.1
