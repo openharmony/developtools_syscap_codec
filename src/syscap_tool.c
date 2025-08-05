@@ -750,5 +750,7 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         printf("Fail! The pcid does not meet the rpcid\n");
     }
 
+    FreePointerMemory(pcidContent, rpcidContent, pcidPriSyscap, rpcidPriSyscap);
+
     return 0;
 }
