@@ -697,7 +697,8 @@ static int32_t CompareVersion(uint32_t *pcidOsArray, uint32_t *rpcidOsAarry)
     return versionFlag;
 }
 
-static void FreePointerMemoryEnd(char *pcidContent, char *rpcidContent, char *pcidPriSyscap, char *rpcidPriSyscap, uint32_t type)
+static void FreePointerMemoryEnd(char *pcidContent, char *rpcidContent,
+                                char *pcidPriSyscap, char *rpcidPriSyscap, uint32_t type)
 {
     printf("After the compare cmd is executed, relase the memory.\n");
     if (type == TYPE_FILE) {
