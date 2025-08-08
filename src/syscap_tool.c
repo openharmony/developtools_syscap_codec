@@ -697,6 +697,20 @@ static int32_t CompareVersion(uint32_t *pcidOsArray, uint32_t *rpcidOsAarry)
     return versionFlag;
 }
 
+static void FreePointerMemoryEnd(char *pcidContent, char *rpcidContent,
+                                 char *pcidPriSyscap, char *rpcidPriSyscap, uint32_t type)
+{
+    if (type == TYPE_FILE) {
+        SafeFree(pcidContent);
+        SafeFree(rpcidPriSyscap);
+        SafeFree(rpcidContent);
+        SafeFree(pcidPriSyscap);
+    } else if (type == TYPE_STRING) {
+        SafeFree(rpcidPriSyscap);
+        SafeFree(pcidPriSyscap);
+    }
+}
+
 int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t type)
 {
     int32_t ret;
@@ -750,5 +764,6 @@ int32_t ComparePcidWithRpcidString(char *pcidFile, char *rpcidFile, uint32_t typ
         printf("Fail! The pcid does not meet the rpcid\n");
     }
 
+    FreePointerMemoryEnd(pcidContent, rpcidContent, pcidPriSyscap, rpcidPriSyscap, type);
     return 0;
 }
