@@ -153,7 +153,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_DLPPERMISSIONSERVICE,
     SECURITY_APPVERIFY,
     SECURITY_DATATRANSITMANAGER,
-    SECURITY_DEVICEAUTH,
+    SECURITY_DEVICEAUTH, // abandoned
     SECURITY_DEVICESECURITYLEVEL,
     SECURITY_HUKS,
     SENSORS_MEDICAL_SENSOR,
@@ -540,7 +540,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.DlpPermissionService", SECURITY_DLPPERMISSIONSERVICE},
     {"SystemCapability.Security.AppVerify", SECURITY_APPVERIFY},
     {"SystemCapability.Security.DataTransitManager", SECURITY_DATATRANSITMANAGER},
-    {"SystemCapability.Security.DeviceAuth", SECURITY_DEVICEAUTH},
+    {"SystemCapability.Security.DeviceAuth", SECURITY_DEVICEAUTH}, // abandoned
     {"SystemCapability.Security.DeviceSecurityLevel", SECURITY_DEVICESECURITYLEVEL},
     {"SystemCapability.Security.Huks", SECURITY_HUKS},
     {"SystemCapability.Sensors.Medical.Sensor", SENSORS_MEDICAL_SENSOR},
