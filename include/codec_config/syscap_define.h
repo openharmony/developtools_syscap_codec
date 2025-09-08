@@ -176,8 +176,8 @@ typedef enum SystemCapabilityNum {
     USB_USBMANAGER,
     USERIAM_USERAUTH_CORE,
     USERIAM_USERAUTH_FACEAUTH,
-    USERIAM_USERAUTH_FINGERPRINTAUTH,
-    USERIAM_USERAUTH_PINAUTH,
+    USERIAM_USERAUTH_FINGERPRINTAUTH, // abandoned
+    USERIAM_USERAUTH_PINAUTH, // abandoned
     ARKUI_UIAPPEARANCE,
     SECURITY_CERTIFICATE_MANAGER,
     GRAPHIC_VULKAN,
@@ -566,8 +566,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.USB.USBManager.Serial", USB_USBMANAGER_SERIAL},
     {"SystemCapability.UserIAM.UserAuth.Core", USERIAM_USERAUTH_CORE},
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
-    {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH},
-    {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH},
+    {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH}, // abandoned
+    {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH}, // abandoned
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
     {"SystemCapability.Security.CertificateManagerDialog", SECURITY_CERTIFICATE_MANAGER_DIALOG},
