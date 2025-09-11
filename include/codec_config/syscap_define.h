@@ -395,6 +395,7 @@ typedef enum SystemCapabilityNum {
     MULTIMODALAWARENESS_ONSCREENAWARENESS,
     ABILITY_APPEXTENSION_VERTICALPANEL,
     ARKCOMPILER_CANGJIEINTEROP,
+    FILEMANAGEMENT_CLOUDDISKMANAGER,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -774,6 +775,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalAwareness.OnScreenAwareness", MULTIMODALAWARENESS_ONSCREENAWARENESS},
     {"SystemCapability.Ability.AppExtension.VerticalPanel", ABILITY_APPEXTENSION_VERTICALPANEL},
     {"SystemCapability.ArkCompiler.CangjieInterop", ARKCOMPILER_CANGJIEINTEROP},
+    {"SystemCapability.FileManagement.CloudDiskManager", FILEMANAGEMENT_CLOUDDISKMANAGER},
 };
 
 #ifdef __cplusplus
