@@ -396,6 +396,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_APPEXTENSION_VERTICALPANEL,
     ARKCOMPILER_CANGJIEINTEROP,
     FILEMANAGEMENT_CLOUDDISKMANAGER,
+    TEE_TEE_CLIENT,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -776,6 +777,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AppExtension.VerticalPanel", ABILITY_APPEXTENSION_VERTICALPANEL},
     {"SystemCapability.ArkCompiler.CangjieInterop", ARKCOMPILER_CANGJIEINTEROP},
     {"SystemCapability.FileManagement.CloudDiskManager", FILEMANAGEMENT_CLOUDDISKMANAGER},
+    {"SystemCapability.Tee.TeeClient", TEE_TEE_CLIENT},
 };
 
 #ifdef __cplusplus
