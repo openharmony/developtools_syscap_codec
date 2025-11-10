@@ -398,6 +398,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_CLOUDDISKMANAGER,
     TEE_TEE_CLIENT,
     MULTIMEDIA_AUDIO_SUITEENGINE,
+    UTILS_CANGJIE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -780,6 +781,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.CloudDiskManager", FILEMANAGEMENT_CLOUDDISKMANAGER},
     {"SystemCapability.Tee.TeeClient", TEE_TEE_CLIENT},
     {"SystemCapability.Multimedia.Audio.SuiteEngine", MULTIMEDIA_AUDIO_SUITEENGINE},
+    {"SystemCapability.Utils.Cangjie", UTILS_CANGJIE},
 };
 
 #ifdef __cplusplus
