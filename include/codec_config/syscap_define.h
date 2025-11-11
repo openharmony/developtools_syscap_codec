@@ -544,7 +544,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.AccessToken", SECURITY_ACCESSTOKEN},
     {"SystemCapability.Security.DlpPermissionService", SECURITY_DLPPERMISSIONSERVICE},
     {"SystemCapability.Security.AppVerify", SECURITY_APPVERIFY},
-    {"SystemCapability.Security.DataTransitManager", SECURITY_DATATRANSITMANAGER},
+    {"SystemCapability.Security.DataTransitManager", SECURITY_DATATRANSITMANAGER}, // abandoned
     {"SystemCapability.Security.DeviceAuth", SECURITY_DEVICEAUTH}, // abandoned
     {"SystemCapability.Security.DeviceSecurityLevel", SECURITY_DEVICESECURITYLEVEL}, // abandoned
     {"SystemCapability.Security.Huks", SECURITY_HUKS},
