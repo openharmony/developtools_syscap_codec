@@ -399,6 +399,7 @@ typedef enum SystemCapabilityNum {
     TEE_TEE_CLIENT,
     MULTIMEDIA_AUDIO_SUITEENGINE,
     UTILS_CANGJIE,
+    HUKS_CRYPTO_EXTENSION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -782,6 +783,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Tee.TeeClient", TEE_TEE_CLIENT},
     {"SystemCapability.Multimedia.Audio.SuiteEngine", MULTIMEDIA_AUDIO_SUITEENGINE},
     {"SystemCapability.Utils.Cangjie", UTILS_CANGJIE},
+    {"SystemCapability.Security.Huks.CryptoExtension", HUKS_CRYPTO_EXTENSION},
 };
 
 #ifdef __cplusplus
