@@ -400,6 +400,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_SUITEENGINE,
     UTILS_CANGJIE,
     HUKS_CRYPTO_EXTENSION,
+    MULTIMODALAWARENESS_DISTANCEMEASUREMENT,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -784,6 +785,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.SuiteEngine", MULTIMEDIA_AUDIO_SUITEENGINE},
     {"SystemCapability.Utils.Cangjie", UTILS_CANGJIE},
     {"SystemCapability.Security.Huks.CryptoExtension", HUKS_CRYPTO_EXTENSION},
+    {"SystemCapability.MultimodalAwareness.DistanceMeasurement", MULTIMODALAWARENESS_DISTANCEMEASUREMENT},
 };
 
 #ifdef __cplusplus
