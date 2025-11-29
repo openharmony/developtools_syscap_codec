@@ -401,6 +401,7 @@ typedef enum SystemCapabilityNum {
     UTILS_CANGJIE,
     HUKS_CRYPTO_EXTENSION,
     MULTIMODALAWARENESS_DISTANCEMEASUREMENT,
+    CANGJIE_INTEROP,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -786,6 +787,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Utils.Cangjie", UTILS_CANGJIE},
     {"SystemCapability.Security.Huks.CryptoExtension", HUKS_CRYPTO_EXTENSION},
     {"SystemCapability.MultimodalAwareness.DistanceMeasurement", MULTIMODALAWARENESS_DISTANCEMEASUREMENT},
+    {"SystemCapability.ArkCompiler.CangjieInterop", CANGJIE_INTEROP},
 };
 
 #ifdef __cplusplus
