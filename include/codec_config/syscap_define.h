@@ -202,7 +202,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_ABILITYRUNTIME_FAMODEL,
     ABILITY_ABILITYRUNTIME_ABILITYCORE,
     ABILITY_ABILITYRUNTIME_MISSION,
-    ABILITY_ABILITYTOOLS_ABILITYASSISTANT,
+    ABILITY_ABILITYTOOLS_ABILITYASSISTANT, // abandoned
     ABILITY_DISTRIBUTEDABILITYMANAGER,
     ABILITY_FORM,
     COMMUNICATION_WIFI_AP_CORE,
@@ -600,7 +600,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AbilityRuntime.FAModel", ABILITY_ABILITYRUNTIME_FAMODEL},
     {"SystemCapability.Ability.AbilityRuntime.AbilityCore", ABILITY_ABILITYRUNTIME_ABILITYCORE},
     {"SystemCapability.Ability.AbilityRuntime.Mission", ABILITY_ABILITYRUNTIME_MISSION},
-    {"SystemCapability.Ability.AbilityTools.AbilityAssistant", ABILITY_ABILITYTOOLS_ABILITYASSISTANT},
+    {"SystemCapability.Ability.AbilityTools.AbilityAssistant", ABILITY_ABILITYTOOLS_ABILITYASSISTANT}, // abandoned
     {"SystemCapability.Ability.DistributedAbilityManager", ABILITY_DISTRIBUTEDABILITYMANAGER},
     {"SystemCapability.Ability.Form", ABILITY_FORM},
     {"SystemCapability.Communication.WiFi.AP.Core", COMMUNICATION_WIFI_AP_CORE},
