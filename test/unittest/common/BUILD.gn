@@ -48,10 +48,13 @@ if (defined(ohos_lite)) {
       defines = [ "NAPI_TEST" ]
 
       deps = [
-        "//build/lite/config/component/cJSON:cjson_static",
         "//test/testfwk/developer_test/third_party/lib/cpp:gtest_main",
-        "//third_party/bounds_checking_function:libsec_static",
+        "//build/lite/config/component/cJSON:cjson_static"
       ]
+
+      external_deps = [
+        "bounds_checking_function:libsec_shared",
+    ]
     }
   }
 
