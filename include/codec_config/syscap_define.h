@@ -136,13 +136,13 @@ typedef enum SystemCapabilityNum {
     NOTIFICATION_NOTIFICATION,
     NOTIFICATION_REMINDERAGENT,
     POWERMANAGER_BATTERYMANAGER_CORE,
-    POWERMANAGER_BATTERYMANAGER_EXTENSION,
+    POWERMANAGER_BATTERYMANAGER_EXTENSION, // abandoned
     POWERMANAGER_BATTERYMANAGER_LITE,
     POWERMANAGER_BATTERYSTATISTICS,
     POWERMANAGER_DISPLAYPOWERMANAGER,
     POWERMANAGER_POWERMANAGER_CORE,
-    POWERMANAGER_POWERMANAGER_EXTENSION,
-    POWERMANAGER_POWERMANAGER_LITE,
+    POWERMANAGER_POWERMANAGER_EXTENSION, // abandoned
+    POWERMANAGER_POWERMANAGER_LITE, // abandoned
     POWERMANAGER_THERMALMANAGER,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK,
@@ -527,14 +527,14 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Notification.Notification", NOTIFICATION_NOTIFICATION},
     {"SystemCapability.Notification.ReminderAgent", NOTIFICATION_REMINDERAGENT},
     {"SystemCapability.PowerManager.BatteryManager.Core", POWERMANAGER_BATTERYMANAGER_CORE},
-    {"SystemCapability.PowerManager.BatteryManager.Extension", POWERMANAGER_BATTERYMANAGER_EXTENSION},
+    {"SystemCapability.PowerManager.BatteryManager.Extension", POWERMANAGER_BATTERYMANAGER_EXTENSION}, // abandoned
     {"SystemCapability.PowerManager.BatteryManager.Lite", POWERMANAGER_BATTERYMANAGER_LITE},
     {"SystemCapability.PowerManager.BatteryStatistics", POWERMANAGER_BATTERYSTATISTICS},
     {"SystemCapability.PowerManager.DisplayPowerManager", POWERMANAGER_DISPLAYPOWERMANAGER},
     {"SystemCapability.PowerManager.DisplayPowerManager.Lite", POWERMANAGER_DISPLAYPOWERMANAGER_LITE},
     {"SystemCapability.PowerManager.PowerManager.Core", POWERMANAGER_POWERMANAGER_CORE},
-    {"SystemCapability.PowerManager.PowerManager.Extension", POWERMANAGER_POWERMANAGER_EXTENSION},
-    {"SystemCapability.PowerManager.PowerManager.Lite", POWERMANAGER_POWERMANAGER_LITE},
+    {"SystemCapability.PowerManager.PowerManager.Extension", POWERMANAGER_POWERMANAGER_EXTENSION}, // abandoned
+    {"SystemCapability.PowerManager.PowerManager.Lite", POWERMANAGER_POWERMANAGER_LITE}, // abandoned
     {"SystemCapability.PowerManager.ThermalManager", POWERMANAGER_THERMALMANAGER},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.ContinuousTask",
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK},
