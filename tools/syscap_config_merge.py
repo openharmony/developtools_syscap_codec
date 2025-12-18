@@ -152,6 +152,6 @@ if __name__ == '__main__':
     output_file = args.output
     
     full = assemble_header_file(base_file, extern_file)
-    with os.fdopen(os.open(output_file, os.O_WRONLY | os.O_CREAT, mode=0o640), 'w') as out:
+    with os.fdopen(os.open(output_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, mode=0o640), 'w') as out:
         out.writelines(full)
 
