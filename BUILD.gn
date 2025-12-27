@@ -103,7 +103,10 @@ if (defined(ohos_lite)) {
 
       deps += [
         "//build/lite/config/component/cJSON:cjson_static",
-        "//third_party/bounds_checking_function:libsec_static",
+      ]
+
+      external_deps = [
+        "bounds_checking_function:libsec_shared",
       ]
     }
   }
@@ -127,7 +130,7 @@ if (defined(ohos_lite)) {
       "./src/common_method.c",
     ]
     external_deps = [
-      "bounds_checking_function:libsec_static",
+      "bounds_checking_function:libsec_shared",
       "cJSON:cjson_static",
     ]
 
