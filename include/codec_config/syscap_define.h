@@ -402,6 +402,7 @@ typedef enum SystemCapabilityNum {
     HUKS_CRYPTO_EXTENSION,
     MULTIMODALAWARENESS_DISTANCEMEASUREMENT,
     CANGJIE_INTEROP,
+    MULTIMEDIA_AVSESSION_AVMUSICTEMPLATE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -661,6 +662,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.AVSession.AVCast", MULTIMEDIA_AVSESSION_AVCAST},
     {"SystemCapability.Multimedia.AVSession.ExtendedDisplayCast", MULTIMEDIA_AVSESSION_EXTENDEDDISPLAYCAST},
     {"SystemCapability.Multimedia.AVSession.AVInputCast", MULTIMEDIA_AVSESSION_AVINPUTCAST},
+    {"SystemCapability.Multimedia.AVSession.AVMusicTemplate", MULTIMEDIA_AVSESSION_AVMUSICTEMPLATE},
     {"SystemCapability.Multimedia.Audio.Tone", MULTIMEDIA_AUDIO_TONE},
     {"SystemCapability.Multimedia.Audio.Interrupt", MULTIMEDIA_AUDIO_INTERRUPT},
     {"SystemCapability.Cloud.AAID", CLOUD_AAID},
