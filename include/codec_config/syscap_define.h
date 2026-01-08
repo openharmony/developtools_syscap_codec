@@ -178,6 +178,7 @@ typedef enum SystemCapabilityNum {
     USERIAM_USERAUTH_FACEAUTH,
     USERIAM_USERAUTH_FINGERPRINTAUTH, // abandoned
     USERIAM_USERAUTH_PINAUTH, // abandoned
+    USERIAM_USERAUTH_COMPANIONDEVICEAUTH,
     ARKUI_UIAPPEARANCE,
     SECURITY_CERTIFICATE_MANAGER,
     GRAPHIC_VULKAN,
@@ -576,6 +577,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH}, // abandoned
     {"SystemCapability.UserIAM.UserAuth.PinAuth", USERIAM_USERAUTH_PINAUTH}, // abandoned
+    {"SystemCapability.UserIAM.UserAuth.CompanionDeviceAuth", USERIAM_USERAUTH_COMPANIONDEVICEAUTH},
     {"SystemCapability.ArkUI.UiAppearance", ARKUI_UIAPPEARANCE},
     {"SystemCapability.Security.CertificateManager", SECURITY_CERTIFICATE_MANAGER},
     {"SystemCapability.Security.CertificateManagerDialog", SECURITY_CERTIFICATE_MANAGER_DIALOG},
