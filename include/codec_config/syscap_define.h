@@ -234,8 +234,8 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_FILE_DISTRIBUTEDFILE,
     FILEMANAGEMENT_APPFILESERVICE,
     FILEMANAGEMENT_USERFILESERVICE,
-    MULTIMEDIA_MEDIALIBRARY_CORE,
-    MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE,
+    MULTIMEDIA_MEDIALIBRARY_CORE, // abandoned
+    MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE, // abandoned
     APPLICATIONS_CONTACTS,
     SECURITY_CIPHER,
     APPLICATIONS_SETTINGS_CORE,
@@ -638,8 +638,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.File.DistributedFile", FILEMANAGEMENT_FILE_DISTRIBUTEDFILE},
     {"SystemCapability.FileManagement.AppFileService", FILEMANAGEMENT_APPFILESERVICE},
     {"SystemCapability.FileManagement.UserFileService", FILEMANAGEMENT_USERFILESERVICE},
-    {"SystemCapability.Multimedia.MediaLibrary.Core", MULTIMEDIA_MEDIALIBRARY_CORE},
-    {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE},
+    {"SystemCapability.Multimedia.MediaLibrary.Core", MULTIMEDIA_MEDIALIBRARY_CORE}, // abandoned
+    {"SystemCapability.Multimedia.MediaLibrary.DistributedCore", MULTIMEDIA_MEDIALIBRARY_DISTRIBUTEDCORE}, // abandoned
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
     {"SystemCapability.Applications.Settings.Core", APPLICATIONS_SETTINGS_CORE},
