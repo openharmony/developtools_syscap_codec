@@ -367,7 +367,7 @@ typedef enum SystemCapabilityNum {
     SECURITY_CRYPTOFRAMEWORK_MAC,
     SECURITY_CRYPTOFRAMEWORK_KDF,
     SECURITY_CRYPTOFRAMEWORK_RAND,
-    COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET,
+    COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET, // abandoned
     GLOBAL_FONTMANAGER,
     TELEPHONY_CORESERVICE_ESIM,
     DISTRIBUTEDDATAMANAGER_AIP_CORE,
@@ -761,7 +761,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Security.CryptoFramework.Kdf", SECURITY_CRYPTOFRAMEWORK_KDF},
     {"SystemCapability.Security.CryptoFramework.Rand", SECURITY_CRYPTOFRAMEWORK_RAND},
     {"SystemCapability.Communication.NetManager.WearableDistributedNet",
-        COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},
+        COMMUNICATION_NETMANAGER_WEARABLE_DISTRIBUTED_NET},  // abandoned
     {"SystemCapability.Global.FontManager", GLOBAL_FONTMANAGER},
     {"SystemCapability.Telephony.CoreService.Esim", TELEPHONY_CORESERVICE_ESIM},
     {"SystemCapability.DistributedDataManager.AIP.Core", DISTRIBUTEDDATAMANAGER_AIP_CORE},
