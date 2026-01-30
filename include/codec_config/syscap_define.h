@@ -405,6 +405,7 @@ typedef enum SystemCapabilityNum {
     CANGJIE_INTEROP,
     COMMUNICATION_FUSIONCONNECTIVITY_CORE,
     MULTIMEDIA_AVSESSION_AVMUSICTEMPLATE,
+    APPLICATIONS_INTELLIGENTSCENE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -794,6 +795,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.MultimodalAwareness.DistanceMeasurement", MULTIMODALAWARENESS_DISTANCEMEASUREMENT},
     {"SystemCapability.ArkCompiler.CangjieInterop", CANGJIE_INTEROP},
     {"SystemCapability.Communication.FusionConnectivity.Core", COMMUNICATION_FUSIONCONNECTIVITY_CORE},
+    {"SystemCapability.Applications.IntelligentScene", APPLICATIONS_INTELLIGENTSCENE},
 };
 
 #ifdef __cplusplus
