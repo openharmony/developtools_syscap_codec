@@ -405,6 +405,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AVSESSION_AVMUSICTEMPLATE,
     APPLICATIONS_INTELLIGENTSCENE,
     USERIAM_USERAUTH_COMPANIONDEVICEAUTH,
+    ABILITY_AGENT_RUNTIME_CORE,
     MULTIMEDIA_AUDIO_MIDI,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -795,6 +796,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.FusionConnectivity.Core", COMMUNICATION_FUSIONCONNECTIVITY_CORE},
     {"SystemCapability.Applications.IntelligentScene", APPLICATIONS_INTELLIGENTSCENE},
     {"SystemCapability.UserIAM.UserAuth.CompanionDeviceAuth", USERIAM_USERAUTH_COMPANIONDEVICEAUTH},
+    {"SystemCapability.Ability.AgentRuntime.Core", ABILITY_AGENT_RUNTIME_CORE},
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
 };
 
