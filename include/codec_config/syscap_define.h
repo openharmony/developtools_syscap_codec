@@ -407,6 +407,7 @@ typedef enum SystemCapabilityNum {
     USERIAM_USERAUTH_COMPANIONDEVICEAUTH,
     ABILITY_AGENT_RUNTIME_CORE,
     MULTIMEDIA_AUDIO_MIDI,
+    APPLICATIONS_SETTINGS_CORE_LITE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -645,6 +646,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
     {"SystemCapability.Applications.Settings.Core", APPLICATIONS_SETTINGS_CORE},
+    {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
     {"SystemCapability.FileManagement.UserFileManager.Core", FILEMANAGEMENT_USERFILEMANAGER_CORE},
     {"SystemCapability.FileManagement.UserFileManager.DistributedCore", FILEMANAGEMENT_USERFILEMANAGER_DISTRIBUTEDCORE},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
