@@ -646,7 +646,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Applications.Contacts", APPLICATIONS_CONTACTS},
     {"SystemCapability.Security.Cipher", SECURITY_CIPHER},
     {"SystemCapability.Applications.Settings.Core", APPLICATIONS_SETTINGS_CORE},
-    {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
     {"SystemCapability.FileManagement.UserFileManager.Core", FILEMANAGEMENT_USERFILEMANAGER_CORE},
     {"SystemCapability.FileManagement.UserFileManager.DistributedCore", FILEMANAGEMENT_USERFILEMANAGER_DISTRIBUTEDCORE},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.EfficiencyResourcesApply",
@@ -800,6 +799,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.CompanionDeviceAuth", USERIAM_USERAUTH_COMPANIONDEVICEAUTH},
     {"SystemCapability.Ability.AgentRuntime.Core", ABILITY_AGENT_RUNTIME_CORE},
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
+     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
 };
 
 #ifdef __cplusplus
