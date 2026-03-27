@@ -799,7 +799,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.UserIAM.UserAuth.CompanionDeviceAuth", USERIAM_USERAUTH_COMPANIONDEVICEAUTH},
     {"SystemCapability.Ability.AgentRuntime.Core", ABILITY_AGENT_RUNTIME_CORE},
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
-     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
+    {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
 };
 
 #ifdef __cplusplus
