@@ -408,6 +408,7 @@ typedef enum SystemCapabilityNum {
     ABILITY_AGENT_RUNTIME_CORE,
     MULTIMEDIA_AUDIO_MIDI,
     APPLICATIONS_SETTINGS_CORE_LITE,
+    HIVIEWDFX_HIRETRIEVAL,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -800,6 +801,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Ability.AgentRuntime.Core", ABILITY_AGENT_RUNTIME_CORE},
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
+    {"SystemCapability.HiviewDFX.HiRetrieval", HIVIEWDFX_HIRETRIEVAL},
 };
 
 #ifdef __cplusplus
