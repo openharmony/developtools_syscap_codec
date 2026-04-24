@@ -146,7 +146,6 @@ typedef enum SystemCapabilityNum {
     POWERMANAGER_THERMALMANAGER,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK,
-    RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE,
     RESOURCESCHEDULE_USAGESTATISTICS_APP,
     RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP,
     RESOURCESCHEDULE_WORKSCHEDULER,
@@ -410,6 +409,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_MIDI,
     APPLICATIONS_SETTINGS_CORE_LITE,
     HIVIEWDFX_HIRETRIEVAL,
+    RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -548,8 +548,6 @@ const static SyscapWithNum g_arraySyscap[] = {
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CONTINUOUSTASK},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.TransientTask",
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_TRANSIENTTASK},
-    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.Core",
-        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE},
     {"SystemCapability.ResourceSchedule.UsageStatistics.App", RESOURCESCHEDULE_USAGESTATISTICS_APP},
     {"SystemCapability.ResourceSchedule.UsageStatistics.AppGroup", RESOURCESCHEDULE_USAGESTATISTICS_APPGROUP},
     {"SystemCapability.ResourceSchedule.WorkScheduler", RESOURCESCHEDULE_WORKSCHEDULER},
@@ -805,6 +803,8 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
     {"SystemCapability.HiviewDFX.HiRetrieval", HIVIEWDFX_HIRETRIEVAL},
+    {"SystemCapability.ResourceSchedule.BackgroundTaskManager.Core",
+        RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE},
 };
 
 #ifdef __cplusplus
