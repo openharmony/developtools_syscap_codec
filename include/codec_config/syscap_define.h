@@ -409,6 +409,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_MIDI,
     APPLICATIONS_SETTINGS_CORE_LITE,
     HIVIEWDFX_HIRETRIEVAL,
+    CONTENTEMBED_OBJECT_EDITOR,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE,
     // Add before here
     SYSCAP_BASIC_END = 500,
@@ -803,6 +804,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.MIDI", MULTIMEDIA_AUDIO_MIDI},
     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
     {"SystemCapability.HiviewDFX.HiRetrieval", HIVIEWDFX_HIRETRIEVAL},
+    {"SystemCapability.ContentEmbed.ObjectEditor", CONTENTEMBED_OBJECT_EDITOR},
     {"SystemCapability.ResourceSchedule.BackgroundTaskManager.Core",
         RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE},
 };
