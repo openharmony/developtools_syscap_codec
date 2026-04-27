@@ -411,6 +411,7 @@ typedef enum SystemCapabilityNum {
     HIVIEWDFX_HIRETRIEVAL,
     CONTENTEMBED_OBJECT_EDITOR,
     RESOURCESCHEDULE_BACKGROUNDTASKMANAGER_CORE,
+    BUSMANAGER_SERIAL,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -580,6 +581,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Update.UpdateService", UPDATE_UPDATESERVICE},
     {"SystemCapability.USB.USBManager", USB_USBMANAGER},
     {"SystemCapability.USB.USBManager.Serial", USB_USBMANAGER_SERIAL},
+    {"SystemCapability.BusManager.Serial", BUSMANAGER_SERIAL},
     {"SystemCapability.UserIAM.UserAuth.Core", USERIAM_USERAUTH_CORE},
     {"SystemCapability.UserIAM.UserAuth.FaceAuth", USERIAM_USERAUTH_FACEAUTH},
     {"SystemCapability.UserIAM.UserAuth.FingerprintAuth", USERIAM_USERAUTH_FINGERPRINTAUTH}, // abandoned
