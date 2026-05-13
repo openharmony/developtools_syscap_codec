@@ -296,6 +296,7 @@ static int32_t ParseRpcidToJson(char *input, uint32_t inputLen, cJSON *rpcidJson
     if (sysCapJson == NULL) {
         PRINT_ERR("Get sysCapJson failed, sysCapJson is empty.\n");
         ret = -1;
+        goto FREE_SYSCAP_OUT;
     }
     for (i = 0; i < sysCapCount; i++) {
         char *temp = sysCapBegin + i * SINGLE_FEAT_LEN;
