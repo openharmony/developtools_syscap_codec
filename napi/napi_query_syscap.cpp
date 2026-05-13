@@ -110,7 +110,9 @@ static char* CalculateAllStringLength(char osCapArray[PCID_MAIN_U32][U32_TO_STR_
 static char* GetSystemCapability()
 {
     bool retBool;
-    int retError, priOutputLen, priCapArrayCnt;
+    int retError;
+    int priOutputLen = 0;
+    int priCapArrayCnt = 0;
     char osOutput[SINGLE_SYSCAP_LEN] = {};
 
     uint32_t *osCapU32 = nullptr;
