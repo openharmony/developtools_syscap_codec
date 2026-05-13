@@ -721,7 +721,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
 {
     int32_t ret = -1;
     uint32_t osSyscap[OS_SYSCAP_NUM] = {0};
-    uint32_t pcidHeader[PCID_HEADER];
+    uint32_t pcidHeader[PCID_HEADER] = {0};
     char *priSyscapStr = NULL;
     char *jsonBuffer = NULL;
 
