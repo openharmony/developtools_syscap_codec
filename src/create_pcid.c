@@ -663,6 +663,7 @@ static int32_t AddOsSyscapToJsonObj(uint32_t *osSyscapArray, uint32_t osSyscapAr
 static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapStringLen, cJSON *sysCapObj)
 {
     char *token = NULL;
+    char *saveptr = NULL;
 
     cJSON *sysCapArray = cJSON_CreateArray();
     if (sysCapArray == NULL) {
@@ -679,14 +680,14 @@ static int32_t AddPriSyscapToJsonObj(char *priSyscapString, uint32_t priSyscapSt
         return 0;
     }
 
-    token = strtok(priSyscapString, ",");
+    token = strtok_r(priSyscapString, ",", &saveptr);
     while (token != NULL) {
         if (!cJSON_AddItemToArray(sysCapArray, cJSON_CreateString(token))) {
             PRINT_ERR("Add private syscap string to json failed.\n");
             cJSON_Delete(sysCapArray);
             return -1;
         }
-        token = strtok(NULL, ",");
+        token = strtok_r(NULL, ",", &saveptr);
     }
     if (!cJSON_AddItemToObject(sysCapObj, "private", sysCapArray)) {
         PRINT_ERR("Add private syscap array to json failed.\n");
