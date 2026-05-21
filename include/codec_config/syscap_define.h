@@ -411,6 +411,7 @@ typedef enum SystemCapabilityNum {
     HIVIEWDFX_HIRETRIEVAL,
     CONTENTEMBED_OBJECT_EDITOR,
     BUSMANAGER_SERIAL,
+    MULTIMEDIA_AUDIO_DEVICEENHANCE,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -806,6 +807,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Applications.Settings.Core.Lite", APPLICATIONS_SETTINGS_CORE_LITE},
     {"SystemCapability.HiviewDFX.HiRetrieval", HIVIEWDFX_HIRETRIEVAL},
     {"SystemCapability.ContentEmbed.ObjectEditor", CONTENTEMBED_OBJECT_EDITOR},
+    {"SystemCapability.Multimedia.Audio.DeviceEnhance", MULTIMEDIA_AUDIO_DEVICEENHANCE},
 };
 
 #ifdef __cplusplus
