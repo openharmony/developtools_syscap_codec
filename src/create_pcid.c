@@ -909,7 +909,7 @@ int32_t EncodePcidscToString(char *inputFile, char *outDirPath)
     if (priSyscapCount == 0) {
         return GetEncodePCIDOut(priSyscapCount, privateSyscapLen, mainSyscap,  freePcidInfo, ret);
     }
-    freePcidInfo.priSyscapFull = (char *)malloc(priSyscapCount * SINGLE_SYSCAP_LEN);
+    freePcidInfo.priSyscapFull = (char *)malloc((priSyscapCount + 1) * SINGLE_SYSCAP_LEN);
     if (freePcidInfo.priSyscapFull == NULL) {
         PRINT_ERR("malloc failed\n");
         return FreeAfterEncodePCID(freePcidInfo, FREE_ENCODE_PCID_CONTEXT_OUT, ret);
