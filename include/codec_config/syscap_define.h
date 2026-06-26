@@ -230,7 +230,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_STORAGESERVICE_ENCRYPTION,
     FILEMANAGEMENT_FILE_FILEIO,
     FILEMANAGEMENT_FILE_ENVIRONMENT,
-    FILEMANAGEMENT_FILE_DISTRIBUTEDFILE,
+    FILEMANAGEMENT_FILE_DISTRIBUTEDFILE, // abandoned
     FILEMANAGEMENT_APPFILESERVICE,
     FILEMANAGEMENT_USERFILESERVICE,
     MULTIMEDIA_MEDIALIBRARY_CORE, // abandoned
@@ -644,7 +644,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.StorageService.Encryption", FILEMANAGEMENT_STORAGESERVICE_ENCRYPTION},
     {"SystemCapability.FileManagement.File.FileIO", FILEMANAGEMENT_FILE_FILEIO},
     {"SystemCapability.FileManagement.File.Environment", FILEMANAGEMENT_FILE_ENVIRONMENT},
-    {"SystemCapability.FileManagement.File.DistributedFile", FILEMANAGEMENT_FILE_DISTRIBUTEDFILE},
+    {"SystemCapability.FileManagement.File.DistributedFile", FILEMANAGEMENT_FILE_DISTRIBUTEDFILE}, // abandoned
     {"SystemCapability.FileManagement.AppFileService", FILEMANAGEMENT_APPFILESERVICE},
     {"SystemCapability.FileManagement.UserFileService", FILEMANAGEMENT_USERFILESERVICE},
     {"SystemCapability.Multimedia.MediaLibrary.Core", MULTIMEDIA_MEDIALIBRARY_CORE}, // abandoned
