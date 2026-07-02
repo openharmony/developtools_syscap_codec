@@ -586,23 +586,27 @@ static int32_t AddHeaderToJsonObj(uint32_t *pcidHeader, uint32_t pcidHeaderLen, 
         return -1;
     }
 
-    PCIDHeader *header = (PCIDHeader *)pcidHeader;
+    PCIDHeader header;
+    if (memcpy_s(&header, sizeof(header), pcidHeader, sizeof(PCIDHeader)) != 0) {
+        PRINT_ERR("Error: memcpy_s failed\n");
+        return -1;
+    }
     // trans system type to string
-    char *systemType = header->systemType  == 0b001 ? "mini" :
-                       (header->systemType == 0b010 ? "small" :
-                       (header->systemType == 0b100 ? "standard" : NULL));
+    char *systemType = header.systemType  == 0b001 ? "mini" :
+                       (header.systemType == 0b010 ? "small" :
+                       (header.systemType == 0b100 ? "standard" : NULL));
     if (systemType == NULL) {
         PRINT_ERR("prase system type failed.\n");
         return -1;
     }
 
     // add to json
-    if (!cJSON_AddNumberToObject(rootObj, "api_version", NtohsInter(header->apiVersion))) {
-        PRINT_ERR("add api_version(%u) to json object failed.\n", NtohsInter(header->apiVersion));
+    if (!cJSON_AddNumberToObject(rootObj, "api_version", NtohsInter(header.apiVersion))) {
+        PRINT_ERR("add api_version(%u) to json object failed.\n", NtohsInter(header.apiVersion));
         return -1;
     }
-    if (!cJSON_AddNumberToObject(rootObj, "manufacturer_id", NtohlInter(header->manufacturerID))) {
-        PRINT_ERR("add manufacturer_id(%u) to json object failed\n", NtohlInter(header->manufacturerID));
+    if (!cJSON_AddNumberToObject(rootObj, "manufacturer_id", NtohlInter(header.manufacturerID))) {
+        PRINT_ERR("add manufacturer_id(%u) to json object failed\n", NtohlInter(header.manufacturerID));
         return -1;
     }
     if (!cJSON_AddStringToObject(rootObj, "system_type", systemType)) {
