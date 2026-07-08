@@ -37,14 +37,35 @@ void FreeContextBuffer(char *contextBuffer)
     }
 }
 
+static int32_t ReadFileContent(FILE *fp, char *contextBuffer, long long fileSize, const char *path)
+{
+    size_t retFread = fread(contextBuffer, (size_t)fileSize, 1, fp);
+    if (retFread != 1) {
+        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
+        return -1;
+    }
+    return 0;
+}
+
+static int32_t CheckFileSize(const struct stat *statBuf)
+{
+    if (statBuf->st_size <= 0) {
+        PRINT_ERR("file size (%lld) out of range\n", (long long)statBuf->st_size);
+        return -1;
+    }
+    if ((uint64_t)statBuf->st_size >= (uint64_t)(UINT32_MAX - 1)) {
+        PRINT_ERR("file size (%lld) exceeds 32-bit limit\n", (long long)statBuf->st_size);
+        return -1;
+    }
+    return 0;
+}
+
 int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bufferLen)
 {
-    int32_t ret;
     FILE *fp = NULL;
     struct stat statBuf;
     char *contextBuffer = NULL;
     char path[PATH_MAX + 1] = {0x00};
-
 #ifdef _POSIX_
     if (strlen(inputFile) > PATH_MAX || strncpy_s(path, PATH_MAX, inputFile, strlen(inputFile)) != EOK) {
         PRINT_ERR("get path(%s) failed\n", inputFile);
@@ -56,14 +77,15 @@ int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bu
         return -1;
     }
 #endif
-
-    ret = stat(path, &statBuf);
-    if (ret != 0) {
+    if (stat(path, &statBuf) != 0) {
         PRINT_ERR("get file(%s) st_mode failed, errno = %d\n", path, errno);
         return -1;
     }
     if (!(statBuf.st_mode & S_IRUSR)) {
         PRINT_ERR("don't have permission to read the file(%s)\n", path);
+        return -1;
+    }
+    if (CheckFileSize(&statBuf) != 0) {
         return -1;
     }
     contextBuffer = (char *)malloc(statBuf.st_size + 1);
@@ -77,16 +99,13 @@ int32_t GetFileContext(const char *inputFile, char **contextBufPtr, uint32_t *bu
         FreeContextBuffer(contextBuffer);
         return -1;
     }
-    size_t retFread = fread(contextBuffer, statBuf.st_size, 1, fp);
-    if (retFread != 1) {
-        PRINT_ERR("read file(%s) failed, errno = %d\n", path, errno);
+    if (ReadFileContent(fp, contextBuffer, statBuf.st_size, path) != 0) {
         FreeContextBuffer(contextBuffer);
         (void)fclose(fp);
         return -1;
     }
     contextBuffer[statBuf.st_size] = '\0';
     (void)fclose(fp);
-
     *contextBufPtr = contextBuffer;
     *bufferLen = statBuf.st_size + 1;
     return 0;
