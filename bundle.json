@@ -28,7 +28,8 @@
         "napi",
         "bounds_checking_function",
         "cJSON",
-        "runtime_core"
+        "runtime_core",
+        "taihe_ffi_gen"
       ],
       "third_party": []
     },
