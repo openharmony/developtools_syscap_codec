@@ -414,6 +414,7 @@ typedef enum SystemCapabilityNum {
     MULTIMEDIA_AUDIO_DEVICEENHANCE,
     COMMUNICATION_NEARLINK_BASE,
     FILEMANAGEMENT_FILE_SWAPFS,
+    MULTIMODALAWARENESS_CAR_AWARENESS,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -812,6 +813,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.DeviceEnhance", MULTIMEDIA_AUDIO_DEVICEENHANCE},
     {"SystemCapability.Communication.NearLink.Base", COMMUNICATION_NEARLINK_BASE},
     {"SystemCapability.FileManagement.File.Swapfs", FILEMANAGEMENT_FILE_SWAPFS},
+    {"SystemCapabilityMultimodalAwareness.CarAwareness", MULTIMODALAWARENESS_CAR_AWARENESS},
 };
 
 #ifdef __cplusplus
