@@ -813,7 +813,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Multimedia.Audio.DeviceEnhance", MULTIMEDIA_AUDIO_DEVICEENHANCE},
     {"SystemCapability.Communication.NearLink.Base", COMMUNICATION_NEARLINK_BASE},
     {"SystemCapability.FileManagement.File.Swapfs", FILEMANAGEMENT_FILE_SWAPFS},
-    {"SystemCapabilityMultimodalAwareness.CarAwareness", MULTIMODALAWARENESS_CAR_AWARENESS},
+    {"SystemCapability.MultimodalAwareness.CarAwareness", MULTIMODALAWARENESS_CAR_AWARENESS},
 };
 
 #ifdef __cplusplus
