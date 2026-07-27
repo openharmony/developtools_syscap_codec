@@ -46,6 +46,7 @@ ohos_shared_library("systemcapability") {
   external_deps = [
     "bounds_checking_function:libsec_static",
     "napi:ace_napi",
+    "node:node_header_notice",
   ]
 
   if (syscap_codec_config_extern_path != "") {
