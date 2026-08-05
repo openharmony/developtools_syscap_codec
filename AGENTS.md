@@ -1,6 +1,6 @@
 # AGENTS.md — syscap_codec
 
-OpenHarmony 系统能力（SysCap）编解码工具。产物包括 `syscap_tool`（CLI 二进制）和 `syscap_interface_shared`（供其他部件使用的共享库）。
+OpenHarmony 系统能力（SysCap）编解码工具。产物包括 `syscap_tool`（CLI 二进制）和 `syscap_interface_shared`（供其它部件使用的共享库）。
 
 ## 构建系统
 
@@ -14,7 +14,7 @@ OpenHarmony 系统能力（SysCap）编解码工具。产物包括 `syscap_tool`
 | 目标 | 产物 | 用途 |
 |---|---|---|
 | `syscap_tool_bin` | `syscap_tool` | pcid/rpcid 编码、解码、比较的 CLI 工具 |
-| `syscap_interface_shared` | `.so` 共享库 | 供其他 OHOS 部件调用的内部 API |
+| `syscap_interface_shared` | `.so` 共享库 | 供其它 OHOS 部件调用的内部 API |
 | `napi:systemcapability` | `.so` 模块 | 设备侧 JS API（`@ohos.systemCapability`） |
 | `taihe/syscap:systemCapability_taihe_native` | `.so` + `.abc` | 新式 Taihe API（从 `.taihe` IDL 代码生成） |
 
@@ -33,6 +33,8 @@ tools/         — 一致性检查和配置合并的 Python 脚本。
 ```
 
 **注意**：同一套 `src/*.c` 源文件被重复编译到每一个目标中 — 内部不存在静态库。
+
+> 嵌套指引：本仓**无** `CLAUDE.md`/`GEMINI.md`/`.cursorrules` 等嵌套指令文件，也无目录级 `AGENTS.md`。本文件是唯一的 agent 指引。深度知识见仓库内 `README_ZH.md` 与下方"知识路由"。
 
 ## 常见任务路径
 
@@ -79,11 +81,18 @@ tools/         — 一致性检查和配置合并的 Python 脚本。
 - **改 `taihe/syscap/`** → 仅当 `support_jsapi && is_standard_system` 时生效
 - **改 `tools/`** → 不参与编译，独立运行
 
+### 编辑前自检（必做）
+
+动手编辑前，agent 须在回复中明确以下三点，再开始改代码：
+1. **任务类别**：这是改 CLI / 改共享库 API / 改 NAPI / 改 Taihe / 改编解码逻辑 / 改构建 / 改测试 / 还是其它？
+2. **已读文档**：按上方"按任务/路径/术语触发"路由，实际读了哪些文件？
+3. **命中约束**：本任务触及哪些"不可破坏 / 修改前必须确认 / syscap_define.h 规则 / Taihe 代码生成"条目？是否需要先请示？
+
 ## 禁止事项
 
 以下规则在任何情况下都不应违反。如有疑问，先询问而不是直接操作。
 
-### 绝对不能做的事
+### 不可破坏的约束
 
 - **切勿**修改 `libsyscap_interface_shared.versionscript` 中已发布的符号名、签名或删除符号。这是共享库的 ABI 契约，破坏后下游部件动态链接失败。
 - **切勿**修改 `interfaces/inner_api/syscap_interface.h` 中已发布函数的签名（参数类型、个数、返回值类型）。可以新增函数，不能变更已有函数。
@@ -96,6 +105,11 @@ tools/         — 一致性检查和配置合并的 Python 脚本。
 - 新增依赖 → 检查 `bundle.json` 中的 `deps.components` 并更新 `BUILD.gn`
 - 新增平台条件编译 → 对照 `BUILD.gn:47-52`（`is_mingw`、`ohos_lite` 分支模式）
 - 修改 `PRINT_ERR` 或错误返回码 → 确认所有调用方兼容新的错误处理路径
+
+### License 敏感改动
+
+- 新增/升级三方依赖（如 cJSON、bounds_checking_function、googletest）前，须检查 `OAT.xml` 白名单是否覆盖；未覆盖须先更新 `OAT.xml` 再引入。
+- `bundle.json` 的 `deps.components` / `public_external_deps` 变更后，同步检查是否引入新的 license 义务。
 
 ## syscap_define.h 规则（极其重要）
 
@@ -131,6 +145,15 @@ Taihe 目标仅在 `support_jsapi && is_standard_system` 时构建。
 
 ## 验证
 
+### 最小检查（任何改动后必跑）
+
+1. **语法/导入**：
+   - 改动的 `.c/.h`：`gcc -fsyntax-only -I include -I interfaces/inner_api <file>` 或 `cppcheck <file>`
+   - 改动的 `.py`：`python3 -m py_compile <file>`（本仓无统一 linter 配置，至少保证可导入）
+   - 改动的 `.cpp`（NAPI/Taihe）：`cppcheck <file>`
+2. **GN 生成**：若改了 `BUILD.gn`/`config.gni`，在 OHOS 源码树根执行 `hb build --build-only-gn` 或 `./build.sh --product-name rk3568 --build-only-gn`，确认 `gn gen` 不报错。
+3. **相关测试套**：按下方"任务→测试"选择至少一项。
+
 ### 完整构建环境（有 OHOS 源码树）
 
 ```bash
@@ -150,6 +173,18 @@ ninja -C out/default developtools/syscap_codec/taihe:taihe_group
 ninja -C out/default developtools/syscap_codec/test/unittest/common:unittest
 ```
 
+### 任务→测试
+
+| 改动类型 | 验证命令 |
+| --- | --- |
+| `src/` 编解码逻辑 | `ninja -C out/default developtools/syscap_codec/test/unittest/common:unittest` 后跑产物 |
+| `interfaces/inner_api/` 对外 API | 编译 `:syscap_interface_shared` + 跑 unittest + 确认 versionscript 符号未变 |
+| `napi/` JS 绑定 | `ninja -C out/default developtools/syscap_codec/napi:systemcapability` |
+| `taihe/syscap/` IDL | `ninja -C out/default developtools/syscap_codec/taihe:taihe_group`（需 `support_jsapi && is_standard_system`） |
+| `include/codec_config/syscap_define.h` | `python3 tools/syscap_check.py -p <ohos_root> -t component_codec` |
+| `tools/*.py` | `python3 -m py_compile tools/syscap_check.py` + 手动跑一次 `-h` |
+| `BUILD.gn` / `config.gni` | `hb build --build-only-gn` 确认生成不报错 |
+
 ### 无构建环境（降级验证）
 
 ```bash
@@ -164,9 +199,19 @@ python3 tools/syscap_check.py -p <ohos_root> -t component_codec
 # 3. 手动确认 version script
 #    - 已发布符号未被删除或改名
 #    - 新增函数需要同步加入 global 段
+
+# 4. 语法检查（无需 OHOS 源码树）
+gcc -fsyntax-only -I include -I interfaces/inner_api src/syscap_tool.c
+python3 -m py_compile tools/syscap_check.py
 ```
 
-### 完成标准
+### Done 定义
+
+任务完成须满足：
+1. 上述"最小检查"全部通过，且按"任务→测试"跑了对应验证。
+2. 未触碰任何"不可破坏"条目，或已获"修改前必须确认"的授权。
+3. 未手改任何生成文件（Taihe 代码生成产物、`syscap_define_custom.h`）。
+4. 若改了公共面（versionscript / `syscap_interface.h` 签名 / `syscap_define.h` 枚举 / `config.gni` 构建参数），已说明兼容性影响。
 
 每次修改完成后自检：
 
@@ -177,6 +222,19 @@ python3 tools/syscap_check.py -p <ohos_root> -t component_codec
 - [ ] `src/` 中通用代码的修改已考虑对所有 4 个目标的影响
 - [ ] 测试目标路径和文件名正确
 - [ ] 若涉及跨平台修改，已检查 MinGW / macOS 条件分支
+- [ ] 若改了三方依赖，已同步更新 `OAT.xml`
+
+### 验证无法运行时
+
+若环境无法构建/测试（缺 OHOS 源码树、无 product、无 prebuilts），**不要**声称完成。改为：列出已尝试命令与失败原因，明确标注"未验证"，并给出在正确环境应运行的完整命令清单。
+
+### 最终回复须包含
+
+- 改了什么（文件 + 简述）。
+- 跑了哪些验证命令 + 结果。
+- 命中了哪些约束（引用本文件"不可破坏 / 修改前必须确认 / syscap_define.h 规则 / Taihe 代码生成"条目）。
+- 兼容性影响评估（若触及公共面）。
+- 若无法验证：说明哪些命令已尝试、为何无法运行、建议人工补验什么。
 
 ## CLI 用法参考
 
