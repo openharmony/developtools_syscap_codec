@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,6 +26,7 @@
 #include "create_pcid.h"
 #include "context_tool.h"
 #include "common_method.h"
+#include "parse_syscap_uint.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -546,7 +547,6 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
 static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSyscapNum,
                                  uint32_t *header, uint32_t headerLen)
 {
-    int32_t ret;
     uint32_t tempNum;
     uint32_t i = 0;
     size_t inputLen = strlen(input);
@@ -556,22 +556,28 @@ static int32_t ParseStringSyscap(char *input, uint32_t *osSyscap, uint32_t osSys
         return -1;
     }
 
-    if (sscanf_s(input, "%u,%u,%s", &header[0], &header[1], input, inputLen) != 3) { // 3, return val of "%u,%u,%s"
+    const char *cursor = input;
+    if (!ParseSyscapCsvUint(&cursor, &header[0]) || !ParseSyscapCsvUint(&cursor, &header[1])) {
         PRINT_ERR("Get pcid header failed.\n");
         return -1;
     }
 
-    while ((ret = sscanf_s(input, "%u,%s", &tempNum, input, inputLen)) > 0) {
-        osSyscap[i++] = tempNum;
-        if (i >= OS_SYSCAP_NUM) {
+    while (i < OS_SYSCAP_NUM) {
+        const char *save = cursor;
+        if (!ParseSyscapCsvUint(&cursor, &tempNum)) {
+            cursor = save;
             break;
         }
-    }
-    if (ret == -1) {
-        PRINT_ERR("sscanf_s failed, i = %u.\n", i);
-        return -1;
+        osSyscap[i++] = tempNum;
     }
 
+    {
+        size_t restLen = strlen(cursor);
+        if (memmove_s(input, inputLen, cursor, restLen + 1) != EOK) {
+            PRINT_ERR("memmove_s remaining syscap string failed.\n");
+            return -1;
+        }
+    }
     if (strlen(input) <= 1) {
         *input = '\0';
     }

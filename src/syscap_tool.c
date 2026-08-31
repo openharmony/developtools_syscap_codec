@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Huawei Device Co., Ltd.
+ * Copyright (C) 2022-2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,7 @@
 #include "syscap_tool.h"
 #include "context_tool.h"
 #include "common_method.h"
+#include "parse_syscap_uint.h"
 
 #ifdef SYSCAP_DEFINE_EXTERN_ENABLE
 #include "syscap_define_custom.h"
@@ -606,9 +607,19 @@ int32_t SeparateSyscapFromString(const char *inputString, uint32_t *osArray, uin
     }
 
     // get os syscap data
-    for (uint32_t i = 0; i < PCID_OUT_BUFFER; i++) {
-        if (sscanf_s(input, "%u,%s", &osArray[i], input, strlen(input)) == -1) {
-            PRINT_ERR("sscanf_s failed.\n");
+    {
+        const char *cursor = input;
+        size_t inputLen = strlen(input);
+        for (uint32_t i = 0; i < PCID_OUT_BUFFER; i++) {
+            if (!ParseSyscapCsvUint(&cursor, &osArray[i])) {
+                PRINT_ERR("parse os syscap uint failed.\n");
+                free(input);
+                return -1;
+            }
+        }
+        size_t restLen = strlen(cursor);
+        if (memmove_s(input, inputLen, cursor, restLen + 1) != EOK) {
+            PRINT_ERR("memmove_s remaining syscap string failed.\n");
             free(input);
             return -1;
         }
