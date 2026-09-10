@@ -479,12 +479,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
 {
     int32_t ret = 0;
     uint32_t contextBufLen;
-    struct FreeDecodePcidJsonInfo freePcidJsonInfo;
-    freePcidJsonInfo.strJson = NULL;
-    freePcidJsonInfo.contextBuffer = NULL;
-    freePcidJsonInfo.jsonRootObj = NULL;
-    freePcidJsonInfo.sysCapObj = NULL;
-    freePcidJsonInfo.flag = 0;
+    struct FreeDecodePcidJsonInfo freePcidJsonInfo = {NULL, NULL, NULL, NULL, 0};
 
     ret = CheckFileAndGetFileContext(inputFile, &freePcidJsonInfo.contextBuffer, (uint32_t *)&contextBufLen);
     if (ret != 0) {
@@ -729,22 +724,20 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     uint32_t pcidHeader[PCID_HEADER] = {0};
     char *priSyscapStr = NULL;
     char *jsonBuffer = NULL;
-
     ret = GetSyscapStr(input, priSyscapStr, osSyscap, pcidHeader);
     if (ret == -1) {
         return ret;
     }
-
-    // add to json object
     cJSON *sysCapObj = cJSON_CreateObject();
     cJSON *rootObj = cJSON_CreateObject();
     if (sysCapObj == NULL || rootObj == NULL) {
         PRINT_ERR("Failed to create cJSON objects.\n");
+        cJSON_Delete(sysCapObj);
         goto FAILED;
     }
-
     if (!cJSON_AddItemToObject(rootObj, "syscap", sysCapObj)) {
         PRINT_ERR("Add syscap to json failed.\n");
+        cJSON_Delete(sysCapObj);
         goto FAILED;
     }
     if (AddHeaderToJsonObj(pcidHeader, PCID_HEADER, rootObj) != 0) {
@@ -755,12 +748,10 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         PRINT_ERR("Add os syscap json object failed.\n");
         goto FAILED;
     }
-
     if (AddPriSyscapToJsonObj(priSyscapStr, (uint32_t) strlen(priSyscapStr), sysCapObj) != 0) {
         PRINT_ERR("Add private syscap json object failed.\n");
         goto FAILED;
     }
-    // save as json file
     jsonBuffer = cJSON_Print(rootObj);
     if (jsonBuffer == NULL) {
         PRINT_ERR("json buffer is null.\n");
@@ -772,11 +763,9 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         goto FAILED;
     }
     ret = 0;
-
 FAILED:
     cJSON_free(jsonBuffer);
     SafeFree(priSyscapStr);
-    cJSON_Delete(sysCapObj);
     cJSON_Delete(rootObj);
     return ret;
 }
