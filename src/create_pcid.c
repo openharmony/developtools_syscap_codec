@@ -759,7 +759,7 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         goto FAILED;
     }
     const char outputFileName[] = "pcid.json";
-    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0;
     if (ret != 0) {
         PRINT_ERR("Save as json file failed.\n");
     }
