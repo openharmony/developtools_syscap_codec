@@ -521,6 +521,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
 
+    freePcidJsonInfo.strJson = NULL;
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
     if (freePcidJsonInfo.strJson  == NULL) {
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, -1);
@@ -758,11 +759,10 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         goto FAILED;
     }
     const char outputFileName[] = "pcid.json";
-    if (ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0) {
+    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0
+    if (ret != 0) {
         PRINT_ERR("Save as json file failed.\n");
-        goto FAILED;
     }
-    ret = 0;
 FAILED:
     cJSON_free(jsonBuffer);
     SafeFree(priSyscapStr);
