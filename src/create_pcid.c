@@ -521,7 +521,7 @@ int32_t DecodePCID(char *inputFile, char *outDirPath)
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, ret);
     }
 
-    freePcidJsonInfo.strJson = NULL;
+    freePcidJsonInfo.sysCapObj = NULL;
     freePcidJsonInfo.strJson = cJSON_Print(freePcidJsonInfo.jsonRootObj);
     if (freePcidJsonInfo.strJson  == NULL) {
         return FreeAfterDecodePCID(freePcidJsonInfo, FREE_DECODE_PCID_ROOT_OUT, -1);
