@@ -55,7 +55,6 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_WIFI_STA,
     CUSTOMIZATION_CONFIGPOLICY,
     CUSTOMIZATION_ENTERPRISEDEVICEMANAGER,
-    CUSTOMIZATION_ASSESSMENTCONFIGURATION,
     DISTRIBUTEDDATAMANAGER_DATAOBJECT_DISTRIBUTEDOBJECT,
     DISTRIBUTEDDATAMANAGER_DATASHARE_CONSUMER,
     DISTRIBUTEDDATAMANAGER_DATASHARE_CORE,
@@ -416,6 +415,7 @@ typedef enum SystemCapabilityNum {
     COMMUNICATION_NEARLINK_BASE,
     FILEMANAGEMENT_FILE_SWAPFS,
     MULTIMODALAWARENESS_CAR_AWARENESS,
+    CUSTOMIZATION_ASSESSMENTCONFIGURATION,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -444,7 +444,6 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.WiFi.STA", COMMUNICATION_WIFI_STA},
     {"SystemCapability.Customization.ConfigPolicy", CUSTOMIZATION_CONFIGPOLICY},
     {"SystemCapability.Customization.EnterpriseDeviceManager", CUSTOMIZATION_ENTERPRISEDEVICEMANAGER},
-    {"SystemCapability.Customization.AssessmentConfiguration", CUSTOMIZATION_ASSESSMENTCONFIGURATION},
     {"SystemCapability.DistributedDataManager.DataObject.DistributedObject",
         DISTRIBUTEDDATAMANAGER_DATAOBJECT_DISTRIBUTEDOBJECT},
     {"SystemCapability.DistributedDataManager.DataShare.Consumer", DISTRIBUTEDDATAMANAGER_DATASHARE_CONSUMER},
@@ -816,6 +815,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.Communication.NearLink.Base", COMMUNICATION_NEARLINK_BASE},
     {"SystemCapability.FileManagement.File.Swapfs", FILEMANAGEMENT_FILE_SWAPFS},
     {"SystemCapability.MultimodalAwareness.CarAwareness", MULTIMODALAWARENESS_CAR_AWARENESS},
+    {"SystemCapability.Customization.AssessmentConfiguration", CUSTOMIZATION_ASSESSMENTCONFIGURATION},
 };
 
 #ifdef __cplusplus
