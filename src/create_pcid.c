@@ -733,16 +733,6 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
     cJSON *rootObj = cJSON_CreateObject();
     if (sysCapObj == NULL || rootObj == NULL) {
         PRINT_ERR("Failed to create cJSON objects.\n");
-        cJSON_Delete(sysCapObj);
-        goto FAILED;
-    }
-    if (!cJSON_AddItemToObject(rootObj, "syscap", sysCapObj)) {
-        PRINT_ERR("Add syscap to json failed.\n");
-        cJSON_Delete(sysCapObj);
-        goto FAILED;
-    }
-    if (AddHeaderToJsonObj(pcidHeader, PCID_HEADER, rootObj) != 0) {
-        PRINT_ERR("Add header to json object failed.\n");
         goto FAILED;
     }
     if (AddOsSyscapToJsonObj(osSyscap, OS_SYSCAP_NUM, sysCapObj) != 0) {
@@ -753,13 +743,21 @@ int32_t DecodeStringPCIDToJson(char *input, char *outDirPath)
         PRINT_ERR("Add private syscap json object failed.\n");
         goto FAILED;
     }
+    if (cJSON_AddItemToObject(rootObj, "syscap", sysCapObj) == 0) {
+        PRINT_ERR("Add syscap to json failed.\n");
+        goto FAILED;
+    }
+    sysCapObj = NULL;
+    if (AddHeaderToJsonObj(pcidHeader, PCID_HEADER, rootObj) != 0) {
+        PRINT_ERR("Add header to json object failed.\n");
+        goto FAILED;
+    }
     jsonBuffer = cJSON_Print(rootObj);
     if (jsonBuffer == NULL) {
         PRINT_ERR("json buffer is null.\n");
         goto FAILED;
     }
-    const char outputFileName[] = "pcid.json";
-    ret = ConvertedContextSaveAsFile(outDirPath, outputFileName, jsonBuffer, strlen(jsonBuffer)) != 0;
+    ret = ConvertedContextSaveAsFile(outDirPath, "pcid.json", jsonBuffer, strlen(jsonBuffer)) != 0;
     if (ret != 0) {
         PRINT_ERR("Save as json file failed.\n");
     }
@@ -767,6 +765,7 @@ FAILED:
     cJSON_free(jsonBuffer);
     SafeFree(priSyscapStr);
     cJSON_Delete(rootObj);
+    cJSON_Delete(sysCapObj);
     return ret;
 }
 
