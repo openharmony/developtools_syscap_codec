@@ -416,6 +416,7 @@ typedef enum SystemCapabilityNum {
     FILEMANAGEMENT_FILE_SWAPFS,
     MULTIMODALAWARENESS_CAR_AWARENESS,
     CUSTOMIZATION_ASSESSMENTCONFIGURATION,
+    SENSORS_SENSOR_SLIM,
     // Add before here
     SYSCAP_BASIC_END = 500,
 } SyscapNum;
@@ -816,6 +817,7 @@ const static SyscapWithNum g_arraySyscap[] = {
     {"SystemCapability.FileManagement.File.Swapfs", FILEMANAGEMENT_FILE_SWAPFS},
     {"SystemCapability.MultimodalAwareness.CarAwareness", MULTIMODALAWARENESS_CAR_AWARENESS},
     {"SystemCapability.Customization.AssessmentConfiguration", CUSTOMIZATION_ASSESSMENTCONFIGURATION},
+    {"SystemCapability.Sensors.Sensor.Slim", SENSORS_SENSOR_SLIM},
 };
 
 #ifdef __cplusplus
